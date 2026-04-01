@@ -4,7 +4,14 @@ import StatusBadge from '../components/StatusBadge';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
 
-const sizes = ['Micro', 'Small', 'Medium', 'Large', 'XL', 'Enterprise'];
+const sizeOptions = [
+  { value: 'Micro', label: 'Micro (< 4 hrs)' },
+  { value: 'Small', label: 'Small (1–2 days)' },
+  { value: 'Medium', label: 'Medium (3–5 days)' },
+  { value: 'Large', label: 'Large (1–2 weeks)' },
+  { value: 'XL', label: 'XL (1–2 months)' },
+  { value: 'Enterprise', label: 'Enterprise (3+ months)' },
+];
 const complexities = ['Low', 'Medium', 'High', 'Innovative'];
 
 export default function Approvals() {
@@ -72,7 +79,7 @@ export default function Approvals() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Size</label>
                     <select value={form.size} onChange={(e) => setForm((f) => ({ ...f, size: e.target.value }))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                      {sizes.map((s) => <option key={s}>{s}</option>)}
+                      {sizeOptions.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
                     </select>
                   </div>
                   <div>
@@ -83,11 +90,11 @@ export default function Approvals() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Bid Cutoff Date</label>
-                    <input type="date" value={form.bidCutoffDate || ''} onChange={(e) => setForm((f) => ({ ...f, bidCutoffDate: e.target.value }))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+                    <input type="datetime-local" value={form.bidCutoffDate || ''} onChange={(e) => setForm((f) => ({ ...f, bidCutoffDate: e.target.value }))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Expected Delivery Date</label>
-                    <input type="date" value={form.expectedDeliveryDate || ''} onChange={(e) => setForm((f) => ({ ...f, expectedDeliveryDate: e.target.value }))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+                    <input type="datetime-local" value={form.expectedDeliveryDate || ''} onChange={(e) => setForm((f) => ({ ...f, expectedDeliveryDate: e.target.value }))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
                   </div>
                 </div>
                 <div className="flex gap-3">

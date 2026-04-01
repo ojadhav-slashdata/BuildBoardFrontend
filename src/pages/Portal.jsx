@@ -1,16 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../axiosConfig';
+import { useAuth } from '../hooks/useAuth';
 import StatusBadge from '../components/StatusBadge';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
 
 const categories = ['All', 'AI/ML', 'Automation', 'DevTools', 'UX', 'Infrastructure', 'Other'];
-const sizes = ['All', 'Micro', 'Small', 'Medium', 'Large', 'XL', 'Enterprise'];
+const sizeOptions = [
+  { value: 'All', label: 'All Sizes' },
+  { value: 'Micro', label: 'Micro (< 4 hrs)' },
+  { value: 'Small', label: 'Small (1–2 days)' },
+  { value: 'Medium', label: 'Medium (3–5 days)' },
+  { value: 'Large', label: 'Large (1–2 weeks)' },
+  { value: 'XL', label: 'XL (1–2 months)' },
+  { value: 'Enterprise', label: 'Enterprise (3+ months)' },
+];
 const projectTypes = ['All', 'POC', 'FullProduct'];
 
 export default function Portal() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [metrics, setMetrics] = useState(null);
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +36,18 @@ export default function Portal() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Employee: only see BiddingOpen ideas + ideas assigned to / in progress / completed by them
+  // Manager/Admin: see everything
+  const isEmployee = user?.role === 'Employee';
+
   const filtered = ideas.filter((idea) => {
+    if (isEmployee) {
+      const isOpenForBidding = idea.status === 'BiddingOpen' || idea.status === 'Approved';
+      const isMyIdea = idea.assignedTo === user?.id || idea.submittedBy === user?.id ||
+        idea.teamMembers?.some((m) => m.userId === user?.id);
+      const isActiveOrDone = ['Assigned', 'InProgress', 'Completed'].includes(idea.status) && isMyIdea;
+      if (!isOpenForBidding && !isActiveOrDone) return false;
+    }
     if (filters.search && !idea.title.toLowerCase().includes(filters.search.toLowerCase())) return false;
     if (filters.category !== 'All' && idea.category !== filters.category) return false;
     if (filters.size !== 'All' && idea.size !== filters.size) return false;
@@ -78,7 +99,7 @@ export default function Portal() {
           {categories.map((c) => <option key={c}>{c}</option>)}
         </select>
         <select value={filters.size} onChange={(e) => setFilters((f) => ({ ...f, size: e.target.value }))} className="border border-gray-300 rounded-lg px-3 py-2 text-sm">
-          {sizes.map((s) => <option key={s}>{s}</option>)}
+          {sizeOptions.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
         </select>
         <select value={filters.projectType} onChange={(e) => setFilters((f) => ({ ...f, projectType: e.target.value }))} className="border border-gray-300 rounded-lg px-3 py-2 text-sm">
           {projectTypes.map((t) => <option key={t}>{t}</option>)}

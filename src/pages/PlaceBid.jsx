@@ -114,7 +114,7 @@ export default function PlaceBid() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Committed Delivery Date</label>
-          <input type="date" required value={committedDate} onChange={(e) => setCommittedDate(e.target.value)} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          <input type="datetime-local" required value={committedDate} onChange={(e) => setCommittedDate(e.target.value)} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
         </div>
 
         {/* Smart Banner */}
