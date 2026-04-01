@@ -16,15 +16,30 @@ export function AuthProvider({ children }) {
       if (firebaseUser) {
         const idToken = await firebaseUser.getIdToken();
         setToken(idToken);
-        setUser((prev) =>
-          prev ?? {
+
+        // Fetch real user profile (including role) from backend
+        try {
+          const res = await api.get('/users/me', {
+            headers: { Authorization: `Bearer ${idToken}` }
+          });
+          setUser({
+            id: res.data.id || firebaseUser.uid,
+            email: res.data.email || firebaseUser.email,
+            name: res.data.name || firebaseUser.displayName,
+            pictureUrl: res.data.pictureUrl || firebaseUser.photoURL,
+            role: res.data.role || 'Employee',
+            totalPoints: res.data.totalPoints || 0,
+          });
+        } catch {
+          // Fallback if backend is down
+          setUser({
             id: firebaseUser.uid,
             email: firebaseUser.email,
             name: firebaseUser.displayName,
             pictureUrl: firebaseUser.photoURL,
             role: 'Employee',
-          },
-        );
+          });
+        }
       } else {
         setToken(null);
         setUser(null);
