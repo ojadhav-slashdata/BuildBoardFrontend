@@ -45,9 +45,13 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
+  const switchRole = useCallback((role) => {
+    setUser((prev) => prev ? { ...prev, role } : prev);
+  }, []);
+
   const value = useMemo(
-    () => ({ token, user, login, logout, loading, isAuthenticated: !!token }),
-    [token, user, login, logout, loading],
+    () => ({ token, user, login, logout, switchRole, loading, isAuthenticated: !!token }),
+    [token, user, login, logout, switchRole, loading],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

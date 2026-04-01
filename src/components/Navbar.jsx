@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
+const devRoles = ['Employee', 'Manager', 'Admin'];
+
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout, switchRole } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -16,6 +18,29 @@ export default function Navbar() {
         <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">BuildBoard</span>
         <span className="hidden sm:block text-xs text-gray-400 border-l border-gray-200 pl-3">Innovation Portal</span>
       </div>
+
+      {/* DEV Role Switcher */}
+      {user && (
+        <div className="flex items-center gap-2 border border-dashed border-gray-300 rounded-lg px-2 py-1">
+          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Dev</span>
+          <div className="inline-flex bg-gray-100 rounded-lg p-0.5">
+            {devRoles.map((role) => (
+              <button
+                key={role}
+                onClick={() => switchRole(role)}
+                className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-200 ${
+                  user.role === role
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {role}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center gap-3">
         {user && (
           <div className="flex items-center gap-2.5 bg-gray-50 rounded-full pl-1 pr-3 py-1">
