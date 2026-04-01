@@ -1,29 +1,9 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-
-const linksByRole = {
-  Employee: [
-    { to: '/portal', label: 'Portal' },
-    { to: '/my-bids', label: 'My Bids' },
-    { to: '/profile', label: 'Profile' },
-  ],
-  Manager: [
-    { to: '/portal', label: 'Portal' },
-    { to: '/approvals', label: 'Approvals' },
-    { to: '/analytics', label: 'Analytics' },
-  ],
-  Admin: [
-    { to: '/portal', label: 'Portal' },
-    { to: '/approvals', label: 'Approvals' },
-    { to: '/analytics', label: 'Analytics' },
-    { to: '/admin/users', label: 'Users' },
-  ],
-};
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const links = linksByRole[user?.role] || linksByRole.Employee;
 
   const handleLogout = () => {
     logout();
@@ -31,38 +11,26 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-30">
-      <div className="flex items-center gap-8">
-        <span className="text-xl font-bold text-indigo-600">BuildBoard</span>
-        <div className="hidden md:flex gap-1">
-          {links.map((l) => (
-            <NavLink
-              key={l.to}
-              to={l.to}
-              className={({ isActive }) =>
-                `px-3 py-2 rounded-md text-sm font-medium ${isActive ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-100'}`
-              }
-            >
-              {l.label}
-            </NavLink>
-          ))}
-        </div>
+    <nav className="bg-white border-b border-gray-200 px-6 py-2.5 flex items-center justify-between sticky top-0 z-30">
+      <div className="flex items-center gap-3">
+        <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">BuildBoard</span>
+        <span className="hidden sm:block text-xs text-gray-400 border-l border-gray-200 pl-3">Innovation Portal</span>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         {user && (
-          <>
-            <img
-              src={user.pictureUrl}
-              alt={user.name}
-              className="h-8 w-8 rounded-full"
-              referrerPolicy="no-referrer"
-            />
+          <div className="flex items-center gap-2.5 bg-gray-50 rounded-full pl-1 pr-3 py-1">
+            {user.pictureUrl ? (
+              <img src={user.pictureUrl} alt={user.name} className="h-7 w-7 rounded-full" referrerPolicy="no-referrer" />
+            ) : (
+              <span className="h-7 w-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">{(user.name || '?')[0]}</span>
+            )}
             <span className="text-sm font-medium text-gray-700 hidden sm:block">{user.name}</span>
-          </>
+            <span className="text-xs text-gray-400 hidden sm:block">({user.role})</span>
+          </div>
         )}
         <button
           onClick={handleLogout}
-          className="text-sm text-gray-500 hover:text-red-600 transition"
+          className="text-sm text-gray-400 hover:text-red-500 px-2 py-1.5 rounded-lg hover:bg-red-50 transition-all duration-200"
         >
           Logout
         </button>
