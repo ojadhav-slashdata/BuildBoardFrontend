@@ -6,7 +6,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
 
 const categories = ['All', 'AI/ML', 'Automation', 'DevTools', 'UX', 'Infrastructure', 'Other'];
-const sizes = ['All', 'Small', 'Medium', 'Large'];
+const sizes = ['All', 'Micro', 'Small', 'Medium', 'Large', 'XL', 'Enterprise'];
 const projectTypes = ['All', 'POC', 'FullProduct'];
 
 export default function Portal() {
@@ -110,6 +110,10 @@ export default function Portal() {
                   >
                     Place Bid
                   </button>
+                ) : idea.status === 'BiddingClosed' ? (
+                  <span className="text-sm bg-slate-50 text-slate-500 px-3 py-1.5 rounded-lg font-medium cursor-not-allowed">
+                    Bidding Closed
+                  </span>
                 ) : (
                   <button
                     onClick={() => navigate(`/ideas/${idea._id}`)}

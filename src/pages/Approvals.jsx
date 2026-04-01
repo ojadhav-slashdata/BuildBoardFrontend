@@ -4,8 +4,8 @@ import StatusBadge from '../components/StatusBadge';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
 
-const sizes = ['Small', 'Medium', 'Large'];
-const complexities = ['Low', 'Medium', 'High'];
+const sizes = ['Micro', 'Small', 'Medium', 'Large', 'XL', 'Enterprise'];
+const complexities = ['Low', 'Medium', 'High', 'Innovative'];
 
 export default function Approvals() {
   const [ideas, setIdeas] = useState([]);

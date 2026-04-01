@@ -11,12 +11,14 @@ const linksByRole = {
     { to: '/portal', label: 'Portal', icon: '💡' },
     { to: '/approvals', label: 'Approvals', icon: '✅' },
     { to: '/analytics', label: 'Analytics', icon: '📊' },
+    { to: '/profile', label: 'Profile', icon: '👤' },
   ],
   Admin: [
     { to: '/portal', label: 'Portal', icon: '💡' },
     { to: '/approvals', label: 'Approvals', icon: '✅' },
     { to: '/analytics', label: 'Analytics', icon: '📊' },
     { to: '/admin/users', label: 'Users', icon: '👥' },
+    { to: '/profile', label: 'Profile', icon: '👤' },
   ],
 };
 

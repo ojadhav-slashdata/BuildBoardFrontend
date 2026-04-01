@@ -38,9 +38,43 @@ export default function MyBids() {
                 {bid.mode === 'team' ? 'Team' : 'Solo'}
               </p>
             </div>
-            <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${statusColor[bid.status] || 'bg-gray-100 text-gray-700'}`}>
-              {bid.status}
-            </span>
+            <div className="flex items-center gap-2">
+              {bid.mode === 'team' && bid.confirmationStatus === 'Pending' && (
+                <div className="flex gap-1.5">
+                  <button
+                    onClick={async () => {
+                      try {
+                        await api.patch(`/bids/${bid._id}/confirm`);
+                        setBids((prev) => prev.map((b) => b._id === bid._id ? { ...b, confirmationStatus: 'Confirmed' } : b));
+                      } catch { alert('Failed to confirm.'); }
+                    }}
+                    className="text-xs bg-green-50 text-green-700 px-2.5 py-1 rounded-lg font-medium hover:bg-green-100 transition"
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    onClick={async () => {
+                      try {
+                        await api.patch(`/bids/${bid._id}/decline`);
+                        setBids((prev) => prev.map((b) => b._id === bid._id ? { ...b, confirmationStatus: 'Declined' } : b));
+                      } catch { alert('Failed to decline.'); }
+                    }}
+                    className="text-xs bg-red-50 text-red-700 px-2.5 py-1 rounded-lg font-medium hover:bg-red-100 transition"
+                  >
+                    Decline
+                  </button>
+                </div>
+              )}
+              {bid.mode === 'team' && bid.confirmationStatus === 'Confirmed' && (
+                <span className="text-xs px-2.5 py-0.5 rounded-full font-medium bg-green-100 text-green-700">Confirmed</span>
+              )}
+              {bid.mode === 'team' && bid.confirmationStatus === 'Declined' && (
+                <span className="text-xs px-2.5 py-0.5 rounded-full font-medium bg-red-100 text-red-700">Declined</span>
+              )}
+              <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${statusColor[bid.status] || 'bg-gray-100 text-gray-700'}`}>
+                {bid.status}
+              </span>
+            </div>
           </div>
         ))}
       </div>

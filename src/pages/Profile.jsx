@@ -59,6 +59,39 @@ export default function Profile() {
         </div>
       </div>
 
+      {/* Points History */}
+      {profile.pointsHistory?.length > 0 && (
+        <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 mb-8">
+          <h3 className="font-semibold mb-3">Points History</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-gray-500 border-b">
+                  <th className="pb-2">Idea</th>
+                  <th className="pb-2 text-right">Base</th>
+                  <th className="pb-2 text-right">Complexity</th>
+                  <th className="pb-2 text-right">Delivery</th>
+                  <th className="pb-2 text-right">Feedback</th>
+                  <th className="pb-2 text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {profile.pointsHistory.map((entry, i) => (
+                  <tr key={i} className="border-b last:border-0">
+                    <td className="py-2 text-gray-800">{entry.ideaTitle}</td>
+                    <td className="py-2 text-right text-gray-600">{entry.basePoints}</td>
+                    <td className="py-2 text-right text-gray-600">+{entry.complexityBonus}</td>
+                    <td className="py-2 text-right text-gray-600">&times;{entry.deliveryMultiplier}</td>
+                    <td className="py-2 text-right text-gray-600">+{entry.feedbackBonus}</td>
+                    <td className="py-2 text-right font-semibold text-indigo-600">{entry.totalPoints}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {/* Badges */}
       {profile.badges?.length > 0 && (
         <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">

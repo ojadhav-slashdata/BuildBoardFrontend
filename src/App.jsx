@@ -12,6 +12,7 @@ import Approvals from './pages/Approvals';
 import BidReview from './pages/BidReview';
 import Analytics from './pages/Analytics';
 import AdminUsers from './pages/AdminUsers';
+import Feedback from './pages/Feedback';
 
 export default function App() {
   return (
@@ -49,6 +50,14 @@ export default function App() {
           element={
             <ProtectedRoute roles={['Manager', 'Admin']}>
               <BidReview />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ideas/:id/feedback"
+          element={
+            <ProtectedRoute roles={['Manager', 'Admin']}>
+              <Feedback />
             </ProtectedRoute>
           }
         />

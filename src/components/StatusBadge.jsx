@@ -10,6 +10,8 @@ const colors = {
   Won: 'bg-green-100 text-green-800',
   Active: 'bg-green-100 text-green-800',
   'Not Selected': 'bg-red-100 text-red-700',
+  BiddingClosed: 'bg-slate-100 text-slate-700',
+  Archived: 'bg-gray-200 text-gray-500',
 };
 
 export default function StatusBadge({ status }) {

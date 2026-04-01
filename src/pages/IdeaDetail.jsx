@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../axiosConfig';
 import { useAuth } from '../hooks/useAuth';
 import StatusBadge from '../components/StatusBadge';
@@ -7,6 +7,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function IdeaDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [idea, setIdea] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -85,6 +86,31 @@ export default function IdeaDetail() {
           <StatusBadge status={idea.status} />
           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${idea.projectType === 'POC' ? 'bg-orange-100 text-orange-700' : 'bg-teal-100 text-teal-700'}`}>{idea.projectType}</span>
           {idea.size && <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium">{idea.size}</span>}
+          <div className="ml-auto flex gap-2">
+            {idea.status === 'InProgress' && (
+              <button
+                onClick={async () => {
+                  try {
+                    await api.patch(`/ideas/${id}/complete`);
+                    setIdea((prev) => ({ ...prev, status: 'Completed' }));
+                  } catch {
+                    alert('Failed to mark as complete.');
+                  }
+                }}
+                className="bg-green-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-green-700 transition"
+              >
+                Mark as Complete
+              </button>
+            )}
+            {idea.status === 'Completed' && (user?.role === 'Manager' || user?.role === 'Admin') && (
+              <button
+                onClick={() => navigate(`/ideas/${id}/feedback`)}
+                className="bg-purple-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-purple-700 transition"
+              >
+                Give Feedback
+              </button>
+            )}
+          </div>
         </div>
         {idea.expectedDeliveryDate && <p className="text-sm text-gray-500 mb-3">Due: {new Date(idea.expectedDeliveryDate).toLocaleDateString()}</p>}
 
