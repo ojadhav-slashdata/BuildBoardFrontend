@@ -28,39 +28,35 @@ export default function AdminUsers() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">User Management</h1>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
+      <h1 className="section-heading text-2xl mb-8">User Management</h1>
+      <div className="surface-card overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-gray-500 border-b bg-gray-50">
-              <th className="px-5 py-3">User</th>
-              <th className="px-5 py-3">Email</th>
-              <th className="px-5 py-3">Role</th>
-              <th className="px-5 py-3">Last Active</th>
+            <tr className="text-left text-on-surface-variant/60 bg-surface-container-low">
+              <th className="px-6 py-4 font-medium">User</th>
+              <th className="px-6 py-4 font-medium">Email</th>
+              <th className="px-6 py-4 font-medium">Role</th>
+              <th className="px-6 py-4 font-medium">Last Active</th>
             </tr>
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u._id} className="border-b last:border-0 hover:bg-gray-50">
-                <td className="px-5 py-3 flex items-center gap-3">
+              <tr key={u._id} className="hover:bg-surface-container-low/50 transition-colors">
+                <td className="px-6 py-4 flex items-center gap-3">
                   {u.pictureUrl ? (
-                    <img src={u.pictureUrl} className="h-8 w-8 rounded-full" referrerPolicy="no-referrer" alt="" />
+                    <img src={u.pictureUrl} className="h-9 w-9 rounded-xl" referrerPolicy="no-referrer" alt="" />
                   ) : (
-                    <span className="h-8 w-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">{(u.name || '?')[0]}</span>
+                    <span className="h-9 w-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">{(u.name || '?')[0]}</span>
                   )}
-                  <span className="font-medium text-gray-800">{u.name}</span>
+                  <span className="font-medium text-on-surface">{u.name}</span>
                 </td>
-                <td className="px-5 py-3 text-gray-600">{u.email}</td>
-                <td className="px-5 py-3">
-                  <select
-                    value={u.role}
-                    onChange={(e) => changeRole(u._id, e.target.value)}
-                    className="border border-gray-300 rounded-lg px-2 py-1 text-sm"
-                  >
+                <td className="px-6 py-4 text-on-surface-variant">{u.email}</td>
+                <td className="px-6 py-4">
+                  <select value={u.role} onChange={(e) => changeRole(u._id, e.target.value)} className="input-field py-1.5 px-3 text-sm">
                     {roles.map((r) => <option key={r}>{r}</option>)}
                   </select>
                 </td>
-                <td className="px-5 py-3 text-gray-500">
+                <td className="px-6 py-4 text-on-surface-variant/60">
                   {u.lastActive ? new Date(u.lastActive).toLocaleDateString() : '—'}
                 </td>
               </tr>

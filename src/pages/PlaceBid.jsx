@@ -31,43 +31,43 @@ function IdeaBanner({ idea }) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-      <h1 className="text-xl font-bold text-gray-900 mb-3">{idea.title}</h1>
+    <div className="surface-card p-6 mb-6">
+      <h1 className="text-xl font-bold font-manrope tracking-tight text-on-surface mb-3">{idea.title}</h1>
 
       <div className="flex flex-wrap items-center gap-2 text-xs mb-3">
         {/* category */}
         {idea.category && (
-          <span className="bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full font-medium">
+          <span className="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full font-medium">
             {idea.category}
           </span>
         )}
 
         {/* type badge */}
         {idea.projectType && (
-          <span className={`px-2.5 py-0.5 rounded-full font-medium ${typeColors[idea.projectType] ?? 'bg-gray-100 text-gray-700'}`}>
+          <span className={`px-2.5 py-0.5 rounded-full font-medium ${typeColors[idea.projectType] ?? 'bg-surface-container-high text-on-surface'}`}>
             {idea.projectType}
           </span>
         )}
 
         {/* size/points badge */}
         {idea.size && (
-          <span className={`px-2.5 py-0.5 rounded-full font-medium ${sizeColors[idea.size] ?? 'bg-gray-100 text-gray-700'}`}>
+          <span className={`px-2.5 py-0.5 rounded-full font-medium ${sizeColors[idea.size] ?? 'bg-surface-container-high text-on-surface'}`}>
             {idea.size}
             {idea.points ? ` · ${idea.points} pts` : ''}
           </span>
         )}
       </div>
 
-      <div className="flex flex-wrap gap-4 text-xs text-gray-500">
+      <div className="flex flex-wrap gap-4 text-xs text-on-surface-variant">
         {(idea.ownerName || idea.owner?.name || idea.owner?.email) && (
           <span>
-            <span className="font-medium text-gray-600">Owner: </span>
+            <span className="font-medium text-on-surface-variant">Owner: </span>
             {idea.ownerName ?? idea.owner?.name ?? idea.owner?.email}
           </span>
         )}
         {idea.expectedDeliveryDate && (
           <span>
-            <span className="font-medium text-gray-600">Expected delivery: </span>
+            <span className="font-medium text-on-surface-variant">Expected delivery: </span>
             {fmtDate(idea.expectedDeliveryDate)}
           </span>
         )}
@@ -87,15 +87,15 @@ function ModeToggle({ mode, onChange }) {
           key={key}
           type="button"
           onClick={() => onChange(key)}
-          className={`flex-1 rounded-xl border-2 px-4 py-3 text-left transition
+          className={`flex-1 rounded-2xl border-2 px-4 py-3 text-left transition
             ${mode === key
-              ? 'border-indigo-600 bg-indigo-50'
-              : 'border-gray-200 bg-white hover:border-indigo-300'}`}
+              ? 'border-primary bg-primary/10'
+              : 'border-outline-variant/20 bg-surface-container-lowest hover:border-primary/40'}`}
         >
-          <p className={`text-sm font-semibold ${mode === key ? 'text-indigo-700' : 'text-gray-700'}`}>
+          <p className={`text-sm font-semibold ${mode === key ? 'text-primary' : 'text-on-surface'}`}>
             {label}
           </p>
-          <p className="text-xs text-gray-500 mt-0.5">{desc}</p>
+          <p className="text-xs text-on-surface-variant mt-0.5">{desc}</p>
         </button>
       ))}
     </div>
@@ -112,7 +112,7 @@ function LateWarning({ show, justification, onJustificationChange }) {
       <div>
         <label className="block text-xs font-medium text-amber-800 mb-1">
           Justification <span className="text-red-500">*</span>
-          <span className="text-gray-400 font-normal ml-1">(min 20 characters)</span>
+          <span className="text-on-surface-variant/60 font-normal ml-1">(min 20 characters)</span>
         </label>
         <textarea
           required
@@ -121,7 +121,7 @@ function LateWarning({ show, justification, onJustificationChange }) {
           onChange={(e) => onJustificationChange(e.target.value)}
           rows={3}
           placeholder="Explain why this delivery date is realistic despite being later than expected..."
-          className="w-full border border-amber-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white"
+          className="w-full border border-amber-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 bg-surface-container-lowest"
         />
       </div>
     </div>
@@ -186,7 +186,7 @@ function UserSearchInput({ currentUserEmail, teamMembers, onAdd, onRemove }) {
 
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-on-surface mb-1">
         Team members
       </label>
 
@@ -196,7 +196,7 @@ function UserSearchInput({ currentUserEmail, teamMembers, onAdd, onRemove }) {
           {teamMembers.map((email) => (
             <span
               key={email}
-              className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 border border-indigo-200 px-2.5 py-1 rounded-full text-xs font-medium"
+              className="inline-flex items-center gap-1 bg-primary/10 text-primary border border-primary/20 px-2.5 py-1 rounded-full text-xs font-medium"
             >
               {email}
               <button
@@ -221,21 +221,21 @@ function UserSearchInput({ currentUserEmail, teamMembers, onAdd, onRemove }) {
           onKeyDown={handleKeyDown}
           onFocus={() => query && open && setOpen(true)}
           placeholder={loadingUsers ? 'Loading users…' : 'Search by name or email…'}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          className="input-field w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
           autoComplete="off"
         />
         {open && suggestions.length > 0 && (
-          <ul className="absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+          <ul className="absolute z-20 mt-1 w-full bg-surface-container-lowest rounded-lg shadow-tonal-lg max-h-48 overflow-y-auto">
             {suggestions.map((u) => (
               <li key={u.email}>
                 <button
                   type="button"
                   onMouseDown={(e) => { e.preventDefault(); select(u); }}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-indigo-50 transition"
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-primary/10 transition"
                 >
-                  <span className="font-medium text-gray-800">{u.name ?? u.displayName ?? u.email}</span>
+                  <span className="font-medium text-on-surface">{u.name ?? u.displayName ?? u.email}</span>
                   {u.name && (
-                    <span className="ml-2 text-xs text-gray-400">{u.email}</span>
+                    <span className="ml-2 text-xs text-on-surface-variant/60">{u.email}</span>
                   )}
                 </button>
               </li>
@@ -310,7 +310,7 @@ export default function PlaceBid() {
 
   if (loading) return <LoadingSpinner />;
   if (!idea) return (
-    <div className="flex items-center justify-center py-24 text-gray-500">
+    <div className="flex items-center justify-center py-24 text-on-surface-variant">
       Idea not found.
     </div>
   );
@@ -319,11 +319,11 @@ export default function PlaceBid() {
     <div className="max-w-2xl mx-auto pb-12">
       <IdeaBanner idea={idea} />
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
+      <form onSubmit={handleSubmit} className="surface-card p-6 space-y-6">
 
         {/* ── mode toggle ── */}
         <div>
-          <p className="text-sm font-semibold text-gray-700 mb-2">Bid type</p>
+          <p className="text-sm font-semibold text-on-surface mb-2">Bid type</p>
           <ModeToggle mode={mode} onChange={(m) => { setMode(m); setTeamMembers([]); }} />
         </div>
 
@@ -332,12 +332,12 @@ export default function PlaceBid() {
           <div className="space-y-4">
             {/* team lead (read-only) */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Team lead</label>
+              <label className="block text-sm font-medium text-on-surface mb-1">Team lead</label>
               <input
                 type="text"
                 readOnly
                 value={user?.name ? `${user.name} (${user.email})` : (user?.email ?? '—')}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 text-gray-500 cursor-not-allowed"
+                className="w-full input-field rounded-lg px-3 py-2 text-sm bg-surface-container-low text-on-surface-variant cursor-not-allowed"
               />
             </div>
 
@@ -353,7 +353,7 @@ export default function PlaceBid() {
 
         {/* ── delivery date ── */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-on-surface mb-1">
             Realistic delivery date <span className="text-red-500">*</span>
           </label>
           <input
@@ -362,10 +362,10 @@ export default function PlaceBid() {
             value={committedDate}
             onChange={(e) => setCommittedDate(e.target.value)}
             min={new Date().toISOString().split('T')[0]}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            className="input-field w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
           />
           {idea.expectedDeliveryDate && (
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-on-surface-variant/60 mt-1">
               Idea expects delivery by {fmtDate(idea.expectedDeliveryDate)}
             </p>
           )}
@@ -380,7 +380,7 @@ export default function PlaceBid() {
 
         {/* ── approach note ── */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-on-surface mb-1">
             Approach note <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -389,7 +389,7 @@ export default function PlaceBid() {
             onChange={(e) => setApproach(e.target.value)}
             rows={4}
             placeholder="Describe how you plan to build this…"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none"
+            className="input-field w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none"
           />
         </div>
 
@@ -404,7 +404,7 @@ export default function PlaceBid() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg text-sm font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-primary to-primary-container hover:bg-primary text-white py-2.5 rounded-full text-sm font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {submitting
             ? 'Submitting…'

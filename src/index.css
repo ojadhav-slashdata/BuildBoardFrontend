@@ -1,3 +1,72 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  h1, h2, h3 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: #151c27;
+  }
+  body {
+    font-feature-settings: 'cv02', 'cv03', 'cv04';
+  }
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+  }
+}
+
+@layer components {
+  /* === Navigation === */
+  .glass-nav {
+    @apply bg-white/80 backdrop-blur-xl;
+  }
+
+  /* === Surface Cards (replace borders with tonal lift) === */
+  .surface-card {
+    @apply bg-surface-container-lowest shadow-tonal rounded-2xl;
+  }
+  .surface-card-elevated {
+    @apply bg-surface-container-lowest shadow-tonal-md rounded-2xl;
+  }
+
+  /* === Buttons === */
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary to-primary-container text-white rounded-full px-6 py-2.5 text-sm font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-primary/25 active:scale-[0.98];
+  }
+  .btn-secondary {
+    @apply bg-surface-container-high text-on-surface rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 hover:bg-surface-container-highest;
+  }
+  .btn-ghost {
+    @apply text-on-surface-variant rounded-full px-4 py-2 text-sm font-medium hover:bg-surface-container-low transition-all duration-200;
+  }
+
+  /* === Form Inputs === */
+  .input-field {
+    @apply bg-surface-container-low border-0 rounded-xl px-4 py-3 text-sm text-on-surface placeholder-on-surface-variant/50 outline-none transition-all duration-200 focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary/30 focus:shadow-tonal;
+  }
+
+  /* === Chips & Badges === */
+  .status-chip {
+    @apply bg-surface-container-high text-on-surface-variant rounded-full px-3 py-1 text-xs font-medium;
+  }
+
+  /* === Typography === */
+  .section-heading {
+    @apply font-manrope font-bold tracking-tight-headline text-on-surface;
+  }
+
+  /* === Background Patterns === */
+  .tech-pattern {
+    background-image: radial-gradient(circle at 2px 2px, #c7c4d8 1px, transparent 0);
+    background-size: 48px 48px;
+    opacity: 0.15;
+  }
+
+  /* === Glass Card === */
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl shadow-tonal-lg;
+  }
+}

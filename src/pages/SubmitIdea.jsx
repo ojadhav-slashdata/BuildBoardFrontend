@@ -11,7 +11,6 @@ export default function SubmitIdea() {
   const [titleCount, setTitleCount] = useState(0);
   const [descCount, setDescCount] = useState(0);
 
-  // User search for project owner
   const [users, setUsers] = useState([]);
   const [ownerSearch, setOwnerSearch] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
@@ -64,190 +63,124 @@ export default function SubmitIdea() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="bg-white border border-gray-200 rounded-2xl p-7 sm:p-8 max-w-[680px] mx-auto">
-        {/* Header */}
-        <div className="mb-7">
-          <p className="text-xl font-medium text-gray-900 m-0 mb-1">
-            Submit new idea
-            <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 ml-2 align-middle">
-              Idea submission
-            </span>
-          </p>
-          <p className="text-sm text-gray-500 m-0">
-            Share your idea with the team. A manager will review and approve it before it goes live for bidding.
-          </p>
-        </div>
+    <div className="max-w-4xl mx-auto">
+      {/* Header */}
+      <div className="mb-10">
+        <button onClick={() => navigate('/portal')} className="flex items-center gap-1 text-primary font-semibold text-sm mb-4 hover:opacity-80 transition">
+          <span className="material-symbols-outlined text-sm">arrow_back</span>
+          Back to Projects
+        </button>
+        <h1 className="section-heading text-4xl lg:text-5xl mb-4">Submit new idea</h1>
+        <p className="text-lg text-on-surface-variant leading-relaxed max-w-2xl">
+          Fill in the details below to bring your vision to life. Your submission will be routed to the appropriate innovation review board.
+        </p>
+      </div>
 
-        <form onSubmit={handleSubmit}>
-          {/* Title */}
-          <div className="mb-5">
-            <div className="flex justify-between items-baseline mb-1.5">
-              <label className="text-sm font-medium text-gray-900">
-                Title <span className="text-red-500">*</span>
-              </label>
-              <span className={`text-xs ${titleCount > 108 ? 'text-amber-600' : 'text-gray-400'}`}>
-                {titleCount} / 120
-              </span>
-            </div>
-            <input
-              type="text"
-              required
-              maxLength={120}
-              value={form.title}
-              onChange={update('title')}
-              placeholder="Give your idea a clear, descriptive name"
-              className="w-full px-3 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition"
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-12">
+        {/* Section 1: General Information */}
+        <section className="surface-card-elevated p-8 lg:p-10">
+          <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
+            <span className="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-sm font-bold">1</span>
+            General Information
+          </h3>
 
-          {/* Description */}
-          <div className="mb-5">
-            <div className="flex justify-between items-baseline mb-1.5">
-              <label className="text-sm font-medium text-gray-900">
-                Description <span className="text-red-500">*</span>
-              </label>
-              <span className={`text-xs ${descCount < 50 ? 'text-amber-600' : 'text-green-600'}`}>
-                {descCount < 50 ? `${descCount} / min 50` : `${descCount} chars ✓`}
-              </span>
-            </div>
-            <textarea
-              required
-              value={form.description}
-              onChange={update('description')}
-              placeholder="Describe the problem you're solving and why it matters to the team..."
-              className="w-full px-3 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition resize-y min-h-[96px] leading-relaxed"
-              rows={4}
-            />
-            <p className="text-xs text-gray-400 mt-1">
-              Minimum 50 characters. Include the problem, proposed solution, and expected impact.
-            </p>
-          </div>
-
-          {/* Category + Project Owner row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+          <div className="space-y-8">
+            {/* Title */}
             <div>
-              <div className="mb-1.5">
-                <label className="text-sm font-medium text-gray-900">
-                  Category <span className="text-red-500">*</span>
-                </label>
+              <div className="flex justify-between items-baseline mb-2">
+                <label className="text-sm font-semibold text-on-surface-variant">Title <span className="text-error">*</span></label>
+                <span className={`text-xs ${titleCount > 108 ? 'text-amber-600' : 'text-on-surface-variant/50'}`}>{titleCount} / 120</span>
               </div>
-              <select
-                required
-                value={form.category}
-                onChange={update('category')}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition appearance-none bg-no-repeat bg-[right_12px_center] cursor-pointer"
-                style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E\")", paddingRight: '32px' }}
-              >
-                <option value="">Select a category</option>
-                {categories.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
+              <input type="text" required maxLength={120} value={form.title} onChange={update('title')} placeholder="Enter a descriptive title for your idea" className="input-field w-full" />
             </div>
 
-            <div ref={dropdownRef} className="relative">
-              <div className="mb-1.5">
-                <label className="text-sm font-medium text-gray-900">
-                  Project owner <span className="text-red-500">*</span>
-                </label>
+            {/* Description */}
+            <div>
+              <div className="flex justify-between items-baseline mb-2">
+                <label className="text-sm font-semibold text-on-surface-variant">Description <span className="text-error">*</span></label>
+                <span className={`text-xs ${descCount < 50 ? 'text-amber-600' : 'text-emerald-600'}`}>
+                  {descCount < 50 ? `${descCount} / min 50` : `${descCount} chars`}
+                </span>
               </div>
-              <div className="relative">
-                <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 opacity-40 pointer-events-none" viewBox="0 0 16 16" fill="none">
-                  <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" strokeWidth="1.5"/>
-                  <path d="M10 10L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-                <input
-                  type="text"
-                  value={ownerSearch}
-                  onChange={(e) => { setOwnerSearch(e.target.value); setShowDropdown(true); }}
-                  onFocus={() => setShowDropdown(true)}
-                  placeholder="Search by name or email..."
-                  className="w-full pl-8 pr-3 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition"
-                />
-                {showDropdown && filteredUsers.length > 0 && (
-                  <div className="absolute z-10 top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-                    {filteredUsers.slice(0, 8).map(u => (
-                      <button
-                        key={u.id || u.email}
-                        type="button"
-                        onClick={() => selectOwner(u)}
-                        className="w-full text-left px-3 py-2 hover:bg-indigo-50 flex items-center gap-2 text-sm"
-                      >
-                        {u.pictureUrl ? (
-                          <img src={u.pictureUrl} alt="" className="w-6 h-6 rounded-full" />
-                        ) : (
-                          <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-xs text-indigo-600 font-medium">
-                            {(u.name || u.email || '?')[0].toUpperCase()}
+              <textarea required value={form.description} onChange={update('description')} placeholder="Explain the problem you're solving and your proposed solution..." className="input-field w-full resize-y min-h-[120px] leading-relaxed" rows={5} />
+              <p className="text-xs text-on-surface-variant/50 mt-2">Minimum 50 characters. Include the problem, proposed solution, and expected impact.</p>
+            </div>
+
+            {/* Category + Owner */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-on-surface-variant mb-2">Category <span className="text-error">*</span></label>
+                <select required value={form.category} onChange={update('category')} className="input-field w-full appearance-none cursor-pointer">
+                  <option value="">Select a category</option>
+                  {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+
+              <div ref={dropdownRef} className="relative">
+                <label className="block text-sm font-semibold text-on-surface-variant mb-2">Project owner <span className="text-error">*</span></label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-lg">search</span>
+                  <input type="text" value={ownerSearch} onChange={(e) => { setOwnerSearch(e.target.value); setShowDropdown(true); }} onFocus={() => setShowDropdown(true)} placeholder="Search by name or email..." className="input-field w-full pl-10" />
+                  {showDropdown && filteredUsers.length > 0 && (
+                    <div className="absolute z-10 top-full left-0 right-0 mt-2 surface-card-elevated max-h-48 overflow-y-auto">
+                      {filteredUsers.slice(0, 8).map(u => (
+                        <button key={u.id || u.email} type="button" onClick={() => selectOwner(u)} className="w-full text-left px-4 py-3 hover:bg-surface-container-low flex items-center gap-3 text-sm transition-colors">
+                          {u.pictureUrl ? (
+                            <img src={u.pictureUrl} alt="" className="w-7 h-7 rounded-full" />
+                          ) : (
+                            <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-xs text-primary font-bold">
+                              {(u.name || u.email || '?')[0].toUpperCase()}
+                            </div>
+                          )}
+                          <div>
+                            <div className="text-on-surface font-medium">{u.name}</div>
+                            <div className="text-on-surface-variant/60 text-xs">{u.email}</div>
                           </div>
-                        )}
-                        <div>
-                          <div className="text-gray-900 font-medium">{u.name}</div>
-                          <div className="text-gray-400 text-xs">{u.email}</div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-              <p className="text-xs text-gray-400 mt-1">
-                The person who raised this idea and can answer requirement questions.
-              </p>
             </div>
           </div>
+        </section>
 
-          {/* Project Type */}
-          <div className="mb-5">
-            <div className="mb-1.5">
-              <label className="text-sm font-medium text-gray-900">
-                Project type <span className="text-red-500">*</span>
-              </label>
-            </div>
-            <div className="grid grid-cols-2 gap-2.5">
-              <button
-                type="button"
-                onClick={() => setForm(f => ({ ...f, projectType: 'POC' }))}
-                className={`p-3 border rounded-lg text-left transition ${
-                  form.projectType === 'POC'
-                    ? 'border-indigo-500 border-[1.5px] bg-indigo-50'
-                    : 'border-gray-200 bg-gray-50 hover:border-gray-300'
-                }`}
-              >
-                <span className={`text-sm font-medium block mb-0.5 ${form.projectType === 'POC' ? 'text-indigo-800' : 'text-gray-900'}`}>
-                  POC
-                </span>
-                <span className={`text-xs block leading-snug ${form.projectType === 'POC' ? 'text-indigo-600' : 'text-gray-500'}`}>
-                  Quick prototype to validate the idea. Smaller scope, faster delivery.
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setForm(f => ({ ...f, projectType: 'FullProduct' }))}
-                className={`p-3 border rounded-lg text-left transition ${
-                  form.projectType === 'FullProduct'
-                    ? 'border-indigo-500 border-[1.5px] bg-indigo-50'
-                    : 'border-gray-200 bg-gray-50 hover:border-gray-300'
-                }`}
-              >
-                <span className={`text-sm font-medium block mb-0.5 ${form.projectType === 'FullProduct' ? 'text-indigo-800' : 'text-gray-900'}`}>
-                  Full product
-                </span>
-                <span className={`text-xs block leading-snug ${form.projectType === 'FullProduct' ? 'text-indigo-600' : 'text-gray-500'}`}>
-                  End-to-end production build. Larger scope, longer timeline.
-                </span>
-              </button>
-            </div>
+        {/* Section 2: Project Scope */}
+        <section>
+          <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
+            <span className="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-sm font-bold">2</span>
+            Project Scope
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <button type="button" onClick={() => setForm(f => ({ ...f, projectType: 'POC' }))} className={`group relative bg-surface-container-low p-8 rounded-4xl cursor-pointer transition-all duration-300 text-left ${form.projectType === 'POC' ? 'ring-2 ring-primary/30 bg-surface-container-lowest' : 'hover:bg-surface-container-lowest'}`}>
+              <div className="w-14 h-14 bg-surface-container-high rounded-2xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-3xl">biotech</span>
+              </div>
+              <h4 className="text-xl font-bold mb-2 text-on-surface">POC</h4>
+              <p className="text-sm text-on-surface-variant leading-relaxed">Proof of Concept focus. Quick prototype to validate the idea with minimal overhead.</p>
+            </button>
+            <button type="button" onClick={() => setForm(f => ({ ...f, projectType: 'FullProduct' }))} className={`group relative bg-surface-container-low p-8 rounded-4xl cursor-pointer transition-all duration-300 text-left ${form.projectType === 'FullProduct' ? 'ring-2 ring-primary/30 bg-surface-container-lowest' : 'hover:bg-surface-container-lowest'}`}>
+              <div className="w-14 h-14 bg-primary text-on-primary rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-3xl">rocket_launch</span>
+              </div>
+              <h4 className="text-xl font-bold mb-2 text-on-surface">Full product</h4>
+              <p className="text-sm text-on-surface-variant leading-relaxed">Comprehensive development track. Full lifecycle from design to deployment.</p>
+            </button>
           </div>
+        </section>
 
-          <hr className="border-gray-100 my-6" />
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-800 transition disabled:opacity-50"
-          >
+        {/* Submit */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-8">
+          <div className="text-sm text-on-surface-variant/50 flex items-center gap-2">
+            <span className="material-symbols-outlined text-lg">info</span>
+            Progress is automatically saved as a draft
+          </div>
+          <button type="submit" disabled={submitting} className="btn-primary w-full md:w-auto px-10 py-4 text-base shadow-xl shadow-primary/20 hover:shadow-2xl hover:scale-[1.02] disabled:opacity-50">
             {submitting ? 'Submitting...' : 'Submit idea for review'}
           </button>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   );
 }

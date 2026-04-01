@@ -13,25 +13,25 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 px-6 py-2.5 flex items-center justify-between sticky top-0 z-30">
+    <nav className="glass-nav px-8 py-3 flex items-center justify-between sticky top-0 z-50">
       <div className="flex items-center gap-3">
-        <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">BuildBoard</span>
-        <span className="hidden sm:block text-xs text-gray-400 border-l border-gray-200 pl-3">Innovation Portal</span>
+        <span className="text-2xl font-manrope font-extrabold tracking-tighter text-on-background">Build<span className="text-primary">Board</span></span>
+        <span className="hidden sm:block text-xs text-on-surface-variant/60 pl-3 ml-3">Innovation Portal</span>
       </div>
 
       {/* DEV Role Switcher */}
       {user && (
-        <div className="flex items-center gap-2 border border-dashed border-gray-300 rounded-lg px-2 py-1">
-          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Dev</span>
-          <div className="inline-flex bg-gray-100 rounded-lg p-0.5">
+        <div className="flex items-center gap-2 bg-surface-container-low rounded-full px-2 py-1">
+          <span className="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-wider px-1">Dev</span>
+          <div className="inline-flex bg-surface-container-high rounded-full p-0.5">
             {devRoles.map((role) => (
               <button
                 key={role}
                 onClick={() => switchRole(role)}
-                className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-200 ${
+                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 ${
                   user.role === role
-                    ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700'
+                    ? 'bg-gradient-to-r from-primary to-primary-container text-white shadow-sm'
+                    : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               >
                 {role}
@@ -43,19 +43,19 @@ export default function Navbar() {
 
       <div className="flex items-center gap-3">
         {user && (
-          <div className="flex items-center gap-2.5 bg-gray-50 rounded-full pl-1 pr-3 py-1">
+          <div className="flex items-center gap-2.5 bg-surface-container-low rounded-full pl-1 pr-3 py-1">
             {user.pictureUrl ? (
-              <img src={user.pictureUrl} alt={user.name} className="h-7 w-7 rounded-full" referrerPolicy="no-referrer" />
+              <img src={user.pictureUrl} alt={user.name} className="h-8 w-8 rounded-full" referrerPolicy="no-referrer" />
             ) : (
-              <span className="h-7 w-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">{(user.name || '?')[0]}</span>
+              <span className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">{(user.name || '?')[0]}</span>
             )}
-            <span className="text-sm font-medium text-gray-700 hidden sm:block">{user.name}</span>
-            <span className="text-xs text-gray-400 hidden sm:block">({user.role})</span>
+            <span className="text-sm font-medium text-on-surface hidden sm:block">{user.name}</span>
+            <span className="text-xs text-on-surface-variant/60 hidden sm:block">({user.role})</span>
           </div>
         )}
         <button
           onClick={handleLogout}
-          className="text-sm text-gray-400 hover:text-red-500 px-2 py-1.5 rounded-lg hover:bg-red-50 transition-all duration-200"
+          className="text-sm text-on-surface-variant hover:text-error px-2 py-1.5 rounded-full hover:bg-error-container/50 transition-all duration-200"
         >
           Logout
         </button>
