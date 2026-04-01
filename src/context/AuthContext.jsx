@@ -6,16 +6,33 @@ import api from '../axiosConfig';
 export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  // TODO: Re-enable Firebase auth once domain is configured
-  const [token, setToken] = useState('dev-bypass-token');
-  const [user, setUser] = useState({
-    id: 'dev-user',
-    email: 'dev@buildboard.local',
-    name: 'Dev User',
-    pictureUrl: null,
-    role: 'Admin',
-  });
-  const [loading, setLoading] = useState(false);
+  const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Sync Firebase auth state on mount / token refresh
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        const idToken = await firebaseUser.getIdToken();
+        setToken(idToken);
+        setUser((prev) =>
+          prev ?? {
+            id: firebaseUser.uid,
+            email: firebaseUser.email,
+            name: firebaseUser.displayName,
+            pictureUrl: firebaseUser.photoURL,
+            role: 'Employee',
+          },
+        );
+      } else {
+        setToken(null);
+        setUser(null);
+      }
+      setLoading(false);
+    });
+    return unsubscribe;
+  }, []);
 
   const login = useCallback((tokenValue, userData) => {
     setToken(tokenValue);
