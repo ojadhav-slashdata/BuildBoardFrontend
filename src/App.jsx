@@ -5,7 +5,8 @@ import { useAuth } from './hooks/useAuth';
 import Login from './pages/Login';
 
 function SmartRedirect() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) return null;
   return <Navigate to={isAuthenticated ? '/portal' : '/login'} replace />;
 }
 import Portal from './pages/Portal';
