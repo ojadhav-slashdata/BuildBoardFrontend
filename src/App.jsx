@@ -13,6 +13,7 @@ import BidReview from './pages/BidReview';
 import Analytics from './pages/Analytics';
 import AdminUsers from './pages/AdminUsers';
 import Feedback from './pages/Feedback';
+import BidResults from './pages/BidResults';
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/ideas/:id" element={<IdeaDetail />} />
 
         {/* Employee */}
+        <Route path="/ideas/:ideaId/results" element={<ProtectedRoute><BidResults /></ProtectedRoute>} />
         <Route path="/ideas/:id/bid" element={<PlaceBid />} />
         <Route path="/my-bids" element={<MyBids />} />
         <Route path="/profile" element={<Profile />} />
