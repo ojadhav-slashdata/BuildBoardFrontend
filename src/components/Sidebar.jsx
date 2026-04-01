@@ -3,18 +3,18 @@ import { useAuth } from '../hooks/useAuth';
 
 const linksByRole = {
   Employee: [
-    { to: '/portal', label: 'Portal', icon: 'dashboard' },
+    { to: '/portal', label: 'Home', icon: 'dashboard' },
     { to: '/my-bids', label: 'My Bids', icon: 'gavel' },
     { to: '/profile', label: 'Profile', icon: 'person' },
   ],
   Manager: [
-    { to: '/portal', label: 'Portal', icon: 'dashboard' },
+    { to: '/portal', label: 'Home', icon: 'dashboard' },
     { to: '/approvals', label: 'Approvals', icon: 'fact_check' },
     { to: '/analytics', label: 'Analytics', icon: 'monitoring' },
     { to: '/profile', label: 'Profile', icon: 'person' },
   ],
   Admin: [
-    { to: '/portal', label: 'Portal', icon: 'dashboard' },
+    { to: '/portal', label: 'Home', icon: 'dashboard' },
     { to: '/approvals', label: 'Approvals', icon: 'fact_check' },
     { to: '/analytics', label: 'Analytics', icon: 'monitoring' },
     { to: '/admin/users', label: 'Users', icon: 'group' },
