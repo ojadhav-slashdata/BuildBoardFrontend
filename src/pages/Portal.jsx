@@ -211,7 +211,17 @@ export default function Portal() {
   }, []);
 
   // ── Filter ideas ────────────────────────────────────────────────────────────
+  const isEmployee = user?.role === 'Employee';
   const filtered = ideas.filter((idea) => {
+    // Employee: only see BiddingOpen/Approved ideas + ideas assigned to / completed by them
+    if (isEmployee) {
+      const isOpenForBidding = idea.status === 'BiddingOpen' || idea.status === 'Approved';
+      const isMyIdea = idea.assignedTo === user?.id || idea.submittedBy === user?.id ||
+        idea.assignedTo?._id === user?.id || idea.submittedBy?._id === user?.id ||
+        idea.teamMembers?.some((m) => m.userId === user?.id || m._id === user?.id);
+      const isActiveOrDone = ['Assigned', 'InProgress', 'Completed'].includes(idea.status) && isMyIdea;
+      if (!isOpenForBidding && !isActiveOrDone) return false;
+    }
     if (filters.search && !idea.title?.toLowerCase().includes(filters.search.toLowerCase())) return false;
     if (filters.category !== 'All' && idea.category !== filters.category) return false;
     if (filters.status   !== 'All' && idea.status   !== filters.status)   return false;
