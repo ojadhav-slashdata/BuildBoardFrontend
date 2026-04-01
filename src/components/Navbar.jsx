@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 const devRoles = ['Employee', 'Manager', 'Admin'];
@@ -15,7 +15,7 @@ export default function Navbar() {
   return (
     <nav className="glass-nav px-8 py-3 flex items-center justify-between sticky top-0 z-50">
       <div className="flex items-center gap-3">
-        <span className="text-2xl font-manrope font-extrabold tracking-tighter text-on-background">Build<span className="text-primary">Board</span></span>
+        <Link to="/" className="text-2xl font-manrope font-extrabold tracking-tighter text-on-background hover:opacity-80 transition">Build<span className="text-primary">Board</span></Link>
         <span className="hidden sm:block text-xs text-on-surface-variant/60 pl-3 ml-3">Innovation Portal</span>
       </div>
 

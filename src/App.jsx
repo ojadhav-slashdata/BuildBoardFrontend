@@ -1,7 +1,13 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
+import { useAuth } from './hooks/useAuth';
 import Login from './pages/Login';
+
+function SmartRedirect() {
+  const { isAuthenticated } = useAuth();
+  return <Navigate to={isAuthenticated ? '/portal' : '/login'} replace />;
+}
 import Portal from './pages/Portal';
 import SubmitIdea from './pages/SubmitIdea';
 import PlaceBid from './pages/PlaceBid';
@@ -83,7 +89,8 @@ export default function App() {
         />
       </Route>
 
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<SmartRedirect />} />
+      <Route path="*" element={<SmartRedirect />} />
     </Routes>
   );
 }
