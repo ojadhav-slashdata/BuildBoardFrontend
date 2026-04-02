@@ -106,7 +106,7 @@ export default function IdeaDetail() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <button onClick={() => navigate(-1)} className="text-sm text-primary hover:underline mb-3">← Back</button>
+      <button onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/all-ideas')} className="text-sm text-primary hover:underline mb-3">← Back</button>
 
       {/* Header */}
       <div className="surface-card p-5 mb-4">

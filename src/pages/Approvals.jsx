@@ -76,6 +76,9 @@ export default function Approvals() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Track if opened via direct link (from IdeaDetail/AllIdeas)
+  const [cameFromDirectLink, setCameFromDirectLink] = useState(false);
+
   // Check for direct idea review link
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -84,6 +87,7 @@ export default function Approvals() {
     if (directIdeaId && ideas.length > 0) {
       const idea = ideas.find(i => (i._id || i.id) === directIdeaId);
       if (idea) {
+        setCameFromDirectLink(true);
         if (action === 'reject') openRejectForm(idea);
         else openApproveForm(idea);
       }
@@ -169,9 +173,15 @@ export default function Approvals() {
   };
 
   const backToList = () => {
+    if (cameFromDirectLink) {
+      navigate(-1);
+      return;
+    }
     setScreen('list');
     setSelectedIdea(null);
     fetchIdeas();
+    // Clean URL params
+    window.history.replaceState({}, '', window.location.pathname);
   };
 
   if (loading) return <div className="flex justify-center py-20 text-on-surface-variant/60">Loading...</div>;
