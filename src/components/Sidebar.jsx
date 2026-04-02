@@ -109,17 +109,7 @@ export default function Sidebar() {
 
   return (
     <aside className="hidden lg:flex flex-col w-64 bg-slate-100/50 backdrop-blur-xl min-h-[calc(100vh-57px)] border-r-0">
-      <div className="flex items-center gap-3 px-4 py-8">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
-          <span className="material-symbols-outlined text-white">tactic</span>
-        </div>
-        <div>
-          <h1 className="text-lg font-bold text-slate-900 font-headline tracking-tight">BuildBoard</h1>
-          <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Arctic Clarity</p>
-        </div>
-      </div>
-
-      <nav className="flex-1 px-4 space-y-0.5">
+      <nav className="flex-1 px-4 pt-4 space-y-0.5">
         {/* MENU section */}
         <SectionTitle>Menu</SectionTitle>
         {sections.MENU.map(renderLink)}

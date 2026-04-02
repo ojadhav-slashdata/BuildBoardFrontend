@@ -38,11 +38,14 @@ export default function Navbar() {
 
   return (
     <nav className="h-16 px-8 flex items-center justify-between sticky top-0 z-40 bg-slate-50/70 backdrop-blur-xl shadow-xl shadow-sky-900/5">
-      <div className="flex items-center gap-4 flex-1">
-        <div className="relative w-full max-w-md">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
-          <input type="text" placeholder="Search projects..." className="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-slate-400 outline-none" />
-        </div>
+      <div className="flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
+            <span className="material-symbols-outlined text-white text-lg">tactic</span>
+          </div>
+          <span className="text-lg font-bold font-manrope tracking-tight text-on-surface hidden sm:block">Build<span style={{ color: 'var(--c-primary, #3525cd)' }}>Board</span></span>
+        </Link>
+        <span className="hidden sm:block text-xs text-on-surface-variant/60 pl-3 ml-1 border-l border-outline-variant/20">Innovation Portal</span>
       </div>
 
       <div className="flex items-center gap-3">
@@ -79,7 +82,7 @@ export default function Navbar() {
             </button>
 
             {showMenu && (
-              <div className="absolute right-0 top-full mt-2 w-72 bg-surface-container-lowest rounded-2xl shadow-tonal-lg z-50 overflow-hidden">
+              <div className="absolute right-0 top-full mt-2 w-72 bg-surface-container-lowest rounded-lg shadow-tonal-lg z-50 overflow-hidden">
                 {/* User info */}
                 <div className="p-4 border-b border-surface-container-high">
                   <p className="text-sm font-bold text-on-surface">{user.name}</p>
