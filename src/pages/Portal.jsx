@@ -103,6 +103,7 @@ export default function Portal() {
   // Needs Your Attention — role-specific actionable items
   const myBidIdeaIds = new Set((myBids || []).map((b) => b.idea?._id || b.idea));
   const isAdmin = user?.role === 'Admin';
+  const isManager = user?.role === 'Manager' || user?.role === 'manager';
 
   const needsAttention = [];
 
