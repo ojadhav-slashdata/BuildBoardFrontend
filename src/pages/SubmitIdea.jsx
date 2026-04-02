@@ -4,6 +4,14 @@ import api from '../axiosConfig';
 
 const categories = ['Tech', 'HR', 'Finance', 'Operations', 'Other'];
 
+const CATEGORY_APPROVERS = {
+  'Tech': { name: 'Sarah Chen', email: 'sarah.chen@company.com' },
+  'HR': { name: 'Emma Taylor', email: 'emma.taylor@company.com' },
+  'Finance': { name: 'Omar Hassan', email: 'omar.hassan@company.com' },
+  'Operations': { name: 'Omar Hassan', email: 'omar.hassan@company.com' },
+  'Other': { name: 'Sarah Chen', email: 'sarah.chen@company.com' },
+};
+
 export default function SubmitIdea() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ title: '', description: '', category: '', projectType: 'POC', projectOwner: '', businessValue: [], resources: '', challenges: '' });
@@ -52,7 +60,7 @@ export default function SubmitIdea() {
     if (form.businessValue.length === 0) { alert('Please select at least one business value.'); return; }
     if (descCount < 50) { alert('Description must be at least 50 characters.'); return; }
     if (!form.category) { alert('Please select a category.'); return; }
-    if (!form.projectOwner) { alert('Please select a project owner.'); return; }
+    if (!form.projectOwner) { alert('Please select an assigned approver.'); return; }
     setSubmitting(true);
     try {
       let attachment = null;
@@ -129,14 +137,23 @@ export default function SubmitIdea() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-on-surface-variant mb-2">Category <span className="text-error">*</span></label>
-                <select required value={form.category} onChange={update('category')} className="input-field w-full appearance-none cursor-pointer">
+                <select required value={form.category} onChange={(e) => {
+                  const cat = e.target.value;
+                  setForm(f => ({ ...f, category: cat }));
+                  // Auto-fill approver based on category
+                  const approver = CATEGORY_APPROVERS[cat];
+                  if (approver) {
+                    setForm(f => ({ ...f, projectOwner: approver.name }));
+                    setOwnerSearch(approver.name);
+                  }
+                }} className="input-field w-full appearance-none cursor-pointer">
                   <option value="">Select a category</option>
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
 
               <div ref={dropdownRef} className="relative">
-                <label className="block text-sm font-semibold text-on-surface-variant mb-2">Project owner <span className="text-error">*</span></label>
+                <label className="block text-sm font-semibold text-on-surface-variant mb-2">Assigned Approver <span className="text-error">*</span></label>
                 <div className="relative">
                   <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-lg">search</span>
                   <input type="text" value={ownerSearch} onChange={(e) => { setOwnerSearch(e.target.value); setShowDropdown(true); }} onFocus={() => setShowDropdown(true)} placeholder="Search by name or email..." className="input-field w-full pl-10" />
@@ -161,6 +178,9 @@ export default function SubmitIdea() {
                   )}
                 </div>
               </div>
+              <p className="text-xs text-on-surface-variant/50 mt-2">
+                Auto-assigned based on category. Change manually if needed.
+              </p>
             </div>
           </div>
         </section>

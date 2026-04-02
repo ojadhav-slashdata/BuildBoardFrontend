@@ -113,7 +113,7 @@ export default function Portal() {
   // PendingApproval for managers
   if (isManager) {
     ideas.filter((i) => i.status === 'PendingApproval').slice(0, 2).forEach((i) => {
-      needsAttention.push({ id: i._id, type: 'review', title: i.title, sub: 'Awaiting your review', icon: 'rate_review', link: `/ideas/${i._id}` });
+      needsAttention.push({ id: i._id, type: 'review', title: i.title, sub: 'Awaiting your review', icon: 'rate_review', link: `/approvals?ideaId=${i._id}` });
     });
   }
   // Completed awaiting feedback for managers

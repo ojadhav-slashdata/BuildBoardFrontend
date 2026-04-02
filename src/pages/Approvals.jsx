@@ -50,6 +50,16 @@ export default function Approvals() {
     fetchIdeas();
   }, []);
 
+  // Check for direct idea review link
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const directIdeaId = params.get('ideaId');
+    if (directIdeaId && ideas.length > 0) {
+      const idea = ideas.find(i => (i._id || i.id) === directIdeaId);
+      if (idea) openApproveForm(idea);
+    }
+  }, [ideas]);
+
   const fetchIdeas = async () => {
     try {
       const res = await api.get('/ideas?status=PendingApproval');
@@ -384,8 +394,37 @@ export default function Approvals() {
           </div>
         </div>
         <div className="mb-5">
-          <label className="text-sm font-medium text-on-surface block mb-1.5">Project owner</label>
-          <input type="text" value={projectOwner} onChange={e => setProjectOwner(e.target.value)} className="input-field w-full px-2.5 py-2 rounded-lg text-sm outline-none focus:border-primary" />
+          <label className="text-sm font-medium text-on-surface block mb-1.5">
+            Assign Project Owner <span className="text-red-500">*</span>
+          </label>
+          <p className="text-xs text-on-surface-variant/60 mb-3">
+            The project owner provides requirements and answers builder questions. They can be the idea creator or someone from the relevant department.
+          </p>
+
+          {/* Quick assign options */}
+          <div className="flex gap-2 mb-3">
+            <button type="button" onClick={() => setProjectOwner(selectedIdea?.projectOwner || selectedIdea?.submittedByName || 'Idea Creator')}
+              className={`px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+                projectOwner === (selectedIdea?.projectOwner || selectedIdea?.submittedByName || 'Idea Creator')
+                  ? 'bg-primary text-on-primary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
+              }`}>
+              <span className="material-symbols-outlined text-sm mr-1 align-middle">person</span>
+              Idea Creator
+            </button>
+            <button type="button" onClick={() => setProjectOwner('')}
+              className={`px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+                projectOwner !== (selectedIdea?.projectOwner || selectedIdea?.submittedByName || 'Idea Creator') && projectOwner !== ''
+                  ? 'bg-primary text-on-primary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
+              }`}>
+              <span className="material-symbols-outlined text-sm mr-1 align-middle">person_search</span>
+              Someone Else
+            </button>
+          </div>
+
+          <input type="text" value={projectOwner} onChange={e => setProjectOwner(e.target.value)}
+            placeholder="Type name of project owner..."
+            className="input-field w-full" />
+          <p className="text-xs text-on-surface-variant/40 mt-1.5">This person will be the main contact for builders working on this idea.</p>
         </div>
 
         <hr className="border-outline-variant/10 my-5" />
