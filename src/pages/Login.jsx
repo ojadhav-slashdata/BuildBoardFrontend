@@ -133,21 +133,21 @@ export default function Login() {
                       </div>
 
                       {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-base font-bold transition-colors duration-300 ${isActive ? 'text-on-surface' : 'text-on-surface-variant'}`}>
+                      <div className="flex-1 min-w-0 overflow-hidden">
+                        <p className={`text-base font-bold transition-all duration-300 ${isActive ? 'text-on-surface' : 'text-on-surface-variant'}`}>
                           {step.title}
                         </p>
-                        <p className={`text-sm transition-all duration-300 ${isActive ? 'text-on-surface-variant max-h-10 opacity-100 mt-0.5' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-                          {step.desc}
-                        </p>
+                        <div className={`overflow-hidden transition-all duration-500 ease-out ${isActive ? 'max-h-12 opacity-100' : 'max-h-0 opacity-0'}`}>
+                          <p className={`text-sm text-on-surface-variant mt-0.5 transition-transform duration-500 ease-out ${isActive ? 'translate-y-0' : 'translate-y-3'}`}>
+                            {step.desc}
+                          </p>
+                        </div>
                       </div>
 
                       {/* Active indicator */}
-                      {isActive && (
-                        <div className="flex-shrink-0">
-                          <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: step.color }} />
-                        </div>
-                      )}
+                      <div className={`flex-shrink-0 transition-all duration-300 ${isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}`}>
+                        <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: step.color }} />
+                      </div>
                     </div>
                   );
                 })}
