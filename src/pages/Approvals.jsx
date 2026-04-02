@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../axiosConfig';
 
@@ -47,8 +47,25 @@ export default function Approvals() {
   // Reject state
   const [rejectComment, setRejectComment] = useState('');
 
+  // User search for project owner assignment
+  const [users, setUsers] = useState([]);
+  const [ownerSearch, setOwnerSearch] = useState('');
+  const [showOwnerDropdown, setShowOwnerDropdown] = useState(false);
+  const ownerDropdownRef = useRef(null);
+
   useEffect(() => {
     fetchIdeas();
+    api.get('/users').then(res => setUsers(res.data || [])).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (ownerDropdownRef.current && !ownerDropdownRef.current.contains(e.target)) {
+        setShowOwnerDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   // Check for direct idea review link
@@ -84,7 +101,9 @@ export default function Approvals() {
     setMaxHours(defaultSizes[1]?.max || defaultSizes[0]?.max);
     setComplexity('Low');
     setComplexityBonus(0);
-    setProjectOwner(idea.projectOwner || '');
+    setProjectOwner('');
+    setOwnerSearch('');
+    setShowOwnerDropdown(false);
     setBidCutoff('');
     setDeliveryDate('');
     setScreen('approve-form');
@@ -109,6 +128,7 @@ export default function Approvals() {
 
   const handleApprove = async () => {
     if (!bidCutoff || !deliveryDate) { alert('Please set both dates.'); return; }
+    if (!projectOwner.trim()) { alert('Please assign a project owner.'); return; }
     setSubmitting(true);
     try {
       await api.patch(`/ideas/${selectedIdea._id || selectedIdea.id}/approve`, {
@@ -118,6 +138,7 @@ export default function Approvals() {
         expectedDeliveryDate: new Date(deliveryDate).toISOString(),
         estimatedHours: maxHours,
         projectType,
+        projectOwner,
       });
       setScreen('approve-success');
     } catch { alert('Failed to approve.'); }
@@ -225,7 +246,7 @@ export default function Approvals() {
         <div className="bg-surface-container-low rounded-lg p-3 mb-5 flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-on-surface">{selectedIdea?.title}</p>
-            <p className="text-xs text-on-surface-variant">Category: {selectedIdea?.category} · Owner: {selectedIdea?.projectOwner || 'Not set'}</p>
+            <p className="text-xs text-on-surface-variant">Category: {selectedIdea?.category} · Approver: {selectedIdea?.projectOwner || 'Not set'}</p>
           </div>
           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${projectType === 'FullProduct' ? 'bg-green-50 text-green-800' : 'bg-primary/10 text-primary'}`}>
             {projectType === 'FullProduct' ? 'Full product' : 'POC'}
@@ -270,7 +291,7 @@ export default function Approvals() {
               <p className="text-sm font-medium text-on-surface">{selectedIdea?.category || 'Not set'}</p>
             </div>
             <div>
-              <p className="text-xs text-on-surface-variant/60">Project Owner</p>
+              <p className="text-xs text-on-surface-variant/60">Assigned Approver</p>
               <p className="text-sm font-medium text-on-surface">{selectedIdea?.projectOwner || 'Not set'}</p>
             </div>
             <div>
@@ -437,17 +458,25 @@ export default function Approvals() {
 
           {/* Quick assign options */}
           <div className="flex gap-2 mb-3">
-            <button type="button" onClick={() => setProjectOwner(selectedIdea?.projectOwner || selectedIdea?.submittedByName || 'Idea Creator')}
+            <button type="button" onClick={() => {
+              const email = selectedIdea?.submittedByEmail || '';
+              setProjectOwner(email);
+              setOwnerSearch('');
+              setShowOwnerDropdown(false);
+            }}
               className={`px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                projectOwner === (selectedIdea?.projectOwner || selectedIdea?.submittedByName || 'Idea Creator')
+                projectOwner && projectOwner === selectedIdea?.submittedByEmail
                   ? 'bg-primary text-on-primary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
               }`}>
               <span className="material-symbols-outlined text-sm mr-1 align-middle">person</span>
-              Idea Creator
+              Idea Creator{selectedIdea?.submittedByName ? ` (${selectedIdea.submittedByName})` : ''}
             </button>
-            <button type="button" onClick={() => setProjectOwner('')}
+            <button type="button" onClick={() => {
+              setProjectOwner('');
+              setOwnerSearch('');
+            }}
               className={`px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                projectOwner !== (selectedIdea?.projectOwner || selectedIdea?.submittedByName || 'Idea Creator') && projectOwner !== ''
+                projectOwner && projectOwner !== selectedIdea?.submittedByEmail
                   ? 'bg-primary text-on-primary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
               }`}>
               <span className="material-symbols-outlined text-sm mr-1 align-middle">person_search</span>
@@ -455,9 +484,51 @@ export default function Approvals() {
             </button>
           </div>
 
-          <input type="text" value={projectOwner} onChange={e => setProjectOwner(e.target.value)}
-            placeholder="Type name of project owner..."
-            className="input-field w-full" />
+          {/* User search dropdown */}
+          <div ref={ownerDropdownRef} className="relative">
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none" style={{ fontSize: '18px' }}>search</span>
+              <input type="text"
+                value={ownerSearch || projectOwner}
+                onChange={e => { setOwnerSearch(e.target.value); setProjectOwner(''); setShowOwnerDropdown(true); }}
+                onFocus={() => setShowOwnerDropdown(true)}
+                placeholder="Search by name or email…"
+                className="input-field w-full pl-10" />
+            </div>
+            {showOwnerDropdown && (ownerSearch || '').length > 0 && (() => {
+              const filtered = users.filter(u =>
+                (u.name || '').toLowerCase().includes((ownerSearch || '').toLowerCase()) ||
+                (u.email || '').toLowerCase().includes((ownerSearch || '').toLowerCase())
+              );
+              return filtered.length > 0 ? (
+                <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-surface-container-lowest rounded-xl shadow-tonal-lg max-h-52 overflow-y-auto border border-outline-variant/20">
+                  {filtered.slice(0, 8).map(u => (
+                    <button key={u.id || u.email} type="button"
+                      onClick={() => { setProjectOwner(u.email); setOwnerSearch(''); setShowOwnerDropdown(false); }}
+                      className="w-full text-left px-4 py-2.5 hover:bg-surface-container-low flex items-center gap-3 text-sm transition-colors first:rounded-t-xl last:rounded-b-xl">
+                      {u.pictureUrl ? (
+                        <img src={u.pictureUrl} alt="" className="w-7 h-7 rounded-full flex-shrink-0 object-cover" referrerPolicy="no-referrer" />
+                      ) : (
+                        <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-xs text-primary font-bold flex-shrink-0">
+                          {(u.name || u.email || '?')[0].toUpperCase()}
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <div className="text-on-surface font-medium truncate text-sm">{u.name}</div>
+                        <div className="text-on-surface-variant/60 text-xs truncate">{u.email}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              ) : null;
+            })()}
+          </div>
+          {projectOwner && (
+            <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-primary/5 rounded-lg border border-primary/20">
+              <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
+              <span className="text-sm font-medium text-on-surface">{projectOwner}</span>
+            </div>
+          )}
           <p className="text-xs text-on-surface-variant/40 mt-1.5">This person will be the main contact for builders working on this idea.</p>
         </div>
 
@@ -502,7 +573,7 @@ export default function Approvals() {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <h3 className="text-sm font-medium font-manrope text-on-surface">{idea.title}</h3>
-                  <p className="text-xs text-on-surface-variant mt-0.5">{idea.category} · Owner: {idea.projectOwner || 'Not set'}</p>
+                  <p className="text-xs text-on-surface-variant mt-0.5">{idea.category} · Approver: {idea.projectOwner || 'Not set'}</p>
                 </div>
                 <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${idea.projectType === 'FullProduct' ? 'bg-green-50 text-green-800' : 'bg-primary/10 text-primary'}`}>
                   {idea.projectType === 'FullProduct' ? 'Full product' : 'POC'}

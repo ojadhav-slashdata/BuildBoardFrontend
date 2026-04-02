@@ -18,7 +18,10 @@ export default function BrowseIdeas() {
       .finally(() => setLoading(false));
   }, []);
 
-  const filtered = ideas.filter(idea => {
+  // Exclude ideas whose bid cutoff has already passed
+  const openIdeas = ideas.filter(i => !i.bidCutoffDate || new Date(i.bidCutoffDate).getTime() > Date.now());
+
+  const filtered = openIdeas.filter(idea => {
     if (filters.search && !idea.title?.toLowerCase().includes(filters.search.toLowerCase())) return false;
     if (filters.category !== 'All' && idea.category !== filters.category) return false;
     if (filters.size !== 'All' && idea.size !== filters.size) return false;
@@ -50,12 +53,12 @@ export default function BrowseIdeas() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         <div className="bg-surface-container-lowest p-5 rounded-2xl text-center">
-          <p className="text-3xl font-bold font-manrope text-primary">{ideas.length}</p>
+          <p className="text-3xl font-bold font-manrope text-primary">{openIdeas.length}</p>
           <p className="text-xs text-on-surface-variant mt-1">Open for bidding</p>
         </div>
         <div className="bg-surface-container-lowest p-5 rounded-2xl text-center">
           <p className="text-3xl font-bold font-manrope text-amber-600">
-            {ideas.filter(i => {
+            {openIdeas.filter(i => {
               const diff = i.bidCutoffDate ? new Date(i.bidCutoffDate) - new Date() : Infinity;
               return diff > 0 && diff < 3 * 86400000;
             }).length}
@@ -64,7 +67,7 @@ export default function BrowseIdeas() {
         </div>
         <div className="bg-surface-container-lowest p-5 rounded-2xl text-center">
           <p className="text-3xl font-bold font-manrope text-emerald-600">
-            {ideas.filter(i => i.projectType === 'POC').length}
+            {openIdeas.filter(i => i.projectType === 'POC').length}
           </p>
           <p className="text-xs text-on-surface-variant mt-1">POC ideas</p>
         </div>

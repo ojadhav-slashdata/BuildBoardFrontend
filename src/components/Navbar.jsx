@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import ThemeSwitcher from './ThemeSwitcher';
+
 import NotificationBell from './NotificationBell';
 
 const MILESTONES = [2000, 4000, 6000, 8000, 10000];
@@ -49,9 +49,6 @@ export default function Navbar() {
       </div>
 
       <div className="flex items-center gap-3">
-        {/* Theme Switcher */}
-        <ThemeSwitcher />
-
         {/* Role badge (read-only) */}
         {user && (
           <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-full">

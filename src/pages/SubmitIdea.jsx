@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../axiosConfig';
 
@@ -35,14 +35,9 @@ export default function SubmitIdea() {
   const [descCount, setDescCount] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
 
-  const [users, setUsers] = useState([]);
-  const [ownerSearch, setOwnerSearch] = useState('');
-  const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef(null);
   const [categoryLeads, setCategoryLeads] = useState({});
 
   useEffect(() => {
-    api.get('/users').then(res => setUsers(res.data || [])).catch(() => {});
     api.get('/department-leads').then(res => {
       const map = {};
       for (const lead of (res.data || [])) {
@@ -52,32 +47,11 @@ export default function SubmitIdea() {
     }).catch(() => {});
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setShowDropdown(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const filteredUsers = users.filter(u =>
-    (u.name || '').toLowerCase().includes(ownerSearch.toLowerCase()) ||
-    (u.email || '').toLowerCase().includes(ownerSearch.toLowerCase())
-  );
-
   const update = (field) => (e) => {
     const val = e.target.value;
     setForm(f => ({ ...f, [field]: val }));
     if (field === 'title') setTitleCount(val.length);
     if (field === 'description') setDescCount(val.length);
-  };
-
-  const selectOwner = (user) => {
-    setForm(f => ({ ...f, projectOwner: user.name || user.email }));
-    setOwnerSearch(user.name || user.email);
-    setShowDropdown(false);
   };
 
   const toggleBusinessValue = (tag) => {
@@ -252,51 +226,30 @@ export default function SubmitIdea() {
                 </div>
               </div>
 
-              {/* Approver search */}
-              <div ref={dropdownRef} className="relative">
+              {/* Assigned Approver (read-only, auto-filled from category) */}
+              <div>
                 <label className="block text-sm font-semibold text-on-surface-variant mb-2">
-                  Assigned Approver <span className="text-error">*</span>
+                  Assigned Approver
                 </label>
-                <div className="relative">
-                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none" style={{ fontSize: '18px' }}>
-                    search
-                  </span>
-                  <input
-                    type="text"
-                    value={ownerSearch}
-                    onChange={(e) => { setOwnerSearch(e.target.value); setShowDropdown(true); }}
-                    onFocus={() => setShowDropdown(true)}
-                    placeholder="Search by name or email…"
-                    className="w-full rounded-2xl py-4 pl-11 pr-5 bg-surface-container-lowest border-none text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-slate-400"
-                  />
-
-                  {showDropdown && filteredUsers.length > 0 && (
-                    <div className="absolute z-20 top-full left-0 right-0 mt-2 bg-surface-container-lowest rounded-2xl shadow-tonal-lg max-h-52 overflow-y-auto">
-                      {filteredUsers.slice(0, 8).map(u => (
-                        <button
-                          key={u.id || u.email}
-                          type="button"
-                          onClick={() => selectOwner(u)}
-                          className="w-full text-left px-4 py-3 hover:bg-surface-container-low flex items-center gap-3 text-sm transition-colors first:rounded-t-2xl last:rounded-b-2xl"
-                        >
-                          {u.pictureUrl ? (
-                            <img src={u.pictureUrl} alt="" className="w-8 h-8 rounded-full flex-shrink-0 object-cover" />
-                          ) : (
-                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs text-primary font-bold flex-shrink-0">
-                              {(u.name || u.email || '?')[0].toUpperCase()}
-                            </div>
-                          )}
-                          <div className="min-w-0">
-                            <div className="text-on-surface font-medium truncate">{u.name}</div>
-                            <div className="text-on-surface-variant/60 text-xs truncate">{u.email}</div>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
+                <div className={`w-full rounded-2xl py-4 px-5 text-sm transition-all ${
+                  form.projectOwner
+                    ? 'bg-primary/5 border border-primary/20 text-on-surface'
+                    : 'bg-surface-container-lowest text-on-surface-variant/40'
+                }`}>
+                  {form.projectOwner ? (
+                    <span className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-primary" style={{ fontSize: '18px' }}>verified_user</span>
+                      {form.projectOwner}
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>person_off</span>
+                      Select a category to assign approver
+                    </span>
                   )}
                 </div>
                 <p className="text-xs text-on-surface-variant/50 mt-2">
-                  Auto-assigned based on category. Change manually if needed.
+                  Auto-assigned based on category's department lead.
                 </p>
               </div>
             </div>

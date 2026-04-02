@@ -183,7 +183,7 @@ export default function Sidebar() {
 
         {/* FirsTech Logo */}
         <div className="pt-4 pb-2 flex justify-center opacity-60 hover:opacity-100 transition-opacity">
-          <img src={firstechLogo} alt="FirsTech" className="h-8 object-contain" />
+          <img src={firstechLogo} alt="FirsTech" className="h-6 object-contain" />
         </div>
       </div>
       </div>
