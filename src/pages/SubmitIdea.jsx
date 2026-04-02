@@ -62,6 +62,10 @@ export default function SubmitIdea() {
     if (descCount < 50) { alert('Description must be at least 50 characters.'); return; }
     if (!form.category) { alert('Please select a category.'); return; }
     if (!form.projectOwner) { alert('Please select an assigned approver.'); return; }
+    if (file && file.size > 3 * 1024 * 1024) {
+      alert('File is too large. Maximum size is 3MB.');
+      return;
+    }
     setSubmitting(true);
     try {
       let attachment = null;
@@ -320,7 +324,7 @@ export default function SubmitIdea() {
                   <>
                     <span className="material-symbols-outlined text-4xl text-on-surface-variant/30 mb-3">cloud_upload</span>
                     <p className="text-sm font-medium text-on-surface-variant">Drag & drop or click to upload</p>
-                    <p className="text-xs text-on-surface-variant/50 mt-1">PNG, JPG, PDF up to 10MB · Helps explain your idea visually</p>
+                    <p className="text-xs text-on-surface-variant/50 mt-1">PNG, JPG, PDF up to 3MB · Helps explain your idea visually</p>
                   </>
                 )}
               </div>
