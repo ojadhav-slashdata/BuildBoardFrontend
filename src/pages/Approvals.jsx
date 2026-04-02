@@ -576,75 +576,61 @@ export default function Approvals() {
   };
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       {/* Header */}
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-4xl font-extrabold font-manrope tracking-tight text-on-surface mb-2">Approval Queue</h1>
-          <p className="text-on-surface-variant font-medium">Review and accelerate high-impact innovation requests.</p>
+          <h1 className="text-3xl font-extrabold font-manrope tracking-tight text-on-surface mb-1">Approval Queue</h1>
+          <p className="text-sm text-on-surface-variant font-medium">Review and accelerate high-impact innovation requests.</p>
         </div>
         <div className="relative">
-          <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40" style={{ fontSize: '20px' }}>search</span>
+          <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/40" style={{ fontSize: '18px' }}>search</span>
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search requests..."
-            className="pl-12 pr-6 py-3 bg-surface-container-low border-none rounded-full w-72 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all"
+            className="pl-10 pr-5 py-2.5 bg-surface-container-low border-none rounded-full w-64 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all"
           />
         </div>
       </div>
 
-      {/* Filter chips */}
-      <div className="flex gap-3">
-        {['All', 'Pending'].map(f => (
-          <button key={f} onClick={() => setFilter(f)}
-            className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all ${
-              filter === f
-                ? 'bg-on-surface text-white shadow-md'
-                : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
-            }`}>
-            {f === 'All' ? 'All Requests' : 'Pending Review'}
-          </button>
-        ))}
-      </div>
-
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-6">
-        <div className="bg-surface-container-lowest p-8 rounded-lg shadow-[0px_20px_40px_rgba(0,101,146,0.04)] relative overflow-hidden group">
-          <div className="absolute -right-4 -top-4 w-24 h-24 bg-sky-50 rounded-full group-hover:scale-110 transition-transform duration-500 opacity-50" />
-          <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Pending Review</p>
-          <h3 className="text-5xl font-black font-manrope text-on-surface">{ideas.length}</h3>
-          <div className="mt-6 flex items-center text-primary font-bold text-sm">
+      <div className="grid grid-cols-3 gap-5">
+        <div className="bg-surface-container-lowest p-5 rounded-lg shadow-[0px_12px_24px_rgba(0,101,146,0.04)] relative overflow-hidden group">
+          <div className="absolute -right-3 -top-3 w-16 h-16 bg-sky-50 rounded-full group-hover:scale-110 transition-transform duration-500 opacity-50" />
+          <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Pending Review</p>
+          <h3 className="text-3xl font-black font-manrope text-on-surface">{ideas.length}</h3>
+          <div className="mt-3 flex items-center text-primary font-bold text-xs">
             {ideas.length > 0 ? (
-              <><span>Action Required</span><span className="material-symbols-outlined ml-1 text-sm">arrow_forward</span></>
+              <><span>Action Required</span><span className="material-symbols-outlined ml-1 text-xs">arrow_forward</span></>
             ) : (
-              <><span className="text-on-surface-variant">Queue Clear</span><span className="material-symbols-outlined ml-1 text-sm text-on-surface-variant">check_circle</span></>
+              <><span className="text-on-surface-variant">Queue Clear</span><span className="material-symbols-outlined ml-1 text-xs text-on-surface-variant">check_circle</span></>
             )}
           </div>
         </div>
-        <div className="bg-surface-container-lowest p-8 rounded-lg shadow-[0px_20px_40px_rgba(0,101,146,0.04)] relative overflow-hidden group">
-          <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Awaiting Info</p>
-          <h3 className="text-5xl font-black font-manrope text-on-surface">0</h3>
-          <div className="mt-6 flex items-center text-on-surface-variant font-bold text-sm">
+        <div className="bg-surface-container-lowest p-5 rounded-lg shadow-[0px_12px_24px_rgba(0,101,146,0.04)] relative overflow-hidden group">
+          <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Awaiting Info</p>
+          <h3 className="text-3xl font-black font-manrope text-on-surface">0</h3>
+          <div className="mt-3 flex items-center text-on-surface-variant font-bold text-xs">
             <span>Queue Clear</span>
-            <span className="material-symbols-outlined ml-1 text-sm">check_circle</span>
+            <span className="material-symbols-outlined ml-1 text-xs">check_circle</span>
           </div>
         </div>
-        <div className="bg-surface-container-lowest p-8 rounded-lg shadow-[0px_20px_40px_rgba(0,101,146,0.04)] relative overflow-hidden group">
-          <div className="absolute -right-4 -top-4 w-24 h-24 bg-green-50 rounded-full group-hover:scale-110 transition-transform duration-500 opacity-50" />
-          <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Approved This Month</p>
-          <h3 className="text-5xl font-black font-manrope text-on-surface">—</h3>
-          <div className="mt-6 flex items-center font-bold text-sm">
+        <div className="bg-surface-container-lowest p-5 rounded-lg shadow-[0px_12px_24px_rgba(0,101,146,0.04)] relative overflow-hidden group">
+          <div className="absolute -right-3 -top-3 w-16 h-16 bg-green-50 rounded-full group-hover:scale-110 transition-transform duration-500 opacity-50" />
+          <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Approved This Month</p>
+          <h3 className="text-3xl font-black font-manrope text-on-surface">—</h3>
+          <div className="mt-3 flex items-center font-bold text-xs">
             <span className="text-emerald-600">Tracking</span>
           </div>
         </div>
       </div>
 
       {/* List header */}
-      <div className="flex items-center justify-between px-1">
-        <h4 className="text-xl font-bold font-manrope tracking-tight text-on-surface">Innovation Backlog</h4>
-        <div className="flex items-center gap-2 text-on-surface-variant text-sm font-medium">
+      <div className="flex items-center justify-between">
+        <h4 className="text-lg font-bold font-manrope tracking-tight text-on-surface">Innovation Backlog</h4>
+        <div className="flex items-center gap-2 text-on-surface-variant text-xs font-medium">
           <span>Sorted by</span>
           <button onClick={() => setSortBy(s => s === 'newest' ? 'oldest' : 'newest')} className="flex items-center gap-1 text-on-surface font-bold">
             {sortBy === 'newest' ? 'Newest First' : 'Oldest First'}
@@ -655,66 +641,64 @@ export default function Approvals() {
 
       {/* Ideas list */}
       {filteredIdeas.length === 0 ? (
-        <div className="py-16 flex flex-col items-center justify-center text-center opacity-30">
-          <span className="material-symbols-outlined text-6xl mb-4">inbox</span>
-          <p className="text-lg font-bold">No ideas pending review</p>
+        <div className="py-12 flex flex-col items-center justify-center text-center opacity-30">
+          <span className="material-symbols-outlined text-5xl mb-3">inbox</span>
+          <p className="text-base font-bold">No ideas pending review</p>
           <p className="text-sm">You're all caught up with your queries.</p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {filteredIdeas.map(idea => {
             const catIcon = CATEGORY_ICONS[idea.category] || 'lightbulb';
             const catColor = CATEGORY_COLORS[idea.category] || 'bg-slate-50 text-slate-600';
 
             return (
               <div key={idea._id || idea.id}
-                className="bg-surface-container-lowest p-8 rounded-lg shadow-[0px_20px_40px_rgba(0,101,146,0.04)] hover:shadow-[0px_20px_40px_rgba(0,101,146,0.08)] transition-all flex flex-col md:flex-row md:items-center gap-8">
+                className="bg-surface-container-lowest p-5 rounded-lg shadow-[0px_12px_24px_rgba(0,101,146,0.04)] hover:shadow-[0px_12px_24px_rgba(0,101,146,0.08)] transition-all flex items-center gap-5">
                 {/* Category icon */}
-                <div className={`w-20 h-20 rounded-2xl ${catColor.split(' ')[0]} flex items-center justify-center flex-shrink-0`}>
-                  <span className={`material-symbols-outlined text-4xl ${catColor.split(' ')[1]}`}>{catIcon}</span>
+                <div className={`w-12 h-12 rounded-xl ${catColor.split(' ')[0]} flex items-center justify-center flex-shrink-0`}>
+                  <span className={`material-symbols-outlined text-2xl ${catColor.split(' ')[1]}`}>{catIcon}</span>
                 </div>
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <span className={`px-3 py-1 text-[10px] font-bold rounded-full uppercase tracking-tight ${
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="text-base font-bold font-manrope text-on-surface truncate">{idea.title}</h3>
+                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded-full uppercase tracking-tight flex-shrink-0 ${
                       idea.projectType === 'FullProduct' ? 'bg-emerald-100 text-emerald-700' : 'bg-sky-100 text-sky-700'
                     }`}>
                       {idea.projectType === 'FullProduct' ? 'Full Product' : 'POC'}
                     </span>
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface-variant text-[10px] font-bold rounded-full uppercase tracking-tight">
+                    <span className="px-2 py-0.5 bg-surface-container-high text-on-surface-variant text-[9px] font-bold rounded-full uppercase tracking-tight flex-shrink-0">
                       {idea.category}
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-extrabold font-manrope text-on-surface mb-2 truncate">{idea.title}</h3>
-
-                  <div className="flex items-center gap-4 text-sm text-on-surface-variant font-medium">
-                    <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-3 text-xs text-on-surface-variant">
+                    <div className="flex items-center gap-1">
                       {idea.submittedByName && (
-                        <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
+                        <span className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-[9px] font-bold text-primary">
                           {idea.submittedByName[0]?.toUpperCase()}
                         </span>
                       )}
-                      <span>{idea.submittedByName || idea.projectOwner || 'Unknown'}</span>
+                      <span className="font-medium">{idea.submittedByName || idea.projectOwner || 'Unknown'}</span>
                     </div>
                     <span className="text-on-surface-variant/30">•</span>
-                    <span>Submitted {timeAgo(idea.createdAt)}</span>
+                    <span>{timeAgo(idea.createdAt)}</span>
                   </div>
 
-                  <p className="mt-4 text-on-surface-variant leading-relaxed max-w-2xl line-clamp-3">{idea.description}</p>
+                  <p className="mt-1.5 text-xs text-on-surface-variant leading-relaxed line-clamp-2">{idea.description}</p>
                 </div>
 
                 {/* Actions */}
-                <div className="flex-shrink-0 flex gap-3">
+                <div className="flex-shrink-0 flex gap-2">
                   <button onClick={() => openApproveForm(idea)}
-                    className="px-8 py-3 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl font-bold shadow-lg shadow-sky-100 hover:scale-105 transition-all">
+                    className="px-5 py-2.5 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl text-sm font-bold shadow-md shadow-sky-100 hover:scale-105 transition-all">
                     Review & Approve
                   </button>
                   <button onClick={() => openRejectForm(idea)}
-                    className="w-12 h-12 flex items-center justify-center rounded-xl bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high transition-colors"
-                    title="Reject">
-                    <span className="material-symbols-outlined">more_vert</span>
+                    className="px-4 py-2.5 rounded-xl text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors">
+                    Reject
                   </button>
                 </div>
               </div>
