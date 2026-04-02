@@ -16,7 +16,7 @@ export default function BidDashboard() {
   const [loading, setLoading] = useState(true);
   const [expandedIdea, setExpandedIdea] = useState(null);
   const [algoStep, setAlgoStep] = useState(0);
-  const [showAlgo, setShowAlgo] = useState(false);
+  const [showAlgo, setShowAlgo] = useState(true);
   const [assigning, setAssigning] = useState(null);
 
   const [error, setError] = useState(null);
