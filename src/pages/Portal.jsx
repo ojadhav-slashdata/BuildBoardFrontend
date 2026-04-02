@@ -254,14 +254,21 @@ export default function Portal() {
               {leaderboard.length === 0 ? (
                 <li className="py-8 text-center text-sm text-on-surface-variant/60">No data yet.</li>
               ) : (
-                leaderboard.slice(0, 5).map((entry, i) => (
+                leaderboard.slice(0, 5).map((entry, i) => {
+                  const userMatch = Object.values(usersMap).find(u => u.name === entry.name);
+                  const avatar = userMatch?.pictureUrl;
+                  return (
                   <li key={entry.name ?? i} className="flex items-center gap-4 bg-surface-container-lowest p-3 rounded-2xl hover:translate-x-0.5 transition-transform">
                     <span className="w-6 text-center font-bold text-primary italic">
                       {['🥇', '🥈', '🥉'][i] ?? (i + 1)}
                     </span>
-                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-sm font-bold text-primary shrink-0">
-                      {(entry.name ?? '?')[0]}
-                    </div>
+                    {avatar ? (
+                      <img src={avatar} alt={entry.name} className="h-10 w-10 rounded-xl object-cover shrink-0" referrerPolicy="no-referrer" />
+                    ) : (
+                      <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-sm font-bold text-primary shrink-0">
+                        {(entry.name ?? '?')[0]}
+                      </div>
+                    )}
                     <div className="flex-grow min-w-0">
                       <p className="text-sm font-bold text-on-surface truncate">{entry.name}</p>
                     </div>
@@ -270,7 +277,8 @@ export default function Portal() {
                       <p className="text-[10px] text-on-surface-variant">pts</p>
                     </div>
                   </li>
-                ))
+                  );
+                })
               )}
             </ul>
             {(user?.role === 'Manager' || user?.role === 'Admin') && (
