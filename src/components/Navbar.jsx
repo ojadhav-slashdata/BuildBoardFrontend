@@ -37,10 +37,12 @@ export default function Navbar() {
   const milestone = getMilestone(points);
 
   return (
-    <nav className="glass-nav px-8 py-3 flex items-center justify-between sticky top-0 z-50">
-      <div className="flex items-center gap-3">
-        <Link to="/" className="text-2xl font-manrope font-extrabold tracking-tighter text-on-background hover:opacity-80 transition">Build<span className="text-primary">Board</span></Link>
-        <span className="hidden sm:block text-xs text-on-surface-variant/60 pl-3 ml-3">Innovation Portal</span>
+    <nav className="h-16 px-8 flex items-center justify-between sticky top-0 z-40 bg-slate-50/70 backdrop-blur-xl shadow-xl shadow-sky-900/5">
+      <div className="flex items-center gap-4 flex-1">
+        <div className="relative w-full max-w-md">
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+          <input type="text" placeholder="Search projects..." className="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-slate-400 outline-none" />
+        </div>
       </div>
 
       <div className="flex items-center gap-3">

@@ -7,9 +7,10 @@
     font-family: 'Manrope', sans-serif;
     font-weight: 700;
     letter-spacing: -0.025em;
-    color: #151c27;
+    color: #2c3437;
   }
   body {
+    font-family: 'Inter', sans-serif;
     font-feature-settings: 'cv02', 'cv03', 'cv04';
   }
   .material-symbols-outlined {
@@ -19,43 +20,41 @@
 }
 
 @layer components {
-  /* === Navigation === */
-  .glass-nav {
-    @apply bg-white/80 backdrop-blur-xl;
-  }
-
-  /* === Surface Cards (replace borders with tonal lift) === */
+  /* === Surface Cards === */
   .surface-card {
-    @apply bg-surface-container-lowest shadow-tonal rounded-2xl;
+    @apply bg-surface-container-lowest rounded-2xl;
+    box-shadow: 0px 20px 40px rgba(0, 101, 146, 0.06);
   }
   .surface-card-elevated {
-    @apply bg-surface-container-lowest shadow-tonal-md rounded-2xl;
+    @apply bg-surface-container-lowest rounded-2xl;
+    box-shadow: 0px 20px 40px rgba(0, 101, 146, 0.06);
   }
 
   /* === Buttons === */
   .btn-primary {
-    @apply bg-gradient-to-r from-primary to-primary-container text-white rounded-full px-6 py-2.5 text-sm font-semibold transition-all duration-200 hover:shadow-lg active:scale-[0.98];
+    @apply bg-gradient-to-r from-primary to-primary-container text-white rounded-xl px-6 py-2.5 text-sm font-bold font-headline transition-all duration-200;
+    box-shadow: 0 10px 20px rgba(0, 101, 146, 0.2);
   }
   .btn-primary:hover {
-    box-shadow: 0 10px 15px -3px color-mix(in srgb, var(--c-primary, #3525cd) 25%, transparent);
+    transform: scale(1.05);
+    box-shadow: 0 15px 30px rgba(0, 101, 146, 0.25);
+  }
+  .btn-primary:active {
+    transform: scale(0.95);
   }
   .btn-secondary {
-    @apply bg-surface-container-high text-on-surface rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 hover:bg-surface-container-highest;
+    @apply bg-surface-container-high text-on-surface rounded-xl px-5 py-2 text-sm font-bold transition-all duration-200 hover:bg-primary hover:text-white;
   }
   .btn-ghost {
-    @apply text-on-surface-variant rounded-full px-4 py-2 text-sm font-medium hover:bg-surface-container-low transition-all duration-200;
+    @apply text-on-surface-variant rounded-xl px-4 py-2 text-sm font-medium hover:bg-slate-200/40 transition-all duration-200;
   }
 
   /* === Form Inputs === */
   .input-field {
-    @apply bg-surface-container-low border-0 rounded-xl px-4 py-3 text-sm text-on-surface outline-none transition-all duration-200 focus:bg-surface-container-lowest focus:ring-1 focus:shadow-tonal;
+    @apply bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm text-on-surface outline-none transition-all duration-200 focus:ring-2 focus:ring-primary/20;
   }
   .input-field::placeholder {
-    color: color-mix(in srgb, #464555 50%, transparent);
-  }
-  .input-field:focus {
-    ring-color: color-mix(in srgb, var(--c-primary, #3525cd) 30%, transparent);
-    --tw-ring-color: color-mix(in srgb, var(--c-primary, #3525cd) 30%, transparent);
+    @apply text-slate-400;
   }
 
   /* === Chips & Badges === */
@@ -65,22 +64,28 @@
 
   /* === Typography === */
   .section-heading {
-    @apply font-manrope font-bold tracking-tight-headline text-on-surface;
+    @apply font-headline font-black tracking-tight text-on-background;
   }
 
   /* === Background Patterns === */
   .tech-pattern {
-    background-image: radial-gradient(circle at 2px 2px, #c7c4d8 1px, transparent 0);
+    background-image: radial-gradient(circle at 2px 2px, #acb3b7 1px, transparent 0);
     background-size: 48px 48px;
-    opacity: 0.15;
+    opacity: 0.12;
   }
 
   /* === Glass Card === */
   .glass-card {
-    @apply bg-white/70 backdrop-blur-xl shadow-tonal-lg;
+    @apply bg-white/70 backdrop-blur-xl;
+    box-shadow: 0px 20px 40px rgba(0, 101, 146, 0.08);
   }
 
-  /* === Sidebar Accent Links (theme-aware) === */
+  /* === Editorial Shadow === */
+  .editorial-shadow {
+    box-shadow: 0px 20px 40px rgba(0, 101, 146, 0.06);
+  }
+
+  /* === Sidebar Accent Links === */
   .sidebar-accent-link {
     display: flex;
     align-items: center;
@@ -90,16 +95,16 @@
     font-size: 0.875rem;
     font-weight: 600;
     transition: all 0.2s;
-    background: color-mix(in srgb, var(--c-primary, #3525cd) 10%, transparent);
-    color: var(--c-primary, #3525cd);
+    background: rgba(0, 101, 146, 0.08);
+    color: #006592;
   }
   .sidebar-accent-link:hover {
-    background: color-mix(in srgb, var(--c-primary, #3525cd) 15%, transparent);
+    background: rgba(0, 101, 146, 0.12);
     transform: translateX(2px);
   }
   .sidebar-accent-link.sidebar-accent-active {
-    background: var(--c-primary, #3525cd);
+    background: linear-gradient(to right, #006592, #34b5fa);
     color: #ffffff;
-    box-shadow: var(--shadow-tonal-md, 0 4px 12px -2px rgba(21,28,39,0.06));
+    box-shadow: 0 4px 12px -2px rgba(0, 101, 146, 0.2);
   }
 }

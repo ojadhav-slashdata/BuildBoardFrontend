@@ -95,12 +95,11 @@ export default function Sidebar() {
       <NavLink
         key={l.to}
         to={l.to}
-        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 hover:translate-x-0.5 ${
+        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ease-in-out ${
           active
-            ? 'bg-surface-container-lowest font-semibold shadow-tonal'
-            : 'text-on-surface-variant hover:bg-surface-container-high/50'
+            ? 'bg-white text-sky-600 shadow-sm'
+            : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/40'
         }`}
-        style={active ? { color: 'var(--c-primary, #3525cd)' } : {}}
       >
         <span className="material-symbols-outlined text-[20px]">{l.icon}</span>
         {l.label}
@@ -109,10 +108,15 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 bg-surface-container-low min-h-[calc(100vh-57px)]">
-      <div className="px-6 py-6 mb-2">
-        <h2 className="font-manrope font-extrabold text-on-surface text-lg">Project Portal</h2>
-        <p className="text-xs text-on-surface-variant/60 font-medium">Innovation Submission</p>
+    <aside className="hidden lg:flex flex-col w-64 bg-slate-100/50 backdrop-blur-xl min-h-[calc(100vh-57px)] border-r-0">
+      <div className="flex items-center gap-3 px-4 py-8">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
+          <span className="material-symbols-outlined text-white">tactic</span>
+        </div>
+        <div>
+          <h1 className="text-lg font-bold text-slate-900 font-headline tracking-tight">BuildBoard</h1>
+          <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Arctic Clarity</p>
+        </div>
       </div>
 
       <nav className="flex-1 px-4 space-y-0.5">
