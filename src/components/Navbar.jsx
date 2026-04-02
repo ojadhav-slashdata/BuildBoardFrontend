@@ -49,13 +49,6 @@ export default function Navbar() {
       </div>
 
       <div className="flex items-center gap-3">
-        {/* Role badge (read-only) */}
-        {user && (
-          <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-full">
-            {user.role}
-          </span>
-        )}
-
         {/* Notification Bell */}
         {user && <NotificationBell />}
 

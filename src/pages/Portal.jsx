@@ -137,6 +137,12 @@ export default function Portal() {
 
   const statCards = [
     {
+      label: 'Pending Review', value: overview?.openIdeas ?? 0,
+      materialIcon: 'rate_review',
+      accent: { bg: 'bg-tertiary/5', text: 'text-tertiary', iconColor: 'text-tertiary', bar: 'bg-tertiary' },
+      onClick: () => navigate('/all-ideas?status=PendingApproval'),
+    },
+    {
       label: 'Open for Bidding', value: overview?.biddingOpen ?? 0,
       materialIcon: 'bid_landscape', badge: 'Active',
       accent: { bg: 'bg-primary/5', text: 'text-primary', iconColor: 'text-primary', bar: 'bg-primary' },
@@ -147,12 +153,6 @@ export default function Portal() {
       materialIcon: 'manufacturing',
       accent: { bg: 'bg-secondary/5', text: 'text-secondary', iconColor: 'text-secondary', bar: 'bg-secondary' },
       onClick: () => navigate('/all-ideas?status=InProgress'),
-    },
-    {
-      label: 'Pending Review', value: overview?.openIdeas ?? 0,
-      materialIcon: 'rate_review',
-      accent: { bg: 'bg-tertiary/5', text: 'text-tertiary', iconColor: 'text-tertiary', bar: 'bg-tertiary' },
-      onClick: () => navigate('/all-ideas?status=PendingApproval'),
     },
     {
       label: 'Completed', value: overview?.completed ?? 0,

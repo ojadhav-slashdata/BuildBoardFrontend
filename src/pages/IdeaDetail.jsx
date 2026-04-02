@@ -3,6 +3,17 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import api from '../axiosConfig';
 
+const STATUS_LABELS = {
+  BiddingOpen: 'Open for Bidding',
+  InProgress: 'In Progress',
+  PendingApproval: 'Pending Review',
+  Completed: 'Completed',
+  Rejected: 'Rejected',
+  Draft: 'Draft',
+  BiddingClosed: 'Bidding Closed',
+  Assigned: 'Assigned',
+};
+
 export default function IdeaDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -90,6 +101,7 @@ export default function IdeaDetail() {
   const isMember = idea.teamMembers?.some(m => m.id === user?.id);
   const totalHours = idea.timeLogs?.reduce((s, l) => s + l.hours, 0) || 0;
   const expectedHours = idea.estimatedHours || idea.actualHours || 100;
+  const isAdmin = user?.role === 'Admin';
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -100,7 +112,11 @@ export default function IdeaDetail() {
         <div className="flex items-start justify-between mb-3">
           <div>
             <h1 className="text-lg font-medium font-manrope tracking-tight text-on-surface">{idea.title}</h1>
-            <p className="text-sm text-on-surface-variant mt-1">{idea.category} · Owner: {idea.projectOwner || 'Not set'}</p>
+            <p className="text-sm text-on-surface-variant mt-1">
+              {idea.category}
+              {idea.projectOwner && <> · Owner: {idea.projectOwner}</>}
+              {idea.submittedByName && <> · Submitted by: {idea.submittedByName}</>}
+            </p>
           </div>
           <div className="flex gap-2 items-center">
             <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-medium ${idea.projectType === 'FullProduct' ? 'bg-teal-50 text-teal-700' : 'bg-primary/10 text-primary'}`}>
@@ -108,19 +124,61 @@ export default function IdeaDetail() {
             </span>
             {idea.size && <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-medium">{idea.size}</span>}
             <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-medium ${statusColors[idea.status] || 'bg-surface-container-high text-on-surface-variant'}`}>
-              {idea.status}
+              {STATUS_LABELS[idea.status] || idea.status}
             </span>
-            {user?.role === 'Admin' && ['BiddingOpen', 'InProgress', 'Approved'].includes(idea.status) && !editing && (
+            {isAdmin && ['BiddingOpen', 'InProgress', 'Approved'].includes(idea.status) && !editing && (
               <button onClick={startEditing} className="p-2 rounded-xl hover:bg-surface-container-high/50 transition-colors">
                 <span className="material-symbols-outlined text-on-surface-variant text-lg">edit</span>
               </button>
             )}
           </div>
         </div>
+
+        {/* Description */}
         <p className="text-sm text-on-surface-variant leading-relaxed">{idea.description}</p>
 
+        {/* Business Value Tags */}
+        {idea.businessValue && (
+          <div className="flex flex-wrap gap-1.5 mt-4">
+            {idea.businessValue.split(',').map((tag, i) => (
+              <span key={i} className="text-[11px] px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium">
+                {tag.trim()}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Resources & Challenges */}
+        {idea.resources && (
+          <div className="mt-4 p-3 bg-surface-container-low rounded-xl">
+            <p className="text-xs font-semibold text-on-surface-variant mb-1 flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-sm">group</span>
+              Resources & Stakeholders
+            </p>
+            <p className="text-sm text-on-surface-variant leading-relaxed">{idea.resources}</p>
+          </div>
+        )}
+        {idea.challenges && (
+          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+            <p className="text-xs font-semibold text-amber-700 mb-1 flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-sm">warning</span>
+              Known Challenges
+            </p>
+            <p className="text-sm text-amber-800 leading-relaxed">{idea.challenges}</p>
+          </div>
+        )}
+
+        {/* Rejection Comment */}
+        {idea.status === 'Rejected' && idea.rejectionComment && (
+          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-xl">
+            <p className="text-xs font-semibold text-red-700 mb-1">Rejection Reason</p>
+            <p className="text-sm text-red-800 leading-relaxed">"{idea.rejectionComment}"</p>
+          </div>
+        )}
+
+        {/* Attachment */}
         {idea.attachmentUrl && (
-          <div className="flex items-center gap-3 mt-3 p-3 bg-surface-container-low rounded-xl">
+          <div className="flex items-center gap-3 mt-4 p-3 bg-surface-container-low rounded-xl">
             {idea.attachmentUrl.startsWith('data:image') ? (
               <img src={idea.attachmentUrl} alt="" className="w-16 h-16 object-cover rounded-lg" />
             ) : (
@@ -139,13 +197,69 @@ export default function IdeaDetail() {
           </div>
         )}
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 pt-4">
-          {idea.expectedDeliveryDate && <div><p className="text-xs text-on-surface-variant/60">Expected delivery</p><p className="text-sm font-medium">{new Date(idea.expectedDeliveryDate).toLocaleDateString()}</p></div>}
-          {idea.bidCutoffDate && <div><p className="text-xs text-on-surface-variant/60">Bid cutoff</p><p className="text-sm font-medium">{new Date(idea.bidCutoffDate).toLocaleDateString()}</p></div>}
-          <div><p className="text-xs text-on-surface-variant/60">Hours logged</p><p className="text-sm font-medium">{totalHours} hrs</p></div>
-          {idea.pointsReward > 0 && <div><p className="text-xs text-on-surface-variant/60">Points</p><p className="text-sm font-medium text-primary">+{idea.pointsReward} pts</p></div>}
+        {/* Meta grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 pt-4 border-t border-outline-variant/10">
+          {idea.createdAt && (
+            <div>
+              <p className="text-xs text-on-surface-variant/60">Submitted</p>
+              <p className="text-sm font-medium">{new Date(idea.createdAt).toLocaleDateString()}</p>
+            </div>
+          )}
+          {idea.expectedDeliveryDate && (
+            <div>
+              <p className="text-xs text-on-surface-variant/60">Expected delivery</p>
+              <p className="text-sm font-medium">{new Date(idea.expectedDeliveryDate).toLocaleDateString()}</p>
+            </div>
+          )}
+          {idea.bidCutoffDate && (
+            <div>
+              <p className="text-xs text-on-surface-variant/60">Bid cutoff</p>
+              <p className="text-sm font-medium">{new Date(idea.bidCutoffDate).toLocaleDateString()}</p>
+            </div>
+          )}
+          {idea.complexity && (
+            <div>
+              <p className="text-xs text-on-surface-variant/60">Complexity</p>
+              <p className="text-sm font-medium">{idea.complexity}</p>
+            </div>
+          )}
+          {idea.minHours && idea.maxHours && (
+            <div>
+              <p className="text-xs text-on-surface-variant/60">Estimated hours</p>
+              <p className="text-sm font-medium">{idea.minHours} – {idea.maxHours} hrs</p>
+            </div>
+          )}
+          <div>
+            <p className="text-xs text-on-surface-variant/60">Hours logged</p>
+            <p className="text-sm font-medium">{totalHours} hrs</p>
+          </div>
+          {idea.pointsReward > 0 && (
+            <div>
+              <p className="text-xs text-on-surface-variant/60">Points</p>
+              <p className="text-sm font-medium text-primary">+{idea.pointsReward} pts</p>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Review Action for Admins on PendingApproval ideas */}
+      {idea.status === 'PendingApproval' && isAdmin && (
+        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 mb-4 flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-bold text-blue-900 flex items-center gap-2">
+              <span className="material-symbols-outlined text-blue-600">rate_review</span>
+              This idea needs your review
+            </h3>
+            <p className="text-xs text-blue-700 mt-0.5">Set size, complexity, dates and approve or reject this idea</p>
+          </div>
+          <button
+            onClick={() => navigate(`/approvals?ideaId=${idea._id || idea.id}`)}
+            className="px-5 py-2.5 bg-gradient-to-r from-primary to-primary-container text-white rounded-full text-sm font-bold hover:opacity-90 transition"
+          >
+            Review & Approve
+          </button>
+        </div>
+      )}
 
       {editing && (
         <div className="surface-card-elevated p-5 mb-4">
@@ -204,7 +318,7 @@ export default function IdeaDetail() {
           <div className="flex gap-3 flex-wrap">
             {idea.teamMembers.map(m => (
               <div key={m.id} className="flex items-center gap-2 bg-surface-container-low rounded-lg px-3 py-2">
-                {m.pictureUrl ? <img src={m.pictureUrl} className="w-7 h-7 rounded-full" alt="" /> :
+                {m.pictureUrl ? <img src={m.pictureUrl} className="w-7 h-7 rounded-full" alt="" referrerPolicy="no-referrer" /> :
                   <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-xs font-medium text-primary">{(m.name||'?')[0]}</div>}
                 <span className="text-sm text-on-surface">{m.name}</span>
               </div>
@@ -301,7 +415,7 @@ export default function IdeaDetail() {
           <div className="space-y-3">
             {idea.comments.map((c, i) => (
               <div key={i} className="flex gap-3">
-                {c.pictureUrl ? <img src={c.pictureUrl} className="w-7 h-7 rounded-full mt-0.5" alt="" /> :
+                {c.pictureUrl ? <img src={c.pictureUrl} className="w-7 h-7 rounded-full mt-0.5" alt="" referrerPolicy="no-referrer" /> :
                   <div className="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center text-xs text-on-surface-variant mt-0.5">{(c.userName||'?')[0]}</div>}
                 <div>
                   <div className="flex items-center gap-2">

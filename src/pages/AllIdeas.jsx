@@ -50,7 +50,7 @@ function StatusBadge({ status }) {
   );
 }
 
-function IdeaCard({ idea, currentUserId, usersMap, onNavigate }) {
+function IdeaCard({ idea, currentUserId, userRole, usersMap, onNavigate }) {
   const ownerId   = idea.submittedBy?._id || idea.submittedBy;
   const ownerName = idea.submittedBy?.name || usersMap[ownerId] || 'Unknown';
   const ownerDept = idea.submittedBy?.department || idea.department || '';
@@ -165,11 +165,18 @@ function IdeaCard({ idea, currentUserId, usersMap, onNavigate }) {
         )}
         {!['BiddingOpen', 'InProgress', 'Completed'].includes(idea.status) && (
           <button
-            onClick={handleView}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (idea.status === 'PendingApproval' && userRole === 'Admin') {
+                onNavigate(`/approvals?ideaId=${idea._id}`);
+              } else {
+                onNavigate(`/ideas/${idea._id}`);
+              }
+            }}
             className="flex-1 rounded-xl border border-primary py-2.5 text-sm font-bold text-primary text-center
                        hover:bg-primary/5 transition-colors duration-200"
           >
-            {idea.status === 'PendingApproval' ? 'Review' : 'Details'}
+            {idea.status === 'PendingApproval' && userRole === 'Admin' ? 'Review' : 'Details'}
           </button>
         )}
 
@@ -427,6 +434,7 @@ export default function AllIdeas() {
               key={idea._id}
               idea={idea}
               currentUserId={user?.id}
+              userRole={user?.role}
               usersMap={usersMap}
               onNavigate={navigate}
             />
