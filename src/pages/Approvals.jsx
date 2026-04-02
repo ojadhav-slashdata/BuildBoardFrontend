@@ -267,7 +267,7 @@ export default function Approvals() {
         )}
 
         {/* Full idea details */}
-        <div className="bg-surface-container-low rounded-2xl p-4 mb-5">
+        <div className="bg-surface-container-low rounded-lg p-4 mb-5">
           <h4 className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant/60 mb-3">Full Submission Details</h4>
           <p className="text-sm text-on-surface leading-relaxed mb-3">{selectedIdea?.description}</p>
 
@@ -281,7 +281,7 @@ export default function Approvals() {
           {selectedIdea?.challenges && (
             <div className="mb-2">
               <p className="text-xs font-semibold text-amber-700 mb-1">Known Challenges</p>
-              <p className="text-sm text-amber-800 bg-amber-50 rounded-xl p-3">{selectedIdea.challenges}</p>
+              <p className="text-sm text-amber-800 bg-amber-50 rounded-md p-3">{selectedIdea.challenges}</p>
             </div>
           )}
 
