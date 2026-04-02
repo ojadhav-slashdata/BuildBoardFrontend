@@ -90,7 +90,7 @@ export default function Portal() {
         setIdeas(ideasRes.data ?? []);
         setMyBids(bidsRes.data ?? []);
         const map = {};
-        (usersRes.data ?? []).forEach((u) => { map[u._id || u.id] = u.name; });
+        (usersRes.data ?? []).forEach((u) => { map[u._id || u.id] = u; });
         setUsersMap(map);
       })
       .catch(() => {})
@@ -241,7 +241,7 @@ export default function Portal() {
             <div className="relative space-y-4 pl-4 before:content-[''] before:absolute before:left-[7px] before:top-3 before:bottom-3 before:w-[2px] before:bg-surface-container-high">
               {recentIdeas.map((idea) => {
                 const ownerId = idea.submittedBy?._id || idea.submittedBy;
-                const ownerName = idea.submittedBy?.name || usersMap[ownerId] || 'Someone';
+                const ownerName = idea.submittedBy?.name || usersMap[ownerId]?.name || 'Someone';
                 return (
                   <div key={idea._id} className="relative flex gap-4">
                     <div className={`w-3 h-3 rounded-full ${STATUS_STYLES[idea.status] || 'bg-gray-400'} mt-2 ring-4 ring-surface shadow-sm z-10 shrink-0`} />
