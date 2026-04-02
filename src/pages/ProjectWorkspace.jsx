@@ -359,6 +359,8 @@ export default function ProjectWorkspace() {
             All Projects
           </button>
 
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">{project.name}</h1>
+
           {/* Project Hero Card */}
           <div className="rounded-3xl p-6 mb-4" style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #3525cd 100%)' }}>
             <div className="flex items-start justify-between mb-4">
