@@ -4,14 +4,18 @@ import { useAuth } from '../hooks/useAuth';
 const linksByRole = {
   Employee: [
     { to: '/portal', label: 'Home', icon: 'dashboard' },
-    { to: '/my-bids', label: 'My Bids', icon: 'gavel' },
+    { to: '/ideas/submit', label: 'Submit Idea', icon: 'lightbulb', accent: true },
+    { to: '/browse-ideas', label: 'Place a Bid', icon: 'gavel', accent: true },
+    { to: '/my-bids', label: 'My Bids', icon: 'assignment' },
     { to: '/marketplace', label: 'Rewards', icon: 'redeem' },
     { to: '/guide', label: 'Guide', icon: 'help' },
     { to: '/profile', label: 'Profile', icon: 'person' },
   ],
   Manager: [
     { to: '/portal', label: 'Home', icon: 'dashboard' },
-    { to: '/bids/dashboard', label: 'Bid Dashboard', icon: 'gavel' },
+    { to: '/ideas/submit', label: 'Submit Idea', icon: 'lightbulb', accent: true },
+    { to: '/browse-ideas', label: 'Place a Bid', icon: 'gavel', accent: true },
+    { to: '/bids/dashboard', label: 'Bid Dashboard', icon: 'analytics' },
     { to: '/approvals', label: 'Approvals', icon: 'fact_check' },
     { to: '/analytics', label: 'Analytics', icon: 'monitoring' },
     { to: '/marketplace', label: 'Rewards', icon: 'redeem' },
@@ -20,7 +24,9 @@ const linksByRole = {
   ],
   Admin: [
     { to: '/portal', label: 'Home', icon: 'dashboard' },
-    { to: '/bids/dashboard', label: 'Bid Dashboard', icon: 'gavel' },
+    { to: '/ideas/submit', label: 'Submit Idea', icon: 'lightbulb', accent: true },
+    { to: '/browse-ideas', label: 'Place a Bid', icon: 'gavel', accent: true },
+    { to: '/bids/dashboard', label: 'Bid Dashboard', icon: 'analytics' },
     { to: '/approvals', label: 'Approvals', icon: 'fact_check' },
     { to: '/analytics', label: 'Analytics', icon: 'monitoring' },
     { to: '/admin/users', label: 'Users', icon: 'group' },
@@ -46,14 +52,20 @@ export default function Sidebar() {
             key={l.to}
             to={l.to}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 hover:translate-x-0.5 ${
-                isActive
-                  ? 'bg-surface-container-lowest text-primary shadow-tonal font-semibold'
-                  : 'text-on-surface-variant hover:bg-surface-container-high/50'
-              }`
+              l.accent
+                ? `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 hover:translate-x-0.5 ${
+                    isActive
+                      ? 'bg-primary text-on-primary shadow-tonal-md'
+                      : 'bg-primary/10 text-primary hover:bg-primary/15'
+                  }`
+                : `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 hover:translate-x-0.5 ${
+                    isActive
+                      ? 'bg-surface-container-lowest text-primary shadow-tonal font-semibold'
+                      : 'text-on-surface-variant hover:bg-surface-container-high/50'
+                  }`
             }
           >
-            <span className="material-symbols-outlined text-[20px]">{l.icon}</span>
+            <span className="material-symbols-outlined text-[20px]" style={l.accent ? { fontVariationSettings: "'FILL' 1" } : {}}>{l.icon}</span>
             {l.label}
           </NavLink>
         ))}

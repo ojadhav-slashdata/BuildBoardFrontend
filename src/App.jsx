@@ -24,6 +24,7 @@ import BidResults from './pages/BidResults';
 import Marketplace from './pages/Marketplace';
 import Guide from './pages/Guide';
 import BidDashboard from './pages/BidDashboard';
+import BrowseIdeas from './pages/BrowseIdeas';
 
 export default function App() {
   return (
@@ -44,6 +45,7 @@ export default function App() {
 
         {/* Employee */}
         <Route path="/ideas/:ideaId/results" element={<ProtectedRoute><BidResults /></ProtectedRoute>} />
+        <Route path="/browse-ideas" element={<BrowseIdeas />} />
         <Route path="/ideas/:id/bid" element={<PlaceBid />} />
         <Route path="/my-bids" element={<MyBids />} />
         <Route path="/profile" element={<Profile />} />
