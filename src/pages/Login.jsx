@@ -34,11 +34,11 @@ export default function Login() {
   const [activeStep, setActiveStep] = useState(0);
   const [showStats, setShowStats] = useState(false);
 
-  // Auto-advance the animated flow
+  // Auto-advance the animated flow — fast 1.5s per step
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveStep(prev => (prev + 1) % FLOW_STEPS.length);
-    }, 3000);
+    }, 1500);
     return () => clearInterval(timer);
   }, []);
 
@@ -100,44 +100,44 @@ export default function Login() {
             </div>
 
             {/* Animated Flow — "How it works" */}
-            <div className="bg-surface-container-lowest rounded-3xl p-6 shadow-tonal">
-              <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant/60 mb-4">How it works</p>
+            <div className="bg-surface-container-lowest rounded-3xl p-8 shadow-tonal">
+              <p className="text-sm font-bold uppercase tracking-wider text-on-surface-variant/60 mb-5">How it works</p>
 
               {/* Flow Steps */}
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {FLOW_STEPS.map((step, i) => {
                   const isActive = i === activeStep;
                   const isPast = i < activeStep;
                   return (
                     <div
                       key={i}
-                      className={`flex items-center gap-4 p-3 rounded-2xl transition-all duration-700 ${
-                        isActive ? 'bg-primary/5 scale-[1.02]' : 'opacity-50 scale-100'
+                      className={`flex items-center gap-5 p-4 rounded-2xl transition-all duration-500 ${
+                        isActive ? 'bg-primary/5 scale-[1.03]' : isPast ? 'opacity-70' : 'opacity-40'
                       }`}
-                      style={isActive ? { boxShadow: `0 0 20px ${step.color}15` } : {}}
+                      style={isActive ? { boxShadow: `0 0 30px ${step.color}20` } : {}}
                     >
                       {/* Step indicator */}
                       <div className="relative flex-shrink-0">
                         <div
-                          className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-all duration-700 ${
+                          className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl transition-all duration-500 ${
                             isActive ? 'scale-110' : isPast ? 'scale-95' : 'scale-90'
                           }`}
-                          style={{ background: isActive ? `${step.color}20` : 'transparent' }}
+                          style={{ background: isActive ? `${step.color}20` : isPast ? `${step.color}08` : 'transparent' }}
                         >
                           {step.icon}
                         </div>
                         {/* Connector line */}
                         {i < FLOW_STEPS.length - 1 && (
-                          <div className="absolute left-1/2 -translate-x-1/2 top-full h-1 w-0.5 bg-outline-variant/20" />
+                          <div className="absolute left-1/2 -translate-x-1/2 top-full h-2 w-0.5 bg-outline-variant/20" />
                         )}
                       </div>
 
                       {/* Content */}
                       <div className="flex-1 min-w-0">
-                        <p className={`text-sm font-bold transition-colors duration-500 ${isActive ? 'text-on-surface' : 'text-on-surface-variant'}`}>
+                        <p className={`text-base font-bold transition-colors duration-300 ${isActive ? 'text-on-surface' : 'text-on-surface-variant'}`}>
                           {step.title}
                         </p>
-                        <p className={`text-xs transition-all duration-500 ${isActive ? 'text-on-surface-variant max-h-10 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                        <p className={`text-sm transition-all duration-300 ${isActive ? 'text-on-surface-variant max-h-10 opacity-100 mt-0.5' : 'max-h-0 opacity-0 overflow-hidden'}`}>
                           {step.desc}
                         </p>
                       </div>
@@ -145,7 +145,7 @@ export default function Login() {
                       {/* Active indicator */}
                       {isActive && (
                         <div className="flex-shrink-0">
-                          <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: step.color }} />
+                          <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: step.color }} />
                         </div>
                       )}
                     </div>
@@ -154,9 +154,9 @@ export default function Login() {
               </div>
 
               {/* Progress bar */}
-              <div className="mt-4 h-1 w-full bg-surface-container-high rounded-full overflow-hidden">
+              <div className="mt-5 h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-primary to-primary-container rounded-full transition-all duration-[3000ms] ease-linear"
+                  className="h-full bg-gradient-to-r from-primary to-primary-container rounded-full transition-all duration-[1500ms] ease-linear"
                   style={{ width: `${((activeStep + 1) / FLOW_STEPS.length) * 100}%` }}
                 />
               </div>
