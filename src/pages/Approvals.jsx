@@ -431,7 +431,11 @@ export default function Approvals() {
                 <option value="16:00">4:00 PM</option>
                 <option value="17:00">5:00 PM</option>
                 <option value="18:00">6:00 PM</option>
+                <option value="19:00">7:00 PM</option>
                 <option value="20:00">8:00 PM</option>
+                <option value="21:00">9:00 PM</option>
+                <option value="22:00">10:00 PM</option>
+                <option value="23:00">11:00 PM</option>
                 <option value="23:59">Midnight</option>
               </select>
             </div>
