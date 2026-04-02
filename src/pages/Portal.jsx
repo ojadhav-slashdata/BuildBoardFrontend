@@ -100,26 +100,36 @@ export default function Portal() {
   const firstName = (user?.name || 'there').split(' ')[0];
   const subtitle = MOTIVATIONAL[Math.floor(Math.random() * MOTIVATIONAL.length)];
 
-  // Needs Your Attention
+  // Needs Your Attention — role-specific actionable items
   const myBidIdeaIds = new Set((myBids || []).map((b) => b.idea?._id || b.idea));
-  const isManager = user?.role === 'Manager' || user?.role === 'Admin';
+  const isAdmin = user?.role === 'Admin';
 
   const needsAttention = [];
-  // New BiddingOpen ideas user hasn't bid on
-  const unbidIdeas = ideas.filter((i) => i.status === 'BiddingOpen' && !myBidIdeaIds.has(i._id));
-  unbidIdeas.slice(0, 3).forEach((i) => {
-    needsAttention.push({ id: i._id, type: 'bid', title: i.title, sub: 'New idea open for bidding', icon: 'gavel', link: `/ideas/${i._id}/bid` });
-  });
-  // PendingApproval for managers
-  if (isManager) {
-    ideas.filter((i) => i.status === 'PendingApproval').slice(0, 2).forEach((i) => {
-      needsAttention.push({ id: i._id, type: 'review', title: i.title, sub: 'Awaiting your review', icon: 'rate_review', link: `/approvals?ideaId=${i._id}` });
+
+  if (isAdmin) {
+    // Admin: pending approvals first (primary action)
+    ideas.filter((i) => i.status === 'PendingApproval').forEach((i) => {
+      needsAttention.push({ id: i._id, type: 'review', title: i.title, sub: 'Awaiting your approval', icon: 'rate_review', link: `/approvals?ideaId=${i._id}` });
     });
-  }
-  // Completed awaiting feedback for managers
-  if (isManager) {
-    ideas.filter((i) => i.status === 'Completed').slice(0, 2).forEach((i) => {
-      needsAttention.push({ id: i._id, type: 'feedback', title: i.title, sub: 'Ready for feedback', icon: 'feedback', link: `/ideas/${i._id}/feedback` });
+    // Admin: completed ideas needing feedback/rating
+    ideas.filter((i) => i.status === 'Completed').slice(0, 3).forEach((i) => {
+      needsAttention.push({ id: i._id, type: 'feedback', title: i.title, sub: 'Ready for your rating', icon: 'feedback', link: `/ideas/${i._id}/feedback` });
+    });
+    // Admin: bidding open ideas past cutoff needing assignment
+    ideas.filter((i) => i.status === 'BiddingOpen' && i.bidCutoffDate && new Date(i.bidCutoffDate).getTime() < Date.now()).slice(0, 2).forEach((i) => {
+      needsAttention.push({ id: i._id, type: 'assign', title: i.title, sub: 'Bidding closed — assign winner', icon: 'assignment_turned_in', link: `/bids/${i._id}` });
+    });
+  } else {
+    // Non-admin: new ideas they can bid on
+    const unbidIdeas = ideas.filter((i) => i.status === 'BiddingOpen' && !myBidIdeaIds.has(i._id));
+    unbidIdeas.slice(0, 4).forEach((i) => {
+      needsAttention.push({ id: i._id, type: 'bid', title: i.title, sub: 'Open for bidding — place your bid', icon: 'gavel', link: `/ideas/${i._id}/bid` });
+    });
+    // Non-admin: their in-progress projects needing hour logs
+    ideas.filter((i) => i.status === 'InProgress' && (
+      i.submittedBy === user?.id || i.teamMembers?.some(m => m.id === user?.id)
+    )).slice(0, 2).forEach((i) => {
+      needsAttention.push({ id: i._id, type: 'project', title: i.title, sub: 'Your active project — log hours', icon: 'schedule', link: `/projects/${i._id}` });
     });
   }
 
