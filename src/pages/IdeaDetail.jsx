@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import api from '../axiosConfig';
+import { useToast } from '../context/ToastContext';
 
 export default function IdeaDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const { user } = useAuth();
   const [idea, setIdea] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,7 +27,7 @@ export default function IdeaDetail() {
       setNotes(''); setHours(2);
       const res = await api.get(`/ideas/${id}`);
       setIdea(res.data);
-    } catch { alert('Failed to log hours'); }
+    } catch { showToast('Failed to log hours', 'error'); }
     setSubmitting(false);
   };
 
@@ -37,7 +39,7 @@ export default function IdeaDetail() {
       setComment('');
       const res = await api.get(`/ideas/${id}`);
       setIdea(res.data);
-    } catch { alert('Failed to post comment'); }
+    } catch { showToast('Failed to post comment', 'error'); }
     setSubmitting(false);
   };
 
@@ -47,7 +49,7 @@ export default function IdeaDetail() {
       await api.patch(`/ideas/${id}/complete`);
       const res = await api.get(`/ideas/${id}`);
       setIdea(res.data);
-    } catch { alert('Failed to submit'); }
+    } catch { showToast('Failed to submit', 'error'); }
     setSubmitting(false);
   };
 

@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../axiosConfig';
+import { useToast } from '../context/ToastContext';
 
 const categories = ['Tech', 'HR', 'Finance', 'Operations', 'Other'];
 
 export default function SubmitIdea() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [form, setForm] = useState({ title: '', description: '', category: '', projectType: 'POC', projectOwner: '', businessValue: [], resources: '', challenges: '' });
   const [submitting, setSubmitting] = useState(false);
   const [file, setFile] = useState(null);
@@ -49,16 +51,16 @@ export default function SubmitIdea() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.businessValue.length === 0) { alert('Please select at least one business value.'); return; }
-    if (descCount < 50) { alert('Description must be at least 50 characters.'); return; }
-    if (!form.category) { alert('Please select a category.'); return; }
-    if (!form.projectOwner) { alert('Please select a project owner.'); return; }
+    if (form.businessValue.length === 0) { showToast('Please select at least one business value.', 'warning'); return; }
+    if (descCount < 50) { showToast('Description must be at least 50 characters.', 'warning'); return; }
+    if (!form.category) { showToast('Please select a category.', 'warning'); return; }
+    if (!form.projectOwner) { showToast('Please select a project owner.', 'warning'); return; }
     setSubmitting(true);
     try {
       await api.post('/ideas', { ...form, businessValue: form.businessValue.join(','), resources: form.resources, challenges: form.challenges });
       navigate('/portal');
     } catch {
-      alert('Failed to submit idea.');
+      showToast('Failed to submit idea.', 'error');
     } finally {
       setSubmitting(false);
     }

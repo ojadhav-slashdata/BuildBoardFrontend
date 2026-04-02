@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useAuth } from './hooks/useAuth';
+import { ToastProvider } from './context/ToastContext';
 import Login from './pages/Login';
 
 function SmartRedirect() {
@@ -32,6 +33,7 @@ import AllIdeas from './pages/AllIdeas';
 
 export default function App() {
   return (
+    <ToastProvider>
     <Routes>
       <Route path="/login" element={<Login />} />
 
@@ -116,5 +118,6 @@ export default function App() {
       <Route path="/" element={<SmartRedirect />} />
       <Route path="*" element={<SmartRedirect />} />
     </Routes>
+    </ToastProvider>
   );
 }
