@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import ThemeSwitcher from './ThemeSwitcher';
+import NotificationBell from './NotificationBell';
 
 const devRoles = ['Employee', 'Manager', 'Admin'];
 
@@ -69,6 +70,9 @@ export default function Navbar() {
             </div>
           </div>
         )}
+
+        {/* Notification Bell */}
+        {user && <NotificationBell />}
 
         {/* Account dropdown */}
         {user && (

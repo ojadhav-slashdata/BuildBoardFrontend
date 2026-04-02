@@ -241,11 +241,35 @@ export default function IdeaDetail() {
         </Link>
       )}
 
-      {/* Place Bid */}
+      {/* Bidding Section */}
       {idea.status === 'BiddingOpen' && (
-        <Link to={`/ideas/${id}/bid`} className="block bg-primary/10 border border-primary/20 rounded-2xl p-4 mb-4 hover:border-primary/40 transition text-center">
-          <p className="text-sm font-medium text-primary">Place a bid on this idea →</p>
-        </Link>
+        <div className="surface-card-elevated rounded-2xl p-5 mb-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-manrope font-bold text-sm text-on-surface flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>gavel</span>
+                Place a Bid
+              </h3>
+              <p className="text-xs text-on-surface-variant mt-0.5">
+                {idea.bidCutoffDate ? `Bidding closes ${new Date(idea.bidCutoffDate).toLocaleDateString()}` : 'Open for bidding'}
+              </p>
+            </div>
+            {idea.bidCutoffDate && new Date(idea.bidCutoffDate) < new Date() ? (
+              <span className="text-xs px-3 py-1.5 rounded-full bg-red-50 text-red-700 font-medium ring-1 ring-inset ring-red-600/20">Bidding Closed</span>
+            ) : (
+              <Link to={`/ideas/${id}/bid`}
+                className="btn-primary inline-flex items-center gap-2 text-sm">
+                <span className="material-symbols-outlined text-lg">gavel</span>
+                Place Bid
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
+      {idea.status !== 'BiddingOpen' && !['InProgress','Completed','PendingApproval'].includes(idea.status) && (
+        <div className="bg-surface-container-low rounded-2xl p-4 mb-4 text-center">
+          <p className="text-sm text-on-surface-variant">This idea is not currently accepting bids</p>
+        </div>
       )}
     </div>
   );
