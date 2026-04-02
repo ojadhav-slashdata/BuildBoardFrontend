@@ -217,6 +217,19 @@ export default function Approvals() {
             {projectType === 'FullProduct' ? 'Full product' : 'POC'}
           </span>
         </div>
+        {selectedIdea?.businessValue && (
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {selectedIdea.businessValue.split(',').map((tag, i) => (
+              <span key={i} className="text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">{tag.trim()}</span>
+            ))}
+          </div>
+        )}
+        {selectedIdea?.challenges && (
+          <p className="text-xs text-amber-600 mt-2 flex items-center gap-1">
+            <span className="material-symbols-outlined text-sm">warning</span>
+            Known challenges: {selectedIdea.challenges}
+          </p>
+        )}
 
         {/* Project Type */}
         <p className="text-[11px] font-medium uppercase tracking-wider text-on-surface-variant/60 mb-2 pb-1.5">Project type</p>
@@ -298,11 +311,11 @@ export default function Approvals() {
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div>
             <label className="text-sm font-medium text-on-surface block mb-1.5">Bid cutoff date <span className="text-red-500">*</span></label>
-            <input type="date" value={bidCutoff} onChange={e => setBidCutoff(e.target.value)} className="input-field w-full px-2.5 py-2 rounded-lg text-sm outline-none focus:border-primary" />
+            <input type="datetime-local" value={bidCutoff} onChange={e => setBidCutoff(e.target.value)} className="input-field w-full px-2.5 py-2 rounded-lg text-sm outline-none focus:border-primary" />
           </div>
           <div>
             <label className="text-sm font-medium text-on-surface block mb-1.5">Expected delivery <span className="text-red-500">*</span></label>
-            <input type="date" value={deliveryDate} onChange={e => setDeliveryDate(e.target.value)} className="input-field w-full px-2.5 py-2 rounded-lg text-sm outline-none focus:border-primary" />
+            <input type="datetime-local" value={deliveryDate} onChange={e => setDeliveryDate(e.target.value)} className="input-field w-full px-2.5 py-2 rounded-lg text-sm outline-none focus:border-primary" />
           </div>
         </div>
         <div className="mb-5">
@@ -323,6 +336,22 @@ export default function Approvals() {
     <div className="max-w-3xl mx-auto">
       <h1 className="text-xl font-medium font-manrope tracking-tight text-on-surface mb-1">Approval queue</h1>
       <p className="text-sm text-on-surface-variant mb-6">Review submitted ideas and approve or reject them.</p>
+
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="surface-card-elevated p-5 text-center">
+          <p className="text-2xl font-bold text-primary">{ideas.length}</p>
+          <p className="text-xs text-on-surface-variant mt-1">Pending review</p>
+        </div>
+        <div className="surface-card-elevated p-5 text-center">
+          <p className="text-2xl font-bold text-amber-600">0</p>
+          <p className="text-xs text-on-surface-variant mt-1">Awaiting info</p>
+        </div>
+        <div className="surface-card-elevated p-5 text-center">
+          <p className="text-2xl font-bold text-emerald-600">—</p>
+          <p className="text-xs text-on-surface-variant mt-1">Approved this month</p>
+        </div>
+      </div>
 
       {ideas.length === 0 ? (
         <div className="surface-card p-12 text-center">

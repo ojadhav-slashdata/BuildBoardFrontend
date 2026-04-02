@@ -6,7 +6,7 @@ const categories = ['Tech', 'HR', 'Finance', 'Operations', 'Other'];
 
 export default function SubmitIdea() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ title: '', description: '', category: '', projectType: 'POC', projectOwner: '' });
+  const [form, setForm] = useState({ title: '', description: '', category: '', projectType: 'POC', projectOwner: '', businessValue: [], resources: '', challenges: '' });
   const [submitting, setSubmitting] = useState(false);
   const [titleCount, setTitleCount] = useState(0);
   const [descCount, setDescCount] = useState(0);
@@ -48,12 +48,13 @@ export default function SubmitIdea() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (form.businessValue.length === 0) { alert('Please select at least one business value.'); return; }
     if (descCount < 50) { alert('Description must be at least 50 characters.'); return; }
     if (!form.category) { alert('Please select a category.'); return; }
     if (!form.projectOwner) { alert('Please select a project owner.'); return; }
     setSubmitting(true);
     try {
-      await api.post('/ideas', form);
+      await api.post('/ideas', { ...form, businessValue: form.businessValue.join(','), resources: form.resources, challenges: form.challenges });
       navigate('/portal');
     } catch {
       alert('Failed to submit idea.');
@@ -167,6 +168,76 @@ export default function SubmitIdea() {
               <h4 className="text-xl font-bold mb-2 text-on-surface">Full product</h4>
               <p className="text-sm text-on-surface-variant leading-relaxed">Comprehensive development track. Full lifecycle from design to deployment.</p>
             </button>
+          </div>
+        </section>
+
+        {/* Section 3: Business Context */}
+        <section className="surface-card-elevated p-8 lg:p-10">
+          <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
+            <span className="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-sm font-bold">3</span>
+            Business Context
+          </h3>
+
+          <div className="space-y-8">
+            {/* Business Value Tags */}
+            <div>
+              <label className="block text-sm font-semibold text-on-surface-variant mb-3">
+                Business value <span className="text-error">*</span>
+                <span className="font-normal text-on-surface-variant/50 ml-2">Select at least one</span>
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {['Cost saving', 'Efficiency', 'Customer acquisition', 'Customer satisfaction', 'Product enhancement', 'Other'].map(tag => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => {
+                      setForm(f => ({
+                        ...f,
+                        businessValue: f.businessValue.includes(tag)
+                          ? f.businessValue.filter(t => t !== tag)
+                          : [...f.businessValue, tag]
+                      }));
+                    }}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                      form.businessValue.includes(tag)
+                        ? 'bg-primary text-on-primary shadow-tonal'
+                        : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
+                    }`}
+                  >
+                    {form.businessValue.includes(tag) && <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 mr-2" />}
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Resources */}
+            <div>
+              <label className="block text-sm font-semibold text-on-surface-variant mb-2">
+                Resources & stakeholders needed <span className="text-on-surface-variant/40">(optional)</span>
+              </label>
+              <textarea
+                value={form.resources}
+                onChange={update('resources')}
+                placeholder="Who might need to be involved? Any teams, tools, or budget required?"
+                className="input-field w-full resize-y min-h-[80px]"
+                rows={3}
+              />
+            </div>
+
+            {/* Known Challenges */}
+            <div>
+              <label className="block text-sm font-semibold text-on-surface-variant mb-2">
+                Known challenges <span className="text-on-surface-variant/40">(optional)</span>
+              </label>
+              <textarea
+                value={form.challenges}
+                onChange={update('challenges')}
+                placeholder="Any anticipated obstacles or risks the builder should be aware of?"
+                className="input-field w-full resize-y min-h-[80px]"
+                rows={3}
+              />
+            </div>
           </div>
         </section>
 

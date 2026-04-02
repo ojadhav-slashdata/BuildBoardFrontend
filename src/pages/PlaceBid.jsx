@@ -265,6 +265,18 @@ export default function PlaceBid() {
   const [approach, setApproach] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [timeLeft, setTimeLeft] = useState(null);
+
+  useEffect(() => {
+    if (!idea?.bidCutoffDate) return;
+    const update = () => {
+      const diff = new Date(idea.bidCutoffDate) - new Date();
+      setTimeLeft(diff > 0 ? diff : 0);
+    };
+    update();
+    const timer = setInterval(update, 60000);
+    return () => clearInterval(timer);
+  }, [idea]);
 
   useEffect(() => {
     setLoading(true);
@@ -320,6 +332,29 @@ export default function PlaceBid() {
       <IdeaBanner idea={idea} />
 
       <form onSubmit={handleSubmit} className="surface-card p-6 space-y-6">
+
+        {/* ── bid cutoff countdown ── */}
+        {timeLeft !== null && (
+          <div className={`rounded-2xl p-4 mb-6 flex items-center justify-between ${
+            timeLeft < 3600000 ? 'bg-error/10 border border-error/20' :
+            timeLeft < 86400000 ? 'bg-amber-50 border border-amber-200' :
+            'bg-surface-container-low border border-outline-variant/30'
+          }`}>
+            <div className="flex items-center gap-2">
+              <span className={`material-symbols-outlined ${timeLeft < 3600000 ? 'text-error' : timeLeft < 86400000 ? 'text-amber-600' : 'text-on-surface-variant'}`}>timer</span>
+              <span className={`text-sm font-medium ${timeLeft < 3600000 ? 'text-error' : timeLeft < 86400000 ? 'text-amber-700' : 'text-on-surface-variant'}`}>
+                {timeLeft < 3600000 ? 'Bidding closes very soon!' :
+                 timeLeft < 86400000 ? 'Bidding closes soon' : 'Time remaining to bid'}
+              </span>
+            </div>
+            <span className={`text-sm font-bold ${timeLeft < 3600000 ? 'text-error' : timeLeft < 86400000 ? 'text-amber-700' : 'text-primary'}`}>
+              {timeLeft <= 0 ? 'Closed' :
+               timeLeft < 3600000 ? `${Math.floor(timeLeft/60000)} mins` :
+               timeLeft < 86400000 ? `${Math.floor(timeLeft/3600000)}h ${Math.floor((timeLeft%3600000)/60000)}m` :
+               `${Math.floor(timeLeft/86400000)}d ${Math.floor((timeLeft%86400000)/3600000)}h`}
+            </span>
+          </div>
+        )}
 
         {/* ── mode toggle ── */}
         <div>
