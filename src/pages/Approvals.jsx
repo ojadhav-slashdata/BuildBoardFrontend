@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../axiosConfig';
-import { useToast } from '../context/ToastContext';
 
 const pocSizes = [
   { name: 'Micro', time: '< 1 day', hours: '< 8 hrs', pts: 10, min: 4, max: 8 },
@@ -27,7 +26,6 @@ const complexities = [
 
 export default function Approvals() {
   const navigate = useNavigate();
-  const { showToast } = useToast();
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedIdea, setSelectedIdea] = useState(null);
@@ -99,7 +97,7 @@ export default function Approvals() {
   };
 
   const handleApprove = async () => {
-    if (!bidCutoff || !deliveryDate) { showToast('Please set both dates.', 'warning'); return; }
+    if (!bidCutoff || !deliveryDate) { alert('Please set both dates.'); return; }
     setSubmitting(true);
     try {
       await api.patch(`/ideas/${selectedIdea._id || selectedIdea.id}/approve`, {
@@ -111,17 +109,17 @@ export default function Approvals() {
         projectType,
       });
       setScreen('approve-success');
-    } catch { showToast('Failed to approve.', 'error'); }
+    } catch { alert('Failed to approve.'); }
     setSubmitting(false);
   };
 
   const handleReject = async () => {
-    if (!rejectComment.trim()) { showToast('Please add a rejection comment.', 'warning'); return; }
+    if (!rejectComment.trim()) { alert('Please add a rejection comment.'); return; }
     setSubmitting(true);
     try {
       await api.patch(`/ideas/${selectedIdea._id || selectedIdea.id}/reject`, { comment: rejectComment });
       setScreen('reject-success');
-    } catch { showToast('Failed to reject.', 'error'); }
+    } catch { alert('Failed to reject.'); }
     setSubmitting(false);
   };
 

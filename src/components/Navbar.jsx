@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import ThemeSwitcher from './ThemeSwitcher';
-import api from '../axiosConfig';
 
 const devRoles = ['Employee', 'Manager', 'Admin'];
 
@@ -19,18 +18,11 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
-  const [notifications, setNotifications] = useState([]);
-  const [showNotifDropdown, setShowNotifDropdown] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const notifRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setShowMenu(false);
-      }
-      if (notifRef.current && !notifRef.current.contains(e.target)) {
-        setShowNotifDropdown(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -45,40 +37,6 @@ export default function Navbar() {
   const points = user?.totalPoints || 0;
   const milestone = getMilestone(points);
 
-  // Fetch notifications
-  useEffect(() => {
-    if (!user) return;
-    const fetchNotifications = async () => {
-      try {
-        const res = await api.get('/notifications');
-        const newNotifs = res.data || [];
-        setNotifications(newNotifs);
-        if (!showNotifDropdown) {
-          setUnreadCount(newNotifs.length);
-        }
-      } catch (err) {
-        // silently fail
-      }
-    };
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000);
-    return () => clearInterval(interval);
-  }, [user]);
-
-  const timeAgo = (timestamp) => {
-    const seconds = Math.floor((Date.now() - new Date(timestamp)) / 1000);
-    if (seconds < 60) return 'just now';
-    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-    return `${Math.floor(seconds / 86400)}d ago`;
-  };
-
-  const notifIcon = (type) => {
-    if (type === 'bid') return 'gavel';
-    if (type === 'comment') return 'chat_bubble';
-    return 'lightbulb';
-  };
-
   return (
     <nav className="glass-nav px-8 py-3 flex items-center justify-between sticky top-0 z-50">
       <div className="flex items-center gap-3">
@@ -90,9 +48,10 @@ export default function Navbar() {
         {/* Theme Switcher */}
         <ThemeSwitcher />
 
-        {/* Role Switcher */}
+        {/* DEV Role Switcher */}
         {user && (
           <div className="flex items-center gap-2 bg-surface-container-low rounded-full px-2 py-1">
+            <span className="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-wider px-1">Dev</span>
             <div className="inline-flex bg-surface-container-high rounded-full p-0.5">
               {devRoles.map((role) => (
                 <button
@@ -108,48 +67,6 @@ export default function Navbar() {
                 </button>
               ))}
             </div>
-          </div>
-        )}
-
-        {/* Notification Bell */}
-        {user && (
-          <div className="relative" ref={notifRef}>
-            <button
-              onClick={() => { setShowNotifDropdown(!showNotifDropdown); setUnreadCount(0); }}
-              className="relative p-2 rounded-xl hover:bg-surface-container-low transition-colors"
-            >
-              <span className="material-symbols-outlined text-[22px]">notifications</span>
-              {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center min-w-[18px] h-[18px]">
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
-              )}
-            </button>
-
-            {showNotifDropdown && (
-              <div className="absolute right-0 top-full mt-2 w-80 bg-surface-container-lowest rounded-2xl shadow-xl border border-surface-container-high overflow-hidden z-50">
-                <div className="px-4 py-3 border-b border-surface-container-high">
-                  <h3 className="text-sm font-semibold text-on-surface">Notifications</h3>
-                </div>
-                <div className="max-h-80 overflow-y-auto">
-                  {notifications.length === 0 ? (
-                    <div className="px-4 py-6 text-center text-sm text-on-surface-variant/60">No notifications yet</div>
-                  ) : (
-                    notifications.map((notif, i) => (
-                      <div key={i} className="px-4 py-3 hover:bg-surface-container-low border-b border-surface-container-high/50 last:border-0 cursor-pointer" onClick={() => { navigate(`/ideas/${notif.ideaId}`); setShowNotifDropdown(false); }}>
-                        <div className="flex items-start gap-3">
-                          <span className="material-symbols-outlined text-[18px] text-primary mt-0.5">{notifIcon(notif.type)}</span>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm text-on-surface line-clamp-2">{notif.message}</p>
-                            <p className="text-xs text-on-surface-variant/60 mt-1">{timeAgo(notif.timestamp)}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            )}
           </div>
         )}
 

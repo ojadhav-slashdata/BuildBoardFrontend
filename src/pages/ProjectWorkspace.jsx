@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import api from '../axiosConfig';
-import { supabase } from '../supabaseClient';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -163,34 +162,6 @@ export default function ProjectWorkspace() {
       .catch(() => setMessages([]))
       .finally(() => setLoadingMessages(false));
   }, [activeChannel, activeTab, id]);
-
-  // Supabase Realtime chat subscription
-  useEffect(() => {
-    if (!id) return;
-    const channel = supabase
-      .channel(`project-chat-${id}`)
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'project_messages',
-        filter: `idea_id=eq.${id}`
-      }, (payload) => {
-        const msg = payload.new;
-        if (msg.channel !== activeChannel) return;
-        setMessages(prev => {
-          if (prev.some(m => m.id === msg.id)) return prev;
-          return [...prev, {
-            ...msg,
-            messageType: msg.message_type,
-            createdAt: msg.created_at,
-            sender: { displayName: msg.user_name || 'Team Member', avatar: msg.user_avatar || '' },
-          }];
-        });
-      })
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
-  }, [id, activeChannel]);
 
   // Scroll chat to bottom
   useEffect(() => {
@@ -688,22 +659,10 @@ export default function ProjectWorkspace() {
         <div className="surface-card-elevated p-5">
           <h3 className="font-manrope font-bold text-sm text-on-surface mb-3">Project Info</h3>
           <div className="space-y-3 text-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm text-on-surface-variant">
-                <span className="material-symbols-outlined text-[18px]">schedule</span>
-                Status
-              </div>
-              <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                project.status === 'InProgress' ? 'bg-blue-100 text-blue-700' :
-                project.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' :
-                project.status === 'BiddingOpen' ? 'bg-amber-100 text-amber-700' :
-                project.status === 'Rejected' ? 'bg-red-100 text-red-700' :
-                'bg-gray-100 text-gray-600'
-              }`}>{project.status ? project.status.replace(/([A-Z])/g, ' $1').trim() : 'Not set'}</span>
-            </div>
-            <InfoRow icon="straighten" label="Size" value={project.size || 'Not set'} />
-            <InfoRow icon="category" label="Type" value={(project.project_type || project.projectType || 'Not set') === 'FullProduct' ? 'Full Product' : (project.project_type || project.projectType || 'Not set')} />
-            <InfoRow icon="label" label="Category" value={project.category || 'Not set'} />
+            <InfoRow icon="info" label="Status" value={project.status || 'N/A'} />
+            <InfoRow icon="straighten" label="Size" value={project.size || 'N/A'} />
+            <InfoRow icon="category" label="Type" value={project.projectType || 'N/A'} />
+            <InfoRow icon="label" label="Category" value={project.category || 'N/A'} />
             {deliveryDate && (
               <InfoRow icon="calendar_today" label="Delivery" value={new Date(deliveryDate).toLocaleDateString()} />
             )}
@@ -1080,11 +1039,7 @@ function ChatTab({ activeChannel, setActiveChannel, messages, loadingMessages, m
   return (
     <div className="surface-card-elevated flex flex-col" style={{ height: 'calc(100vh - 16rem)' }}>
       {/* Channel tabs */}
-      <div className="flex items-center gap-1 p-2 border-b border-surface-container-low">
-        <span className="flex items-center gap-1 text-[10px] text-emerald-600 font-semibold mr-1">
-          <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-          Live
-        </span>
+      <div className="flex gap-1 p-2 border-b border-surface-container-low">
         {CHANNELS.map(ch => (
           <button
             key={ch}
