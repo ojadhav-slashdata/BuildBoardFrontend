@@ -256,6 +256,8 @@ export default function PlaceBid() {
 
   const [idea, setIdea] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [canBid, setCanBid] = useState(true);
+  const [bidError, setBidError] = useState('');
 
   // form state
   const [mode, setMode] = useState('solo');
@@ -280,10 +282,33 @@ export default function PlaceBid() {
 
   useEffect(() => {
     setLoading(true);
-    api.get(`/ideas/${ideaId}`)
-      .then(({ data }) => setIdea(data))
-      .catch(() => setIdea(null))
-      .finally(() => setLoading(false));
+    (async () => {
+      try {
+        const res = await api.get(`/ideas/${ideaId}`);
+        setIdea(res.data);
+
+        // Check if can bid
+        if (res.data.status !== 'BiddingOpen') {
+          setCanBid(false);
+          setBidError('This idea is not open for bidding');
+        }
+        if (res.data.bidCutoffDate && new Date(res.data.bidCutoffDate) < new Date()) {
+          setCanBid(false);
+          setBidError('Bidding deadline has passed');
+        }
+
+        // Check if already bid
+        try {
+          const bidsRes = await api.get(`/ideas/${ideaId}/bids`);
+          const myBid = (bidsRes.data.bids || bidsRes.data || []).find(b => b.bidder === user?.id);
+          if (myBid) { setCanBid(false); setBidError('You have already placed a bid on this idea'); }
+        } catch {}
+      } catch {
+        setIdea(null);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, [ideaId]);
 
   const late = isLate(committedDate, idea?.expectedDeliveryDate);
@@ -353,6 +378,14 @@ export default function PlaceBid() {
                timeLeft < 86400000 ? `${Math.floor(timeLeft/3600000)}h ${Math.floor((timeLeft%3600000)/60000)}m` :
                `${Math.floor(timeLeft/86400000)}d ${Math.floor((timeLeft%86400000)/3600000)}h`}
             </span>
+          </div>
+        )}
+
+        {/* ── bid validation error ── */}
+        {!canBid && (
+          <div className="bg-error/10 border border-error/20 rounded-2xl p-4 mb-6 flex items-center gap-3">
+            <span className="material-symbols-outlined text-error">block</span>
+            <p className="text-sm font-medium text-error">{bidError}</p>
           </div>
         )}
 
@@ -438,7 +471,7 @@ export default function PlaceBid() {
         {/* ── submit button ── */}
         <button
           type="submit"
-          disabled={submitting}
+          disabled={submitting || !canBid}
           className="w-full bg-gradient-to-r from-primary to-primary-container hover:bg-primary text-white py-2.5 rounded-full text-sm font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {submitting

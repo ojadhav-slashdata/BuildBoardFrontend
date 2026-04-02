@@ -11,6 +11,7 @@ const linksByRole = {
   ],
   Manager: [
     { to: '/portal', label: 'Home', icon: 'dashboard' },
+    { to: '/bids/dashboard', label: 'Bid Dashboard', icon: 'gavel' },
     { to: '/approvals', label: 'Approvals', icon: 'fact_check' },
     { to: '/analytics', label: 'Analytics', icon: 'monitoring' },
     { to: '/marketplace', label: 'Rewards', icon: 'redeem' },
@@ -19,6 +20,7 @@ const linksByRole = {
   ],
   Admin: [
     { to: '/portal', label: 'Home', icon: 'dashboard' },
+    { to: '/bids/dashboard', label: 'Bid Dashboard', icon: 'gavel' },
     { to: '/approvals', label: 'Approvals', icon: 'fact_check' },
     { to: '/analytics', label: 'Analytics', icon: 'monitoring' },
     { to: '/admin/users', label: 'Users', icon: 'group' },

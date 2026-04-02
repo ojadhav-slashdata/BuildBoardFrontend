@@ -23,6 +23,7 @@ import Feedback from './pages/Feedback';
 import BidResults from './pages/BidResults';
 import Marketplace from './pages/Marketplace';
 import Guide from './pages/Guide';
+import BidDashboard from './pages/BidDashboard';
 
 export default function App() {
   return (
@@ -50,6 +51,7 @@ export default function App() {
         <Route path="/guide" element={<ProtectedRoute><Guide /></ProtectedRoute>} />
 
         {/* Manager / Admin */}
+        <Route path="/bids/dashboard" element={<ProtectedRoute><BidDashboard /></ProtectedRoute>} />
         <Route
           path="/approvals"
           element={
