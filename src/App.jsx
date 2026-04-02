@@ -25,6 +25,7 @@ import Marketplace from './pages/Marketplace';
 import Guide from './pages/Guide';
 import BidDashboard from './pages/BidDashboard';
 import BrowseIdeas from './pages/BrowseIdeas';
+import ExecutiveDashboard from './pages/ExecutiveDashboard';
 
 export default function App() {
   return (
@@ -83,6 +84,14 @@ export default function App() {
           element={
             <ProtectedRoute roles={['Manager', 'Admin']}>
               <Analytics />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/executive"
+          element={
+            <ProtectedRoute roles={['Manager', 'Admin']}>
+              <ExecutiveDashboard />
             </ProtectedRoute>
           }
         />
