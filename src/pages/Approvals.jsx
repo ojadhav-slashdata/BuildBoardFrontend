@@ -386,11 +386,23 @@ export default function Approvals() {
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div>
             <label className="text-sm font-medium text-on-surface block mb-1.5">Bid cutoff date <span className="text-red-500">*</span></label>
-            <input type="datetime-local" value={bidCutoff} onChange={e => setBidCutoff(e.target.value)} className="input-field w-full px-2.5 py-2 rounded-lg text-sm outline-none focus:border-primary" />
+            <div className="relative">
+              <input type="date" value={bidCutoff} onChange={e => setBidCutoff(e.target.value)}
+                min={new Date().toISOString().split('T')[0]}
+                className="input-field w-full px-3 py-3 rounded-xl text-sm outline-none focus:border-primary cursor-pointer appearance-none" />
+              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none text-lg">calendar_month</span>
+            </div>
+            <p className="text-xs text-on-surface-variant/40 mt-1">When bidding window closes</p>
           </div>
           <div>
             <label className="text-sm font-medium text-on-surface block mb-1.5">Expected delivery <span className="text-red-500">*</span></label>
-            <input type="datetime-local" value={deliveryDate} onChange={e => setDeliveryDate(e.target.value)} className="input-field w-full px-2.5 py-2 rounded-lg text-sm outline-none focus:border-primary" />
+            <div className="relative">
+              <input type="date" value={deliveryDate} onChange={e => setDeliveryDate(e.target.value)}
+                min={bidCutoff || new Date().toISOString().split('T')[0]}
+                className="input-field w-full px-3 py-3 rounded-xl text-sm outline-none focus:border-primary cursor-pointer appearance-none" />
+              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none text-lg">calendar_month</span>
+            </div>
+            <p className="text-xs text-on-surface-variant/40 mt-1">Target completion for builders</p>
           </div>
         </div>
         <div className="mb-5">
