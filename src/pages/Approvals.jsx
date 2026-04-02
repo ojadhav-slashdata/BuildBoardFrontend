@@ -47,6 +47,11 @@ export default function Approvals() {
   // Reject state
   const [rejectComment, setRejectComment] = useState('');
 
+  // List view state
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState('All');
+  const [sortBy, setSortBy] = useState('newest');
+
   // User search for project owner assignment
   const [users, setUsers] = useState([]);
   const [ownerSearch, setOwnerSearch] = useState('');
@@ -547,10 +552,6 @@ export default function Approvals() {
   // ===== IDEAS LIST =====
   const CATEGORY_ICONS = { Tech: 'computer', HR: 'groups', Finance: 'payments', Operations: 'settings', Other: 'lightbulb' };
   const CATEGORY_COLORS = { Tech: 'bg-sky-50 text-sky-600', HR: 'bg-violet-50 text-violet-600', Finance: 'bg-emerald-50 text-emerald-600', Operations: 'bg-amber-50 text-amber-600', Other: 'bg-slate-50 text-slate-600' };
-
-  const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('All');
-  const [sortBy, setSortBy] = useState('newest');
 
   const filteredIdeas = ideas
     .filter(idea => {
