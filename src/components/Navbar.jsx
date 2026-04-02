@@ -4,8 +4,6 @@ import { useAuth } from '../hooks/useAuth';
 import ThemeSwitcher from './ThemeSwitcher';
 import NotificationBell from './NotificationBell';
 
-const devRoles = ['Employee', 'Manager', 'Admin'];
-
 const MILESTONES = [2000, 4000, 6000, 8000, 10000];
 
 function getMilestone(points) {
@@ -15,7 +13,7 @@ function getMilestone(points) {
 }
 
 export default function Navbar() {
-  const { user, logout, switchRole } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
@@ -49,26 +47,11 @@ export default function Navbar() {
         {/* Theme Switcher */}
         <ThemeSwitcher />
 
-        {/* DEV Role Switcher */}
+        {/* Role badge (read-only) */}
         {user && (
-          <div className="flex items-center gap-2 bg-surface-container-low rounded-full px-2 py-1">
-            <span className="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-wider px-1">Dev</span>
-            <div className="inline-flex bg-surface-container-high rounded-full p-0.5">
-              {devRoles.map((role) => (
-                <button
-                  key={role}
-                  onClick={() => switchRole(role)}
-                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 ${
-                    user.role === role
-                      ? 'bg-gradient-to-r from-primary to-primary-container text-white shadow-sm'
-                      : 'text-on-surface-variant hover:text-on-surface'
-                  }`}
-                >
-                  {role}
-                </button>
-              ))}
-            </div>
-          </div>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+            {user.role}
+          </span>
         )}
 
         {/* Notification Bell */}

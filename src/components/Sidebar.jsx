@@ -30,14 +30,8 @@ const sectionsByRole = {
       { to: '/my-bids', label: 'My Bids', icon: 'assignment' },
       { to: '/projects', label: 'Projects', icon: 'folder_special' },
     ],
-    REQUESTS: [
-      { to: '/approvals', label: 'Approvals', icon: 'fact_check' },
-    ],
-    DASHBOARDS: [
-      { to: '/bids/dashboard', label: 'Bid Dashboard', icon: 'analytics' },
-      { to: '/analytics', label: 'Analytics', icon: 'monitoring' },
-      { to: '/executive', label: 'Executive View', icon: 'trending_up' },
-    ],
+    REQUESTS: [],
+    DASHBOARDS: [],
   },
   Admin: {
     MENU: [

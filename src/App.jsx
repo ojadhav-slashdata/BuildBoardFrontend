@@ -59,12 +59,12 @@ export default function App() {
         <Route path="/marketplace" element={<ProtectedRoute><Marketplace /></ProtectedRoute>} />
         <Route path="/guide" element={<ProtectedRoute><Guide /></ProtectedRoute>} />
 
-        {/* Manager / Admin */}
+        {/* Admin only (approvals, analytics, dashboards) */}
         <Route path="/bids/dashboard" element={<ProtectedRoute><BidDashboard /></ProtectedRoute>} />
         <Route
           path="/approvals"
           element={
-            <ProtectedRoute roles={['Manager', 'Admin']}>
+            <ProtectedRoute roles={['Admin']}>
               <Approvals />
             </ProtectedRoute>
           }
@@ -72,7 +72,7 @@ export default function App() {
         <Route
           path="/bids/:ideaId"
           element={
-            <ProtectedRoute roles={['Manager', 'Admin']}>
+            <ProtectedRoute roles={['Admin']}>
               <BidReview />
             </ProtectedRoute>
           }
@@ -80,7 +80,7 @@ export default function App() {
         <Route
           path="/ideas/:id/feedback"
           element={
-            <ProtectedRoute roles={['Manager', 'Admin']}>
+            <ProtectedRoute roles={['Admin']}>
               <Feedback />
             </ProtectedRoute>
           }
@@ -88,7 +88,7 @@ export default function App() {
         <Route
           path="/analytics"
           element={
-            <ProtectedRoute roles={['Manager', 'Admin']}>
+            <ProtectedRoute roles={['Admin']}>
               <Analytics />
             </ProtectedRoute>
           }
@@ -96,7 +96,7 @@ export default function App() {
         <Route
           path="/executive"
           element={
-            <ProtectedRoute roles={['Manager', 'Admin']}>
+            <ProtectedRoute roles={['Admin']}>
               <ExecutiveDashboard />
             </ProtectedRoute>
           }
