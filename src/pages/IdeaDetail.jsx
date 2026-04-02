@@ -180,7 +180,7 @@ export default function IdeaDetail() {
         {/* Attachment */}
         {idea.attachmentUrl && (
           <div className="flex items-center gap-3 mt-4 p-3 bg-surface-container-low rounded-xl">
-            {idea.attachmentUrl.startsWith('data:image') ? (
+            {(/\.(png|jpg|jpeg|gif|webp)$/i.test(idea.attachmentName || '') || idea.attachmentUrl.startsWith('data:image')) ? (
               <img src={idea.attachmentUrl} alt="" className="w-16 h-16 object-cover rounded-lg" />
             ) : (
               <div className="w-10 h-10 bg-primary/5 rounded-xl flex items-center justify-center">

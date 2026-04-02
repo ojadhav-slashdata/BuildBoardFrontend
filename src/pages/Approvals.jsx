@@ -315,7 +315,7 @@ export default function Approvals() {
             <div className="mt-3 pt-3 border-t border-outline-variant/10">
               <p className="text-xs font-semibold text-on-surface-variant mb-2">Attached File</p>
               <div className="flex items-center gap-3 p-3 bg-surface-container-lowest rounded-xl">
-                {selectedIdea.attachmentUrl.startsWith('data:image') ? (
+                {(/\.(png|jpg|jpeg|gif|webp)$/i.test(selectedIdea.attachmentName || '') || selectedIdea.attachmentUrl.startsWith('data:image')) ? (
                   <img src={selectedIdea.attachmentUrl} alt="Attachment" className="w-20 h-20 object-cover rounded-lg" />
                 ) : (
                   <div className="w-12 h-12 bg-primary/5 rounded-xl flex items-center justify-center">
