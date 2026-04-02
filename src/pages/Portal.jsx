@@ -106,20 +106,26 @@ export default function Portal() {
 
   const needsAttention = [];
 
-  if (isAdmin) {
-    // Admin: ONLY pending approvals — the one truly actionable item
-    ideas.filter((i) => i.status === 'PendingApproval').forEach((i) => {
-      needsAttention.push({ id: i._id, type: 'review', title: i.title, sub: 'Awaiting your approval', icon: 'rate_review', link: `/approvals?ideaId=${i._id}` });
-    });
-    // Admin: bidding past cutoff with no winner assigned yet
-    ideas.filter((i) => i.status === 'BiddingOpen' && i.bidCutoffDate && new Date(i.bidCutoffDate).getTime() > 0 && new Date(i.bidCutoffDate).getTime() < Date.now()).forEach((i) => {
-      needsAttention.push({ id: i._id, type: 'assign', title: i.title, sub: 'Bidding closed — assign winner', icon: 'assignment_turned_in', link: `/bids/${i._id}` });
-    });
-  } else {
-    // Non-admin: only ideas open for bidding that user hasn't bid on
-    const unbidIdeas = ideas.filter((i) => i.status === 'BiddingOpen' && !myBidIdeaIds.has(i._id) && (!i.bidCutoffDate || new Date(i.bidCutoffDate).getTime() > Date.now()));
-    unbidIdeas.slice(0, 4).forEach((i) => {
+  // For everyone: ideas open for bidding that user hasn't bid on
+  ideas
+    .filter((i) => i.status === 'BiddingOpen' && !myBidIdeaIds.has(i._id) && i.submittedBy !== user?.id && (!i.bidCutoffDate || new Date(i.bidCutoffDate).getTime() > Date.now()))
+    .slice(0, 4)
+    .forEach((i) => {
       needsAttention.push({ id: i._id, type: 'bid', title: i.title, sub: 'Open for bidding — place your bid', icon: 'gavel', link: `/ideas/${i._id}/bid` });
+    });
+
+  if (isAdmin || isManager) {
+    // Pending approvals
+    ideas.filter((i) => i.status === 'PendingApproval').forEach((i) => {
+      needsAttention.push({ id: i._id, type: 'review', title: i.title, sub: 'Awaiting your approval', icon: 'rate_review', link: `/approvals?review=${i._id}` });
+    });
+    // Completed ideas awaiting feedback
+    ideas.filter((i) => i.status === 'Completed').forEach((i) => {
+      needsAttention.push({ id: `fb-${i._id}`, type: 'feedback', title: i.title, sub: 'Completed — rate delivery', icon: 'star_rate', link: `/ideas/${i._id}/feedback` });
+    });
+    // Bidding past cutoff — assign winner
+    ideas.filter((i) => i.status === 'BiddingOpen' && i.bidCutoffDate && new Date(i.bidCutoffDate).getTime() < Date.now()).forEach((i) => {
+      needsAttention.push({ id: `assign-${i._id}`, type: 'assign', title: i.title, sub: 'Bidding closed — assign winner', icon: 'assignment_turned_in', link: `/bids/${i._id}` });
     });
   }
 
@@ -185,9 +191,20 @@ export default function Portal() {
         <div className="xl:col-span-2 space-y-8">
 
           {/* Needs Your Attention */}
-          {needsAttention.length > 0 && (
-            <section>
-              <h2 className="text-xl font-bold font-manrope tracking-tight text-on-surface mb-4">Needs Your Attention</h2>
+          <section>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="material-symbols-outlined text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>notifications_active</span>
+              <h2 className="text-xl font-bold font-manrope tracking-tight text-on-surface">Needs Your Attention</h2>
+              {needsAttention.length > 0 && (
+                <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">{needsAttention.length}</span>
+              )}
+            </div>
+            {needsAttention.length === 0 ? (
+              <div className="bg-surface-container-lowest rounded-2xl p-6 text-center">
+                <span className="material-symbols-outlined text-3xl text-on-surface-variant/20 mb-2">check_circle</span>
+                <p className="text-sm text-on-surface-variant">You're all caught up! No pending actions.</p>
+              </div>
+            ) : (
               <div className="space-y-3">
                 {needsAttention.map((item) => (
                   <div
@@ -195,7 +212,12 @@ export default function Portal() {
                     onClick={() => navigate(item.link)}
                     className="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-2xl hover:shadow-tonal-md transition-all duration-200 cursor-pointer group"
                   >
-                    <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+                    <div className={`p-2.5 rounded-xl ${
+                      item.type === 'review' ? 'bg-blue-50 text-blue-600' :
+                      item.type === 'feedback' ? 'bg-amber-50 text-amber-600' :
+                      item.type === 'assign' ? 'bg-purple-50 text-purple-600' :
+                      'bg-primary/10 text-primary'
+                    }`}>
                       <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
                     </div>
                     <div className="flex-grow min-w-0">
@@ -206,8 +228,8 @@ export default function Portal() {
                   </div>
                 ))}
               </div>
-            </section>
-          )}
+            )}
+          </section>
 
           {/* Recent Activity */}
           <section>
