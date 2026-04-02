@@ -247,34 +247,23 @@ export default function Approvals() {
         <h2 className="text-lg font-medium font-manrope text-on-surface mb-1">Approve idea</h2>
         <p className="text-sm text-on-surface-variant mb-5">Set the size, complexity, and dates before this idea goes live for bidding.</p>
 
-        {/* Idea banner */}
-        <div className="bg-surface-container-low rounded-lg p-3 mb-5 flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-on-surface">{selectedIdea?.title}</p>
-            <p className="text-xs text-on-surface-variant">Category: {selectedIdea?.category} · Approver: {selectedIdea?.projectOwner || 'Not set'}</p>
-          </div>
-          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${projectType === 'FullProduct' ? 'bg-green-50 text-green-800' : 'bg-primary/10 text-primary'}`}>
-            {projectType === 'FullProduct' ? 'Full product' : 'POC'}
-          </span>
-        </div>
-        {selectedIdea?.businessValue && (
-          <div className="flex flex-wrap gap-1.5 mt-3">
-            {selectedIdea.businessValue.split(',').map((tag, i) => (
-              <span key={i} className="text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">{tag.trim()}</span>
-            ))}
-          </div>
-        )}
-        {selectedIdea?.challenges && (
-          <p className="text-xs text-amber-600 mt-2 flex items-center gap-1">
-            <span className="material-symbols-outlined text-sm">warning</span>
-            Known challenges: {selectedIdea.challenges}
-          </p>
-        )}
-
-        {/* Full idea details */}
+        {/* Idea summary */}
         <div className="bg-surface-container-low rounded-lg p-4 mb-5">
-          <h4 className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant/60 mb-3">Full Submission Details</h4>
-          <p className="text-sm text-on-surface leading-relaxed mb-3">{selectedIdea?.description}</p>
+          <div className="flex items-start justify-between mb-3">
+            <h3 className="text-base font-bold text-on-surface">{selectedIdea?.title}</h3>
+            <span className={`text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0 ${projectType === 'FullProduct' ? 'bg-green-50 text-green-800' : 'bg-primary/10 text-primary'}`}>
+              {projectType === 'FullProduct' ? 'Full product' : 'POC'}
+            </span>
+          </div>
+          <p className="text-sm text-on-surface-variant leading-relaxed mb-3">{selectedIdea?.description}</p>
+
+          {selectedIdea?.businessValue && (
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {selectedIdea.businessValue.split(',').map((tag, i) => (
+                <span key={i} className="text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">{tag.trim()}</span>
+              ))}
+            </div>
+          )}
 
           {selectedIdea?.resources && (
             <div className="mb-2">
@@ -290,22 +279,18 @@ export default function Approvals() {
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-outline-variant/10">
+          <div className="grid grid-cols-3 gap-3 mt-3 pt-3 border-t border-outline-variant/10">
             <div>
               <p className="text-xs text-on-surface-variant/60">Category</p>
               <p className="text-sm font-medium text-on-surface">{selectedIdea?.category || 'Not set'}</p>
             </div>
             <div>
-              <p className="text-xs text-on-surface-variant/60">Assigned Approver</p>
-              <p className="text-sm font-medium text-on-surface">{selectedIdea?.projectOwner || 'Not set'}</p>
+              <p className="text-xs text-on-surface-variant/60">Submitted by</p>
+              <p className="text-sm font-medium text-on-surface">{selectedIdea?.submittedByName || 'Unknown'}</p>
             </div>
             <div>
               <p className="text-xs text-on-surface-variant/60">Submitted</p>
               <p className="text-sm font-medium text-on-surface">{selectedIdea?.createdAt ? new Date(selectedIdea.createdAt).toLocaleDateString() : 'Unknown'}</p>
-            </div>
-            <div>
-              <p className="text-xs text-on-surface-variant/60">Project Type</p>
-              <p className="text-sm font-medium text-on-surface">{selectedIdea?.projectType === 'FullProduct' ? 'Full Product' : 'POC'}</p>
             </div>
           </div>
           {selectedIdea?.attachmentUrl && (
@@ -468,13 +453,15 @@ export default function Approvals() {
           {/* Quick assign options */}
           <div className="flex gap-2 mb-3">
             <button type="button" onClick={() => {
-              const email = selectedIdea?.submittedByEmail || '';
-              setProjectOwner(email);
-              setOwnerSearch('');
-              setShowOwnerDropdown(false);
+              const email = selectedIdea?.submittedByEmail || selectedIdea?.submittedByName || selectedIdea?.projectOwner || '';
+              if (email) {
+                setProjectOwner(email);
+                setOwnerSearch('');
+                setShowOwnerDropdown(false);
+              }
             }}
               className={`px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                projectOwner && projectOwner === selectedIdea?.submittedByEmail
+                projectOwner && (projectOwner === selectedIdea?.submittedByEmail || projectOwner === selectedIdea?.submittedByName)
                   ? 'bg-primary text-on-primary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
               }`}>
               <span className="material-symbols-outlined text-sm mr-1 align-middle">person</span>
