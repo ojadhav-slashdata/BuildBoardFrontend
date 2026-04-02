@@ -19,8 +19,16 @@ export default function BidDashboard() {
   const [showAlgo, setShowAlgo] = useState(false);
   const [assigning, setAssigning] = useState(null);
 
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    api.get('/bids/dashboard').then(r => setData(r.data)).catch(() => {}).finally(() => setLoading(false));
+    api.get('/bids/dashboard')
+      .then(r => setData(r.data))
+      .catch(err => {
+        console.error('Bid dashboard error:', err);
+        setError(err.response?.data?.error || err.message || 'Failed to load');
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   // Animate algorithm steps
@@ -52,7 +60,15 @@ export default function BidDashboard() {
   };
 
   if (loading) return <div className="flex justify-center py-20 text-on-surface-variant">Loading...</div>;
-  if (!data) return <div className="text-center py-20 text-on-surface-variant">Failed to load</div>;
+  if (error) return (
+    <div className="text-center py-20">
+      <span className="material-symbols-outlined text-4xl text-error/50 mb-3 block">error</span>
+      <p className="text-error font-medium">{error}</p>
+      <p className="text-sm text-on-surface-variant mt-2">Make sure you are logged in as Manager or Admin</p>
+      <button onClick={() => window.location.reload()} className="btn-primary mt-4">Retry</button>
+    </div>
+  );
+  if (!data) return <div className="text-center py-20 text-on-surface-variant">No data available</div>;
 
   const { dashboard, algorithm } = data;
 
