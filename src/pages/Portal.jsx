@@ -107,29 +107,19 @@ export default function Portal() {
   const needsAttention = [];
 
   if (isAdmin) {
-    // Admin: pending approvals first (primary action)
+    // Admin: ONLY pending approvals — the one truly actionable item
     ideas.filter((i) => i.status === 'PendingApproval').forEach((i) => {
       needsAttention.push({ id: i._id, type: 'review', title: i.title, sub: 'Awaiting your approval', icon: 'rate_review', link: `/approvals?ideaId=${i._id}` });
     });
-    // Admin: completed ideas needing feedback/rating
-    ideas.filter((i) => i.status === 'Completed').slice(0, 3).forEach((i) => {
-      needsAttention.push({ id: i._id, type: 'feedback', title: i.title, sub: 'Ready for your rating', icon: 'feedback', link: `/ideas/${i._id}/feedback` });
-    });
-    // Admin: bidding open ideas past cutoff needing assignment
-    ideas.filter((i) => i.status === 'BiddingOpen' && i.bidCutoffDate && new Date(i.bidCutoffDate).getTime() < Date.now()).slice(0, 2).forEach((i) => {
+    // Admin: bidding past cutoff with no winner assigned yet
+    ideas.filter((i) => i.status === 'BiddingOpen' && i.bidCutoffDate && new Date(i.bidCutoffDate).getTime() > 0 && new Date(i.bidCutoffDate).getTime() < Date.now()).forEach((i) => {
       needsAttention.push({ id: i._id, type: 'assign', title: i.title, sub: 'Bidding closed — assign winner', icon: 'assignment_turned_in', link: `/bids/${i._id}` });
     });
   } else {
-    // Non-admin: new ideas they can bid on
-    const unbidIdeas = ideas.filter((i) => i.status === 'BiddingOpen' && !myBidIdeaIds.has(i._id));
+    // Non-admin: only ideas open for bidding that user hasn't bid on
+    const unbidIdeas = ideas.filter((i) => i.status === 'BiddingOpen' && !myBidIdeaIds.has(i._id) && (!i.bidCutoffDate || new Date(i.bidCutoffDate).getTime() > Date.now()));
     unbidIdeas.slice(0, 4).forEach((i) => {
       needsAttention.push({ id: i._id, type: 'bid', title: i.title, sub: 'Open for bidding — place your bid', icon: 'gavel', link: `/ideas/${i._id}/bid` });
-    });
-    // Non-admin: their in-progress projects needing hour logs
-    ideas.filter((i) => i.status === 'InProgress' && (
-      i.submittedBy === user?.id || i.teamMembers?.some(m => m.id === user?.id)
-    )).slice(0, 2).forEach((i) => {
-      needsAttention.push({ id: i._id, type: 'project', title: i.title, sub: 'Your active project — log hours', icon: 'schedule', link: `/projects/${i._id}` });
     });
   }
 
