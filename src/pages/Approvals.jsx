@@ -186,6 +186,9 @@ export default function Approvals() {
             <p className="text-xs text-on-surface-variant">Category: {selectedIdea?.category} · {selectedIdea?.projectType}</p>
           </div>
         </div>
+        {selectedIdea?.description && (
+          <p className="text-sm text-on-surface-variant mt-3 leading-relaxed">{selectedIdea.description}</p>
+        )}
         <label className="text-sm font-medium text-on-surface block mb-1.5">Rejection comment <span className="text-red-500">*</span></label>
         <textarea value={rejectComment} onChange={e => setRejectComment(e.target.value)} rows={4} placeholder="Explain why this idea is not being approved at this time..."
           className="input-field w-full px-3 py-2.5 rounded-lg text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition resize-y min-h-[96px]" />
@@ -230,6 +233,45 @@ export default function Approvals() {
             Known challenges: {selectedIdea.challenges}
           </p>
         )}
+
+        {/* Full idea details */}
+        <div className="bg-surface-container-low rounded-2xl p-4 mb-5">
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant/60 mb-3">Full Submission Details</h4>
+          <p className="text-sm text-on-surface leading-relaxed mb-3">{selectedIdea?.description}</p>
+
+          {selectedIdea?.resources && (
+            <div className="mb-2">
+              <p className="text-xs font-semibold text-on-surface-variant mb-1">Resources & Stakeholders</p>
+              <p className="text-sm text-on-surface-variant">{selectedIdea.resources}</p>
+            </div>
+          )}
+
+          {selectedIdea?.challenges && (
+            <div className="mb-2">
+              <p className="text-xs font-semibold text-amber-700 mb-1">Known Challenges</p>
+              <p className="text-sm text-amber-800 bg-amber-50 rounded-xl p-3">{selectedIdea.challenges}</p>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-outline-variant/10">
+            <div>
+              <p className="text-xs text-on-surface-variant/60">Category</p>
+              <p className="text-sm font-medium text-on-surface">{selectedIdea?.category || 'Not set'}</p>
+            </div>
+            <div>
+              <p className="text-xs text-on-surface-variant/60">Project Owner</p>
+              <p className="text-sm font-medium text-on-surface">{selectedIdea?.projectOwner || 'Not set'}</p>
+            </div>
+            <div>
+              <p className="text-xs text-on-surface-variant/60">Submitted</p>
+              <p className="text-sm font-medium text-on-surface">{selectedIdea?.createdAt ? new Date(selectedIdea.createdAt).toLocaleDateString() : 'Unknown'}</p>
+            </div>
+            <div>
+              <p className="text-xs text-on-surface-variant/60">Project Type</p>
+              <p className="text-sm font-medium text-on-surface">{selectedIdea?.projectType === 'FullProduct' ? 'Full Product' : 'POC'}</p>
+            </div>
+          </div>
+        </div>
 
         {/* Project Type */}
         <p className="text-[11px] font-medium uppercase tracking-wider text-on-surface-variant/60 mb-2 pb-1.5">Project type</p>
@@ -370,7 +412,28 @@ export default function Approvals() {
                   {idea.projectType === 'FullProduct' ? 'Full product' : 'POC'}
                 </span>
               </div>
-              <p className="text-sm text-on-surface-variant mb-4 line-clamp-2">{idea.description}</p>
+              <p className="text-sm text-on-surface-variant mb-3 line-clamp-3">{idea.description}</p>
+
+              {/* Business context */}
+              {idea.businessValue && (
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {idea.businessValue.split(',').map((tag, i) => (
+                    <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">{tag.trim()}</span>
+                  ))}
+                </div>
+              )}
+              {idea.resources && (
+                <div className="flex items-start gap-1.5 mb-2">
+                  <span className="material-symbols-outlined text-sm text-on-surface-variant/50 mt-0.5">group</span>
+                  <p className="text-xs text-on-surface-variant line-clamp-1">{idea.resources}</p>
+                </div>
+              )}
+              {idea.challenges && (
+                <div className="flex items-start gap-1.5 mb-3">
+                  <span className="material-symbols-outlined text-sm text-amber-600 mt-0.5">warning</span>
+                  <p className="text-xs text-amber-700 line-clamp-1">{idea.challenges}</p>
+                </div>
+              )}
               <div className="flex gap-2">
                 <button onClick={() => openApproveForm(idea)} className="px-4 py-2 bg-gradient-to-r from-primary to-primary-container text-white rounded-full text-xs font-medium hover:bg-primary transition">Review & approve</button>
                 <button onClick={() => openRejectForm(idea)} className="px-4 py-2 bg-surface-container-low rounded-lg text-xs text-on-surface-variant hover:bg-surface-container-high transition">Reject</button>
