@@ -28,6 +28,7 @@ import BrowseIdeas from './pages/BrowseIdeas';
 import ExecutiveDashboard from './pages/ExecutiveDashboard';
 import Projects from './pages/Projects';
 import ProjectWorkspace from './pages/ProjectWorkspace';
+import AllIdeas from './pages/AllIdeas';
 
 export default function App() {
   return (
@@ -49,6 +50,7 @@ export default function App() {
         <Route path="/projects/:id" element={<ProjectWorkspace />} />
 
         {/* Employee */}
+        <Route path="/all-ideas" element={<AllIdeas />} />
         <Route path="/ideas/:ideaId/results" element={<ProtectedRoute><BidResults /></ProtectedRoute>} />
         <Route path="/browse-ideas" element={<BrowseIdeas />} />
         <Route path="/ideas/:id/bid" element={<PlaceBid />} />

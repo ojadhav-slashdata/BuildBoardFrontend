@@ -34,7 +34,10 @@
 
   /* === Buttons === */
   .btn-primary {
-    @apply bg-gradient-to-r from-primary to-primary-container text-white rounded-full px-6 py-2.5 text-sm font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-primary/25 active:scale-[0.98];
+    @apply bg-gradient-to-r from-primary to-primary-container text-white rounded-full px-6 py-2.5 text-sm font-semibold transition-all duration-200 hover:shadow-lg active:scale-[0.98];
+  }
+  .btn-primary:hover {
+    box-shadow: 0 10px 15px -3px color-mix(in srgb, var(--c-primary, #3525cd) 25%, transparent);
   }
   .btn-secondary {
     @apply bg-surface-container-high text-on-surface rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 hover:bg-surface-container-highest;
@@ -45,7 +48,14 @@
 
   /* === Form Inputs === */
   .input-field {
-    @apply bg-surface-container-low border-0 rounded-xl px-4 py-3 text-sm text-on-surface placeholder-on-surface-variant/50 outline-none transition-all duration-200 focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary/30 focus:shadow-tonal;
+    @apply bg-surface-container-low border-0 rounded-xl px-4 py-3 text-sm text-on-surface outline-none transition-all duration-200 focus:bg-surface-container-lowest focus:ring-1 focus:shadow-tonal;
+  }
+  .input-field::placeholder {
+    color: color-mix(in srgb, #464555 50%, transparent);
+  }
+  .input-field:focus {
+    ring-color: color-mix(in srgb, var(--c-primary, #3525cd) 30%, transparent);
+    --tw-ring-color: color-mix(in srgb, var(--c-primary, #3525cd) 30%, transparent);
   }
 
   /* === Chips & Badges === */
@@ -68,5 +78,28 @@
   /* === Glass Card === */
   .glass-card {
     @apply bg-white/70 backdrop-blur-xl shadow-tonal-lg;
+  }
+
+  /* === Sidebar Accent Links (theme-aware) === */
+  .sidebar-accent-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    background: color-mix(in srgb, var(--c-primary, #3525cd) 10%, transparent);
+    color: var(--c-primary, #3525cd);
+  }
+  .sidebar-accent-link:hover {
+    background: color-mix(in srgb, var(--c-primary, #3525cd) 15%, transparent);
+    transform: translateX(2px);
+  }
+  .sidebar-accent-link.sidebar-accent-active {
+    background: var(--c-primary, #3525cd);
+    color: #ffffff;
+    box-shadow: var(--shadow-tonal-md, 0 4px 12px -2px rgba(21,28,39,0.06));
   }
 }

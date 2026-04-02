@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Skill(update-config)",
+      "Bash(git reset:*)",
+      "Bash(git stash:*)",
+      "Bash(git checkout:*)",
+      "Bash(git commit:*)",
+      "Bash(git rebase:*)",
+      "Bash(curl:*)",
+      "Bash(npx vite:*)",
+      "Bash(git merge:*)"
+    ]
+  }
+}
