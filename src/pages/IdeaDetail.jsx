@@ -151,7 +151,7 @@ export default function IdeaDetail() {
 
         {/* Resources & Challenges */}
         {idea.resources && (
-          <div className="mt-4 p-3 bg-surface-container-low rounded-lg">
+          <div className="mt-4 p-3 bg-surface-container-low rounded-md">
             <p className="text-xs font-semibold text-on-surface-variant mb-1 flex items-center gap-1.5">
               <span className="material-symbols-outlined text-sm">group</span>
               Resources & Stakeholders
@@ -160,7 +160,7 @@ export default function IdeaDetail() {
           </div>
         )}
         {idea.challenges && (
-          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md">
             <p className="text-xs font-semibold text-amber-700 mb-1 flex items-center gap-1.5">
               <span className="material-symbols-outlined text-sm">warning</span>
               Known Challenges
@@ -171,7 +171,7 @@ export default function IdeaDetail() {
 
         {/* Rejection Comment */}
         {idea.status === 'Rejected' && idea.rejectionComment && (
-          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-md">
             <p className="text-xs font-semibold text-red-700 mb-1">Rejection Reason</p>
             <p className="text-sm text-red-800 leading-relaxed">"{idea.rejectionComment}"</p>
           </div>
