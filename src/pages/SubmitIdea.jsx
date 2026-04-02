@@ -8,6 +8,7 @@ export default function SubmitIdea() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ title: '', description: '', category: '', projectType: 'POC', projectOwner: '', businessValue: [], resources: '', challenges: '' });
   const [submitting, setSubmitting] = useState(false);
+  const [file, setFile] = useState(null);
   const [titleCount, setTitleCount] = useState(0);
   const [descCount, setDescCount] = useState(0);
 
@@ -237,6 +238,54 @@ export default function SubmitIdea() {
                 className="input-field w-full resize-y min-h-[80px]"
                 rows={3}
               />
+            </div>
+          </div>
+        </section>
+
+        {/* Section 4: Supporting Materials */}
+        <section className="surface-card-elevated p-8 lg:p-10">
+          <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
+            <span className="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-sm font-bold">4</span>
+            Supporting Materials
+            <span className="text-sm font-normal text-on-surface-variant/50 ml-2">(optional)</span>
+          </h3>
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-semibold text-on-surface-variant mb-3">Attachments</label>
+              <div
+                className="border-2 border-dashed border-outline-variant/30 rounded-2xl p-8 text-center hover:border-primary/30 transition-colors cursor-pointer"
+                onClick={() => document.getElementById('file-upload').click()}
+                onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-primary/50', 'bg-primary/5'); }}
+                onDragLeave={(e) => { e.currentTarget.classList.remove('border-primary/50', 'bg-primary/5'); }}
+                onDrop={(e) => { e.preventDefault(); e.currentTarget.classList.remove('border-primary/50', 'bg-primary/5'); if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); }}
+              >
+                <input
+                  id="file-upload"
+                  type="file"
+                  className="hidden"
+                  accept=".png,.jpg,.jpeg,.pdf"
+                  onChange={(e) => setFile(e.target.files[0] || null)}
+                />
+                {file ? (
+                  <div className="flex items-center justify-center gap-3">
+                    <span className="material-symbols-outlined text-primary text-2xl">description</span>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-on-surface">{file.name}</p>
+                      <p className="text-xs text-on-surface-variant">{(file.size / 1024).toFixed(1)} KB</p>
+                    </div>
+                    <button type="button" onClick={(e) => { e.stopPropagation(); setFile(null); }} className="ml-4 text-on-surface-variant hover:text-error transition-colors">
+                      <span className="material-symbols-outlined text-lg">close</span>
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-4xl text-on-surface-variant/30 mb-3">cloud_upload</span>
+                    <p className="text-sm font-medium text-on-surface-variant">Drag & drop or click to upload</p>
+                    <p className="text-xs text-on-surface-variant/50 mt-1">PNG, JPG, PDF up to 10MB · Helps explain your idea visually</p>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </section>

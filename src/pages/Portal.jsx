@@ -45,9 +45,9 @@ const RECENT_ACTIVITY = [
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function StatCard({ label, value, icon, materialIcon, accent, badge }) {
+function StatCard({ label, value, icon, materialIcon, accent, badge, onClick }) {
   return (
-    <div className="bg-surface-container-lowest p-6 rounded-2xl hover:shadow-tonal-md transition-all duration-200 group">
+    <div onClick={onClick} className="bg-surface-container-lowest p-6 rounded-2xl hover:shadow-tonal-md transition-all duration-200 group cursor-pointer">
       <div className="flex justify-between items-start mb-4">
         <div className={`p-3 rounded-xl ${accent.bg} ${accent.iconColor || accent.text}`}>
           <span className="material-symbols-outlined">{materialIcon}</span>
@@ -193,16 +193,18 @@ export default function Portal() {
   const isEmployee = user?.role === 'Employee';
   const filtered = ideas.filter((idea) => {
     if (isEmployee) {
-      const isOpenForBidding = idea.status === 'BiddingOpen' || idea.status === 'Approved';
-      const isMyIdea = idea.assignedTo === user?.id || idea.submittedBy === user?.id ||
-        idea.assignedTo?._id === user?.id || idea.submittedBy?._id === user?.id ||
-        idea.teamMembers?.some((m) => m.userId === user?.id || m._id === user?.id);
-      const isActiveOrDone = ['Assigned', 'InProgress', 'Completed'].includes(idea.status) && isMyIdea;
-      if (!isOpenForBidding && !isActiveOrDone) return false;
+      const isOpenForBidding = idea.status === 'BiddingOpen';
+      const isMyIdea =
+        idea.submittedBy === user?.id || idea.submittedBy?._id === user?.id ||
+        idea.assignedTo === user?.id || idea.assignedTo?._id === user?.id ||
+        idea.projectOwner === user?.name || idea.projectOwner === user?.email ||
+        idea.teamMembers?.some((m) => m.id === user?.id || m.userId === user?.id);
+      // Employees see: all BiddingOpen + their own InProgress/Completed/PendingApproval
+      if (!isOpenForBidding && !isMyIdea) return false;
     }
     if (filters.search && !idea.title?.toLowerCase().includes(filters.search.toLowerCase())) return false;
     if (filters.category !== 'All' && idea.category !== filters.category) return false;
-    if (filters.status   !== 'All' && idea.status   !== filters.status)   return false;
+    if (filters.status !== 'All' && idea.status !== filters.status) return false;
     return true;
   });
 
@@ -212,21 +214,25 @@ export default function Portal() {
       label: 'Open for Bidding', value: overview?.biddingOpen ?? 0,
       materialIcon: 'bid_landscape', badge: 'Active',
       accent: { bg: 'bg-primary/5', text: 'text-primary', iconColor: 'text-primary', bar: 'bg-primary' },
+      onClick: () => setFilters(f => ({ ...f, status: 'BiddingOpen' })),
     },
     {
       label: 'In Progress', value: overview?.inProgress ?? 0,
       materialIcon: 'manufacturing',
       accent: { bg: 'bg-secondary/5', text: 'text-secondary', iconColor: 'text-secondary', bar: 'bg-secondary' },
+      onClick: () => setFilters(f => ({ ...f, status: 'InProgress' })),
     },
     {
       label: 'Pending Review', value: overview?.openIdeas ?? 0,
       materialIcon: 'rate_review',
       accent: { bg: 'bg-tertiary/5', text: 'text-tertiary', iconColor: 'text-tertiary', bar: 'bg-tertiary' },
+      onClick: () => setFilters(f => ({ ...f, status: 'PendingApproval' })),
     },
     {
       label: 'Completed', value: overview?.completed ?? 0,
       materialIcon: 'verified',
       accent: { bg: 'bg-emerald-500/5', text: 'text-emerald-600', iconColor: 'text-emerald-600', bar: 'bg-emerald-500' },
+      onClick: () => setFilters(f => ({ ...f, status: 'Completed' })),
     },
   ];
 
@@ -362,9 +368,11 @@ export default function Portal() {
                 ))
               )}
             </ul>
-            <Link to="/analytics" className="block w-full mt-6 py-3 text-center text-on-surface-variant text-sm font-bold rounded-xl hover:bg-surface-container-high transition-colors">
-              Full Leaderboard
-            </Link>
+            {(user?.role === 'Manager' || user?.role === 'Admin') && (
+              <Link to="/analytics" className="block w-full mt-6 py-3 text-center text-on-surface-variant text-sm font-bold rounded-xl hover:bg-surface-container-high transition-colors">
+                Full Leaderboard →
+              </Link>
+            )}
           </div>
 
           {/* Live Activity */}

@@ -24,9 +24,9 @@ export default function Guide() {
   return (
     <div className="max-w-4xl mx-auto">
       {/* Hero */}
-      <div className="bg-inverse-surface text-inverse-on-surface rounded-4xl p-10 mb-10">
-        <h1 className="text-4xl font-bold mb-3">BuildBoard — employee guide</h1>
-        <p className="text-lg text-primary-light/70">Everything you need to know to earn points and claim rewards</p>
+      <div className="rounded-4xl p-10 mb-10" style={{ background: '#1E1B4B' }}>
+        <h1 className="text-4xl font-bold mb-3 text-white">BuildBoard — employee guide</h1>
+        <p className="text-lg" style={{ color: '#A78BFA' }}>Everything you need to know to earn points and claim rewards</p>
       </div>
 
       {/* Tab Nav */}
