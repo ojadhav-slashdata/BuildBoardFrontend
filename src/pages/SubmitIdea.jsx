@@ -55,7 +55,24 @@ export default function SubmitIdea() {
     if (!form.projectOwner) { alert('Please select a project owner.'); return; }
     setSubmitting(true);
     try {
-      await api.post('/ideas', { ...form, businessValue: form.businessValue.join(','), resources: form.resources, challenges: form.challenges });
+      let attachment = null;
+      let attachmentName = null;
+      if (file) {
+        attachmentName = file.name;
+        attachment = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.readAsDataURL(file);
+        });
+      }
+      await api.post('/ideas', {
+        ...form,
+        businessValue: form.businessValue.join(','),
+        resources: form.resources,
+        challenges: form.challenges,
+        attachment,
+        attachmentName,
+      });
       navigate('/portal');
     } catch {
       alert('Failed to submit idea.');

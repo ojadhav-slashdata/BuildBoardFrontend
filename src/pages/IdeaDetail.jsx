@@ -89,6 +89,26 @@ export default function IdeaDetail() {
         </div>
         <p className="text-sm text-on-surface-variant leading-relaxed">{idea.description}</p>
 
+        {idea.attachmentUrl && (
+          <div className="flex items-center gap-3 mt-3 p-3 bg-surface-container-low rounded-xl">
+            {idea.attachmentUrl.startsWith('data:image') ? (
+              <img src={idea.attachmentUrl} alt="" className="w-16 h-16 object-cover rounded-lg" />
+            ) : (
+              <div className="w-10 h-10 bg-primary/5 rounded-xl flex items-center justify-center">
+                <span className="material-symbols-outlined text-primary">description</span>
+              </div>
+            )}
+            <div className="flex-1">
+              <p className="text-sm font-medium text-on-surface">{idea.attachmentName || 'Attachment'}</p>
+            </div>
+            <a href={idea.attachmentUrl} target="_blank" rel="noopener noreferrer" download={idea.attachmentName}
+              className="text-xs text-primary font-semibold hover:underline flex items-center gap-1">
+              <span className="material-symbols-outlined text-sm">download</span>
+              Download
+            </a>
+          </div>
+        )}
+
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 pt-4">
           {idea.expectedDeliveryDate && <div><p className="text-xs text-on-surface-variant/60">Expected delivery</p><p className="text-sm font-medium">{new Date(idea.expectedDeliveryDate).toLocaleDateString()}</p></div>}
           {idea.bidCutoffDate && <div><p className="text-xs text-on-surface-variant/60">Bid cutoff</p><p className="text-sm font-medium">{new Date(idea.bidCutoffDate).toLocaleDateString()}</p></div>}

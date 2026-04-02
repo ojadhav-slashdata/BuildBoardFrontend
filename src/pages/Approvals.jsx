@@ -271,6 +271,29 @@ export default function Approvals() {
               <p className="text-sm font-medium text-on-surface">{selectedIdea?.projectType === 'FullProduct' ? 'Full Product' : 'POC'}</p>
             </div>
           </div>
+          {selectedIdea?.attachmentUrl && (
+            <div className="mt-3 pt-3 border-t border-outline-variant/10">
+              <p className="text-xs font-semibold text-on-surface-variant mb-2">Attached File</p>
+              <div className="flex items-center gap-3 p-3 bg-surface-container-lowest rounded-xl">
+                {selectedIdea.attachmentUrl.startsWith('data:image') ? (
+                  <img src={selectedIdea.attachmentUrl} alt="Attachment" className="w-20 h-20 object-cover rounded-lg" />
+                ) : (
+                  <div className="w-12 h-12 bg-primary/5 rounded-xl flex items-center justify-center">
+                    <span className="material-symbols-outlined text-primary text-2xl">description</span>
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-on-surface">{selectedIdea.attachmentName || 'Attachment'}</p>
+                  <p className="text-xs text-on-surface-variant/60 mt-0.5">Uploaded with idea submission</p>
+                </div>
+                <a href={selectedIdea.attachmentUrl} target="_blank" rel="noopener noreferrer" download={selectedIdea.attachmentName}
+                  className="btn-primary text-xs px-3 py-1.5">
+                  <span className="material-symbols-outlined text-sm mr-1">download</span>
+                  Download
+                </a>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Project Type */}
@@ -432,6 +455,17 @@ export default function Approvals() {
                 <div className="flex items-start gap-1.5 mb-3">
                   <span className="material-symbols-outlined text-sm text-amber-600 mt-0.5">warning</span>
                   <p className="text-xs text-amber-700 line-clamp-1">{idea.challenges}</p>
+                </div>
+              )}
+              {idea.attachmentUrl && (
+                <div className="flex items-center gap-2 mb-3 p-2.5 bg-surface-container-low rounded-xl">
+                  <span className="material-symbols-outlined text-primary text-lg">attach_file</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-on-surface truncate">{idea.attachmentName || 'Attachment'}</p>
+                  </div>
+                  <a href={idea.attachmentUrl} target="_blank" rel="noopener noreferrer" download={idea.attachmentName}
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-xs text-primary font-semibold hover:underline">View</a>
                 </div>
               )}
               <div className="flex gap-2">
