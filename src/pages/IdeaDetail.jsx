@@ -274,7 +274,7 @@ export default function IdeaDetail() {
                 {idea.bidCutoffDate ? `Bidding closes ${new Date(idea.bidCutoffDate).toLocaleDateString()}` : 'Open for bidding'}
               </p>
             </div>
-            {idea.bidCutoffDate && new Date(idea.bidCutoffDate) < new Date() ? (
+            {idea.bidCutoffDate && new Date(idea.bidCutoffDate).getTime() > 0 && new Date(idea.bidCutoffDate).getTime() < Date.now() ? (
               <span className="text-xs px-3 py-1.5 rounded-full bg-red-50 text-red-700 font-medium ring-1 ring-inset ring-red-600/20">Bidding Closed</span>
             ) : (
               <Link to={`/ideas/${id}/bid`}

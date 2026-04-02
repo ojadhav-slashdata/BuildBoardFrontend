@@ -291,10 +291,13 @@ export default function PlaceBid() {
         if (res.data.status !== 'BiddingOpen') {
           setCanBid(false);
           setBidError('This idea is not open for bidding');
-        }
-        if (res.data.bidCutoffDate && new Date(res.data.bidCutoffDate) < new Date()) {
-          setCanBid(false);
-          setBidError('Bidding deadline has passed');
+        } else if (res.data.bidCutoffDate) {
+          const cutoff = new Date(res.data.bidCutoffDate).getTime();
+          const now = Date.now();
+          if (cutoff > 0 && cutoff < now) {
+            setCanBid(false);
+            setBidError('Bidding deadline has passed');
+          }
         }
 
         // Check if already bid

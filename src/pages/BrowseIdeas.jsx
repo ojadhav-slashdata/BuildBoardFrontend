@@ -27,7 +27,9 @@ export default function BrowseIdeas() {
 
   const getTimeLeft = (cutoff) => {
     if (!cutoff) return null;
-    const diff = new Date(cutoff) - new Date();
+    const cutoffTime = new Date(cutoff).getTime();
+    if (!cutoffTime || cutoffTime <= 0) return null;
+    const diff = cutoffTime - Date.now();
     if (diff <= 0) return { text: 'Closed', urgent: true };
     if (diff < 3600000) return { text: `${Math.floor(diff / 60000)}m left`, urgent: true };
     if (diff < 86400000) return { text: `${Math.floor(diff / 3600000)}h ${Math.floor((diff % 3600000) / 60000)}m left`, urgent: true };
