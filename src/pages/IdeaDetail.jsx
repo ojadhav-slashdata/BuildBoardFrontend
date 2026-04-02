@@ -87,6 +87,16 @@ export default function IdeaDetail() {
     setSubmitting(false);
   };
 
+  const deleteIdea = async () => {
+    if (!window.confirm('Are you sure you want to delete this idea? This cannot be undone.')) return;
+    setSubmitting(true);
+    try {
+      await api.delete(`/ideas/${id}`);
+      navigate('/ideas');
+    } catch { alert('Failed to delete idea'); }
+    setSubmitting(false);
+  };
+
   if (loading) return <div className="flex justify-center py-20 text-on-surface-variant/60">Loading...</div>;
   if (!idea) return <div className="text-center py-20 text-on-surface-variant/60">Idea not found</div>;
 
@@ -130,6 +140,11 @@ export default function IdeaDetail() {
             {isAdmin && ['BiddingOpen', 'InProgress', 'Approved'].includes(idea.status) && !editing && (
               <button onClick={startEditing} className="p-2 rounded-xl hover:bg-surface-container-high/50 transition-colors">
                 <span className="material-symbols-outlined text-on-surface-variant text-lg">edit</span>
+              </button>
+            )}
+            {isAdmin && (
+              <button onClick={deleteIdea} disabled={submitting} className="p-2 rounded-xl hover:bg-red-50 transition-colors" title="Delete idea">
+                <span className="material-symbols-outlined text-red-500 text-lg">delete</span>
               </button>
             )}
           </div>

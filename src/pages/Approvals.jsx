@@ -172,6 +172,14 @@ export default function Approvals() {
     setSubmitting(false);
   };
 
+  const handleDelete = async (idea) => {
+    if (!window.confirm(`Delete "${idea.title}"? This cannot be undone.`)) return;
+    try {
+      await api.delete(`/ideas/${idea._id || idea.id}`);
+      fetchIdeas();
+    } catch { alert('Failed to delete.'); }
+  };
+
   const backToList = () => {
     if (cameFromDirectLink) {
       navigate(-1);
@@ -711,6 +719,10 @@ export default function Approvals() {
                   <button onClick={() => openRejectForm(idea)}
                     className="px-4 py-2.5 rounded-xl text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors">
                     Reject
+                  </button>
+                  <button onClick={() => handleDelete(idea)}
+                    className="p-2.5 rounded-xl text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors" title="Delete idea">
+                    <span className="material-symbols-outlined text-lg">delete</span>
                   </button>
                 </div>
               </div>
