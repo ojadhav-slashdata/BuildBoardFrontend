@@ -108,8 +108,9 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 bg-slate-100/50 backdrop-blur-xl min-h-[calc(100vh-57px)] border-r-0">
-      <nav className="flex-1 px-4 pt-4 space-y-0.5">
+    <aside className="hidden lg:block w-64 bg-slate-100/50 backdrop-blur-xl min-h-[calc(100vh-64px)] border-r-0">
+      <div className="sticky top-16 flex flex-col h-[calc(100vh-64px)]">
+      <nav className="flex-1 px-4 pt-4 space-y-0.5 overflow-y-auto">
         {/* MENU section */}
         <SectionTitle>Menu</SectionTitle>
         {sections.MENU.map(renderLink)}
@@ -184,6 +185,7 @@ export default function Sidebar() {
         <div className="pt-4 pb-2 flex justify-center opacity-60 hover:opacity-100 transition-opacity">
           <img src={firstechLogo} alt="FirsTech" className="h-8 object-contain" />
         </div>
+      </div>
       </div>
     </aside>
   );
