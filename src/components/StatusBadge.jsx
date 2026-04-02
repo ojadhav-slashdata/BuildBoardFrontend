@@ -8,6 +8,7 @@ const config = {
   Completed:       { cls: 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20' },
   Archived:        { cls: 'bg-surface-container-high text-on-surface-variant/60' },
   Rejected:        { cls: 'bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20' },
+  Expired:         { cls: 'bg-orange-50 text-orange-700 ring-1 ring-inset ring-orange-600/20' },
   Pending:         { cls: 'bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20' },
   Won:             { cls: 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20' },
   Active:          { cls: 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20' },

@@ -96,6 +96,7 @@ export default function IdeaDetail() {
     Completed: 'bg-emerald-50 text-emerald-700',
     PendingApproval: 'bg-blue-50 text-blue-700',
     Rejected: 'bg-red-50 text-red-700',
+    Expired: 'bg-orange-50 text-orange-700',
   };
 
   const isMember = idea.teamMembers?.some(m => m.id === user?.id);
@@ -150,7 +151,7 @@ export default function IdeaDetail() {
 
         {/* Resources & Challenges */}
         {idea.resources && (
-          <div className="mt-4 p-3 bg-surface-container-low rounded-xl">
+          <div className="mt-4 p-3 bg-surface-container-low rounded-lg">
             <p className="text-xs font-semibold text-on-surface-variant mb-1 flex items-center gap-1.5">
               <span className="material-symbols-outlined text-sm">group</span>
               Resources & Stakeholders
@@ -159,7 +160,7 @@ export default function IdeaDetail() {
           </div>
         )}
         {idea.challenges && (
-          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+          <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
             <p className="text-xs font-semibold text-amber-700 mb-1 flex items-center gap-1.5">
               <span className="material-symbols-outlined text-sm">warning</span>
               Known Challenges
@@ -170,7 +171,7 @@ export default function IdeaDetail() {
 
         {/* Rejection Comment */}
         {idea.status === 'Rejected' && idea.rejectionComment && (
-          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-xl">
+          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-xs font-semibold text-red-700 mb-1">Rejection Reason</p>
             <p className="text-sm text-red-800 leading-relaxed">"{idea.rejectionComment}"</p>
           </div>
@@ -244,7 +245,7 @@ export default function IdeaDetail() {
 
       {/* Review Action for Admins on PendingApproval ideas */}
       {idea.status === 'PendingApproval' && isAdmin && (
-        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 mb-4 flex items-center justify-between">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-4 flex items-center justify-between">
           <div>
             <h3 className="text-sm font-bold text-blue-900 flex items-center gap-2">
               <span className="material-symbols-outlined text-blue-600">rate_review</span>
@@ -480,7 +481,16 @@ export default function IdeaDetail() {
           </div>
         </div>
       )}
-      {idea.status !== 'BiddingOpen' && !['InProgress','Completed','PendingApproval'].includes(idea.status) && (
+      {idea.status === 'Expired' && (
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4 flex items-center gap-3">
+          <span className="material-symbols-outlined text-orange-600">timer_off</span>
+          <div>
+            <p className="text-sm font-medium text-orange-800">This idea has expired</p>
+            <p className="text-xs text-orange-600">The bidding period ended with no bids received.</p>
+          </div>
+        </div>
+      )}
+      {idea.status !== 'BiddingOpen' && !['InProgress','Completed','PendingApproval','Expired'].includes(idea.status) && (
         <div className="bg-surface-container-low rounded-2xl p-4 mb-4 text-center">
           <p className="text-sm text-on-surface-variant">This idea is not currently accepting bids</p>
         </div>

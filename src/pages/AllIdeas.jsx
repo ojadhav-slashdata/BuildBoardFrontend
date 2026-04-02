@@ -5,7 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const CATEGORIES = ['All', 'Tech', 'HR', 'Finance', 'Operations', 'Other'];
-const STATUSES   = ['All', 'BiddingOpen', 'InProgress', 'PendingApproval', 'Completed'];
+const STATUSES   = ['All', 'BiddingOpen', 'InProgress', 'PendingApproval', 'Completed', 'Expired'];
 
 const STATUS_STYLES = {
   BiddingOpen:     'bg-sky-50 text-sky-600',
@@ -16,6 +16,7 @@ const STATUS_STYLES = {
   Draft:           'bg-slate-50 text-slate-500',
   BiddingClosed:   'bg-slate-50 text-slate-500',
   Assigned:        'bg-purple-50 text-purple-600',
+  Expired:         'bg-orange-50 text-orange-600',
 };
 
 const STATUS_LABELS = {
@@ -27,6 +28,7 @@ const STATUS_LABELS = {
   Draft:           'Draft',
   BiddingClosed:   'Bidding Closed',
   Assigned:        'Assigned',
+  Expired:         'Expired',
 };
 
 const CATEGORY_ICONS = {
