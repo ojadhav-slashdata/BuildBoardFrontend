@@ -253,12 +253,20 @@ export default function IdeaDetail() {
             </h3>
             <p className="text-xs text-blue-700 mt-0.5">Set size, complexity, dates and approve or reject this idea</p>
           </div>
-          <button
-            onClick={() => navigate(`/approvals?ideaId=${idea._id || idea.id}`)}
-            className="px-5 py-2.5 bg-gradient-to-r from-primary to-primary-container text-white rounded-full text-sm font-bold hover:opacity-90 transition"
-          >
-            Review & Approve
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => navigate(`/approvals?ideaId=${idea._id || idea.id}`)}
+              className="px-5 py-2.5 bg-gradient-to-r from-primary to-primary-container text-white rounded-full text-sm font-bold hover:opacity-90 transition"
+            >
+              Review & Approve
+            </button>
+            <button
+              onClick={() => navigate(`/approvals?ideaId=${idea._id || idea.id}&action=reject`)}
+              className="px-5 py-2.5 rounded-full text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition"
+            >
+              Reject
+            </button>
+          </div>
         </div>
       )}
 

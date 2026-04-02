@@ -80,9 +80,13 @@ export default function Approvals() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const directIdeaId = params.get('ideaId');
+    const action = params.get('action');
     if (directIdeaId && ideas.length > 0) {
       const idea = ideas.find(i => (i._id || i.id) === directIdeaId);
-      if (idea) openApproveForm(idea);
+      if (idea) {
+        if (action === 'reject') openRejectForm(idea);
+        else openApproveForm(idea);
+      }
     }
   }, [ideas]);
 
