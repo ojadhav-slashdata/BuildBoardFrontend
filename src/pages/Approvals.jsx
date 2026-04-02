@@ -39,6 +39,7 @@ export default function Approvals() {
   const [complexity, setComplexity] = useState('Low');
   const [complexityBonus, setComplexityBonus] = useState(0);
   const [bidCutoff, setBidCutoff] = useState('');
+  const [bidCutoffTime, setBidCutoffTime] = useState('18:00');
   const [deliveryDate, setDeliveryDate] = useState('');
   const [projectOwner, setProjectOwner] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -113,7 +114,7 @@ export default function Approvals() {
       await api.patch(`/ideas/${selectedIdea._id || selectedIdea.id}/approve`, {
         size: selectedSize,
         complexity,
-        bidCutoffDate: new Date(bidCutoff).toISOString(),
+        bidCutoffDate: bidCutoff ? new Date(`${bidCutoff}T${bidCutoffTime || '18:00'}`).toISOString() : null,
         expectedDeliveryDate: new Date(deliveryDate).toISOString(),
         estimatedHours: maxHours,
         projectType,
@@ -385,14 +386,35 @@ export default function Approvals() {
         <p className="text-[11px] font-medium uppercase tracking-wider text-on-surface-variant/60 mb-2 pb-1.5">Dates & ownership</p>
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div>
-            <label className="text-sm font-medium text-on-surface block mb-1.5">Bid cutoff date <span className="text-red-500">*</span></label>
-            <div className="relative">
-              <input type="date" value={bidCutoff} onChange={e => setBidCutoff(e.target.value)}
-                min={new Date().toISOString().split('T')[0]}
-                className="input-field w-full px-3 py-3 rounded-xl text-sm outline-none focus:border-primary cursor-pointer appearance-none" />
-              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none text-lg">calendar_month</span>
+            <label className="text-sm font-medium text-on-surface block mb-1.5">Bid cutoff <span className="text-red-500">*</span></label>
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <input type="date" value={bidCutoff.split('T')[0] || bidCutoff} onChange={e => {
+                  const time = bidCutoffTime || '18:00';
+                  setBidCutoff(e.target.value);
+                  setBidCutoffTime(time);
+                }}
+                  min={new Date().toISOString().split('T')[0]}
+                  className="input-field w-full px-3 py-3 rounded-xl text-sm cursor-pointer" />
+                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none text-lg">calendar_month</span>
+              </div>
+              <select value={bidCutoffTime} onChange={e => setBidCutoffTime(e.target.value)}
+                className="input-field px-3 py-3 rounded-xl text-sm cursor-pointer w-28">
+                <option value="09:00">9:00 AM</option>
+                <option value="10:00">10:00 AM</option>
+                <option value="11:00">11:00 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="13:00">1:00 PM</option>
+                <option value="14:00">2:00 PM</option>
+                <option value="15:00">3:00 PM</option>
+                <option value="16:00">4:00 PM</option>
+                <option value="17:00">5:00 PM</option>
+                <option value="18:00">6:00 PM</option>
+                <option value="20:00">8:00 PM</option>
+                <option value="23:59">Midnight</option>
+              </select>
             </div>
-            <p className="text-xs text-on-surface-variant/40 mt-1">When bidding window closes</p>
+            <p className="text-xs text-on-surface-variant/40 mt-1">Date and time when bidding window closes</p>
           </div>
           <div>
             <label className="text-sm font-medium text-on-surface block mb-1.5">Expected delivery <span className="text-red-500">*</span></label>

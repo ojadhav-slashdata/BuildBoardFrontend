@@ -66,6 +66,18 @@ function BidCard({ bid, onConfirm, onDecline, editingBid, editDate, editApproach
         <p className="text-sm text-on-surface-variant bg-surface-container-low rounded-xl px-4 py-3 leading-relaxed line-clamp-3">{bid.approach}</p>
       )}
 
+      {(bid.status === 'Not Selected') && bid.rejectionReason && (
+        <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+          <div className="flex items-start gap-2">
+            <span className="material-symbols-outlined text-amber-600 text-lg mt-0.5">info</span>
+            <div>
+              <p className="text-xs font-semibold text-amber-800 mb-0.5">Why your bid wasn't selected</p>
+              <p className="text-xs text-amber-700 leading-relaxed">{bid.rejectionReason}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {isPendingTeam && (
         <div className="flex gap-2 pt-1">
           <button onClick={handleConfirm} disabled={acting} className="flex-1 text-sm font-semibold bg-emerald-50 text-emerald-700 px-4 py-2.5 rounded-full hover:bg-emerald-100 transition disabled:opacity-50">
