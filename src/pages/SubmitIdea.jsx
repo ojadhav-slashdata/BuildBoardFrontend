@@ -4,13 +4,6 @@ import api from '../axiosConfig';
 
 const categories = ['Tech', 'HR', 'Finance', 'Operations', 'Other'];
 
-const CATEGORY_APPROVERS = {
-  'Tech': { name: 'Sarah Chen', email: 'sarah.chen@company.com' },
-  'HR': { name: 'Emma Taylor', email: 'emma.taylor@company.com' },
-  'Finance': { name: 'Omar Hassan', email: 'omar.hassan@company.com' },
-  'Operations': { name: 'Omar Hassan', email: 'omar.hassan@company.com' },
-  'Other': { name: 'Sarah Chen', email: 'sarah.chen@company.com' },
-};
 
 export default function SubmitIdea() {
   const navigate = useNavigate();
@@ -24,9 +17,17 @@ export default function SubmitIdea() {
   const [ownerSearch, setOwnerSearch] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
+  const [categoryLeads, setCategoryLeads] = useState({});
 
   useEffect(() => {
     api.get('/users').then(res => setUsers(res.data || [])).catch(() => {});
+    api.get('/department-leads').then(res => {
+      const map = {};
+      for (const lead of (res.data || [])) {
+        map[lead.category] = { name: lead.leadName, email: lead.leadEmail };
+      }
+      setCategoryLeads(map);
+    }).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -141,7 +142,7 @@ export default function SubmitIdea() {
                   const cat = e.target.value;
                   setForm(f => ({ ...f, category: cat }));
                   // Auto-fill approver based on category
-                  const approver = CATEGORY_APPROVERS[cat];
+                  const approver = categoryLeads[cat];
                   if (approver) {
                     setForm(f => ({ ...f, projectOwner: approver.name }));
                     setOwnerSearch(approver.name);

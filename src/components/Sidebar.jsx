@@ -140,20 +140,36 @@ export default function Sidebar() {
       {/* Bottom section */}
       <div className="px-4 pb-4 space-y-1">
         {isAdmin && (
-          <NavLink
-            to="/admin/users"
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 hover:translate-x-0.5 ${
-                isActive
-                  ? 'bg-surface-container-lowest font-semibold shadow-tonal'
-                  : 'text-on-surface-variant hover:bg-surface-container-high/50'
-              }`
-            }
-            style={({ isActive }) => isActive ? { color: 'var(--c-primary, #3525cd)' } : {}}
-          >
-            <span className="material-symbols-outlined text-[20px]">group</span>
-            Users
-          </NavLink>
+          <>
+            <NavLink
+              to="/admin/users"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 hover:translate-x-0.5 ${
+                  isActive
+                    ? 'bg-surface-container-lowest font-semibold shadow-tonal'
+                    : 'text-on-surface-variant hover:bg-surface-container-high/50'
+                }`
+              }
+              style={({ isActive }) => isActive ? { color: 'var(--c-primary, #3525cd)' } : {}}
+            >
+              <span className="material-symbols-outlined text-[20px]">group</span>
+              Users
+            </NavLink>
+            <NavLink
+              to="/admin/department-leads"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 hover:translate-x-0.5 ${
+                  isActive
+                    ? 'bg-surface-container-lowest font-semibold shadow-tonal'
+                    : 'text-on-surface-variant hover:bg-surface-container-high/50'
+                }`
+              }
+              style={({ isActive }) => isActive ? { color: 'var(--c-primary, #3525cd)' } : {}}
+            >
+              <span className="material-symbols-outlined text-[20px]">supervisor_account</span>
+              Dept Leads
+            </NavLink>
+          </>
         )}
         <NavLink
           to="/marketplace"

@@ -29,6 +29,7 @@ import ExecutiveDashboard from './pages/ExecutiveDashboard';
 import Projects from './pages/Projects';
 import ProjectWorkspace from './pages/ProjectWorkspace';
 import AllIdeas from './pages/AllIdeas';
+import DepartmentLeads from './pages/DepartmentLeads';
 
 export default function App() {
   return (
@@ -108,6 +109,14 @@ export default function App() {
           element={
             <ProtectedRoute roles={['Admin']}>
               <AdminUsers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/department-leads"
+          element={
+            <ProtectedRoute roles={['Admin']}>
+              <DepartmentLeads />
             </ProtectedRoute>
           }
         />
