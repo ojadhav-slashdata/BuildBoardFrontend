@@ -47,6 +47,9 @@ export default function Approvals() {
   // Reject state
   const [rejectComment, setRejectComment] = useState('');
 
+  // Owner assignment mode
+  const [ownerMode, setOwnerMode] = useState('creator'); // 'creator' | 'other'
+
   // List view state
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('All');
@@ -106,7 +109,8 @@ export default function Approvals() {
     setMaxHours(defaultSizes[1]?.max || defaultSizes[0]?.max);
     setComplexity('Low');
     setComplexityBonus(0);
-    setProjectOwner('');
+    setProjectOwner(idea.submittedByEmail || idea.submittedByName || idea.projectOwner || '');
+    setOwnerMode('creator');
     setOwnerSearch('');
     setShowOwnerDropdown(false);
     setBidCutoff('');
@@ -453,49 +457,54 @@ export default function Approvals() {
           {/* Quick assign options */}
           <div className="flex gap-2 mb-3">
             <button type="button" onClick={() => {
-              const email = selectedIdea?.submittedByEmail || selectedIdea?.submittedByName || selectedIdea?.projectOwner || '';
-              if (email) {
-                setProjectOwner(email);
-                setOwnerSearch('');
-                setShowOwnerDropdown(false);
-              }
+              setOwnerMode('creator');
+              setProjectOwner(selectedIdea?.submittedByEmail || selectedIdea?.submittedByName || selectedIdea?.projectOwner || '');
+              setOwnerSearch('');
+              setShowOwnerDropdown(false);
             }}
               className={`px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                projectOwner && (projectOwner === selectedIdea?.submittedByEmail || projectOwner === selectedIdea?.submittedByName)
-                  ? 'bg-primary text-on-primary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
+                ownerMode === 'creator' ? 'bg-primary text-on-primary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
               }`}>
               <span className="material-symbols-outlined text-sm mr-1 align-middle">person</span>
               Idea Creator{selectedIdea?.submittedByName ? ` (${selectedIdea.submittedByName})` : ''}
             </button>
             <button type="button" onClick={() => {
+              setOwnerMode('other');
               setProjectOwner('');
               setOwnerSearch('');
             }}
               className={`px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                projectOwner && projectOwner !== selectedIdea?.submittedByEmail
-                  ? 'bg-primary text-on-primary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
+                ownerMode === 'other' ? 'bg-primary text-on-primary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
               }`}>
               <span className="material-symbols-outlined text-sm mr-1 align-middle">person_search</span>
               Someone Else
             </button>
           </div>
 
-          {/* User search dropdown — only show when NOT using Idea Creator */}
-          {!(projectOwner && (projectOwner === selectedIdea?.submittedByEmail || projectOwner === selectedIdea?.submittedByName)) && (
+          {/* Idea Creator confirmation */}
+          {ownerMode === 'creator' && projectOwner && (
+            <div className="flex items-center gap-2 px-3 py-2 bg-primary/5 rounded-lg border border-primary/20">
+              <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
+              <span className="text-sm font-medium text-on-surface">{projectOwner}</span>
+            </div>
+          )}
+
+          {/* User search — only when Someone Else */}
+          {ownerMode === 'other' && (
             <div ref={ownerDropdownRef} className="relative">
               <div className="relative">
                 <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none" style={{ fontSize: '18px' }}>search</span>
                 <input type="text"
-                  value={ownerSearch || projectOwner}
+                  value={ownerSearch}
                   onChange={e => { setOwnerSearch(e.target.value); setProjectOwner(''); setShowOwnerDropdown(true); }}
                   onFocus={() => setShowOwnerDropdown(true)}
                   placeholder="Search by name or email…"
                   className="input-field w-full pl-10" />
               </div>
-              {showOwnerDropdown && (ownerSearch || '').length > 0 && (() => {
+              {showOwnerDropdown && ownerSearch.length > 0 && (() => {
                 const filtered = users.filter(u =>
-                  (u.name || '').toLowerCase().includes((ownerSearch || '').toLowerCase()) ||
-                  (u.email || '').toLowerCase().includes((ownerSearch || '').toLowerCase())
+                  (u.name || '').toLowerCase().includes(ownerSearch.toLowerCase()) ||
+                  (u.email || '').toLowerCase().includes(ownerSearch.toLowerCase())
                 );
                 return filtered.length > 0 ? (
                   <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-surface-container-lowest rounded-xl shadow-tonal-lg max-h-52 overflow-y-auto border border-outline-variant/20">
@@ -519,12 +528,12 @@ export default function Approvals() {
                   </div>
                 ) : null;
               })()}
-            </div>
-          )}
-          {projectOwner && (
-            <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-primary/5 rounded-lg border border-primary/20">
-              <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
-              <span className="text-sm font-medium text-on-surface">{projectOwner}</span>
+              {projectOwner && (
+                <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-primary/5 rounded-lg border border-primary/20">
+                  <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
+                  <span className="text-sm font-medium text-on-surface">{projectOwner}</span>
+                </div>
+              )}
             </div>
           )}
           <p className="text-xs text-on-surface-variant/40 mt-1.5">This person will be the main contact for builders working on this idea.</p>
