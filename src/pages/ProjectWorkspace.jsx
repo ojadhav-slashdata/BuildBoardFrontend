@@ -6,6 +6,7 @@ import api from '../axiosConfig';
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const TABS = [
+  { key: 'overview', label: 'Overview', icon: 'space_dashboard' },
   { key: 'board', label: 'Board', icon: 'view_kanban' },
   { key: 'chat', label: 'Chat', icon: 'forum' },
   { key: 'requirements', label: 'Requirements', icon: 'checklist' },
@@ -106,7 +107,7 @@ export default function ProjectWorkspace() {
   // Top-level state
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('board');
+  const [activeTab, setActiveTab] = useState('overview');
 
   // Board state
   const [editingTask, setEditingTask] = useState(null);
@@ -351,23 +352,84 @@ export default function ProjectWorkspace() {
     <div className="flex gap-6 min-h-[calc(100vh-5rem)]">
       {/* ── Main content area ───────────────────────────────────────────── */}
       <div className="flex-1 min-w-0">
-        {/* Header */}
+        {/* ── Hero Project Header ─────────────────────────────────────── */}
         <div className="mb-6">
-          <button onClick={() => navigate(-1)} className="text-sm text-primary hover:underline mb-2 inline-flex items-center gap-1">
+          <button onClick={() => navigate('/projects')} className="text-sm text-primary hover:underline mb-3 inline-flex items-center gap-1">
             <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-            Back
+            All Projects
           </button>
-          <div className="flex items-start justify-between">
-            <div>
-              <h1 className="text-2xl font-bold font-manrope tracking-tight text-on-surface">{project.title || project.name}</h1>
-              <p className="text-sm text-on-surface-variant mt-1">{project.description?.slice(0, 120)}{project.description?.length > 120 ? '...' : ''}</p>
+
+          {/* Project Hero Card */}
+          <div className="rounded-3xl p-6 mb-4" style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #3525cd 100%)' }}>
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  {project.status && (
+                    <span className="text-[10px] px-2.5 py-1 rounded-full font-bold bg-white/15 text-white/90 backdrop-blur">
+                      {project.status === 'InProgress' ? '● In Progress' : project.status}
+                    </span>
+                  )}
+                  {project.projectType && (
+                    <span className="text-[10px] px-2.5 py-1 rounded-full font-bold bg-white/10 text-white/70">
+                      {project.projectType === 'FullProduct' ? 'Full Product' : 'POC'}
+                    </span>
+                  )}
+                  {project.size && (
+                    <span className="text-[10px] px-2.5 py-1 rounded-full font-bold bg-white/10 text-white/70">{project.size}</span>
+                  )}
+                  {project.complexity && (
+                    <span className="text-[10px] px-2.5 py-1 rounded-full font-bold bg-white/10 text-white/70">{project.complexity}</span>
+                  )}
+                </div>
+                <h1 className="text-2xl font-bold font-manrope tracking-tight text-white mb-1">{project.title || project.name}</h1>
+                <p className="text-sm text-white/60 max-w-xl">{project.description?.slice(0, 150)}{project.description?.length > 150 ? '...' : ''}</p>
+              </div>
+              {/* Team avatars */}
+              <div className="flex -space-x-2 shrink-0">
+                {(project.members || team).slice(0, 5).map((m, i) => (
+                  m.avatar ? (
+                    <img key={i} src={m.avatar} className="w-9 h-9 rounded-full border-2 border-[#1E1B4B]" alt="" />
+                  ) : (
+                    <div key={i} className="w-9 h-9 rounded-full bg-white/20 border-2 border-[#1E1B4B] flex items-center justify-center text-xs font-bold text-white">
+                      {(m.name || '?')[0]}
+                    </div>
+                  )
+                ))}
+              </div>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              {project.status && (
-                <span className={`text-xs px-3 py-1 rounded-full font-medium ${statusColor[project.status] || 'bg-surface-container-high text-on-surface-variant'}`}>
-                  {project.status}
-                </span>
-              )}
+
+            {/* Quick Metrics */}
+            <div className="grid grid-cols-4 gap-3">
+              <div className="bg-white/10 backdrop-blur rounded-xl p-3 text-center">
+                <p className="text-xl font-bold font-manrope text-white">{tasks.length}</p>
+                <p className="text-[10px] text-white/50">Total Tasks</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur rounded-xl p-3 text-center">
+                <p className="text-xl font-bold font-manrope text-emerald-300">{tasks.filter(t => t.status === 'done').length}</p>
+                <p className="text-[10px] text-white/50">Completed</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur rounded-xl p-3 text-center">
+                <p className="text-xl font-bold font-manrope text-amber-300">{Math.round(totalHours)}h</p>
+                <p className="text-[10px] text-white/50">Hours Logged</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur rounded-xl p-3 text-center">
+                <p className={`text-xl font-bold font-manrope ${daysLeft !== null && daysLeft <= 3 ? 'text-red-300' : daysLeft !== null && daysLeft <= 7 ? 'text-amber-300' : 'text-blue-300'}`}>
+                  {daysLeft !== null ? `${daysLeft}d` : '—'}
+                </p>
+                <p className="text-[10px] text-white/50">Days Left</p>
+              </div>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="mt-4">
+              <div className="flex justify-between text-[10px] text-white/40 mb-1">
+                <span>Task Progress</span>
+                <span>{tasks.length > 0 ? Math.round((tasks.filter(t => t.status === 'done').length / tasks.length) * 100) : 0}%</span>
+              </div>
+              <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-emerald-400 to-emerald-300 rounded-full transition-all duration-500"
+                  style={{ width: `${tasks.length > 0 ? (tasks.filter(t => t.status === 'done').length / tasks.length) * 100 : 0}%` }} />
+              </div>
             </div>
           </div>
         </div>
@@ -391,6 +453,151 @@ export default function ProjectWorkspace() {
         </div>
 
         {/* Tab content */}
+        {activeTab === 'overview' && (
+          <div className="space-y-6">
+            {/* Health Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {[
+                { icon: 'task_alt', label: 'Tasks Done', value: `${tasks.filter(t=>t.status==='done').length}/${tasks.length}`, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+                { icon: 'schedule', label: 'Hours Used', value: `${Math.round(totalHours)}/${estimatedHours}h`, color: hoursPercent > 90 ? 'text-red-600' : 'text-primary', bg: hoursPercent > 90 ? 'bg-red-50' : 'bg-primary/5' },
+                { icon: 'checklist', label: 'Requirements', value: `${doneReqs}/${requirements.length}`, color: 'text-blue-600', bg: 'bg-blue-50' },
+                { icon: 'link', label: 'Resources', value: `${links.length}`, color: 'text-purple-600', bg: 'bg-purple-50' },
+              ].map((m, i) => (
+                <div key={i} className="bg-surface-container-lowest rounded-2xl p-5">
+                  <div className={`w-10 h-10 rounded-xl ${m.bg} flex items-center justify-center mb-3`}>
+                    <span className={`material-symbols-outlined ${m.color}`} style={{ fontVariationSettings: "'FILL' 1" }}>{m.icon}</span>
+                  </div>
+                  <p className={`text-2xl font-bold font-manrope ${m.color}`}>{m.value}</p>
+                  <p className="text-xs text-on-surface-variant mt-0.5">{m.label}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Two columns: Activity + Team */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Recent Activity */}
+              <div className="bg-surface-container-lowest rounded-2xl p-5">
+                <h3 className="font-manrope font-bold text-sm text-on-surface mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>history</span>
+                  Recent Activity
+                </h3>
+                <div className="space-y-3">
+                  {(project.timeLogs || []).slice(0, 5).map((log, i) => (
+                    <div key={i} className="flex items-start gap-3 pb-3 border-b border-outline-variant/10 last:border-0">
+                      <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-on-surface"><span className="font-medium">{log.userName || 'Team member'}</span> logged <span className="font-bold text-primary">{log.hours}h</span></p>
+                        {log.description && <p className="text-xs text-on-surface-variant mt-0.5 truncate">{log.description}</p>}
+                        <p className="text-[10px] text-on-surface-variant/50 mt-0.5">{log.logged_date || timeAgo(log.created_at)}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {(!project.timeLogs || project.timeLogs.length === 0) && (
+                    <p className="text-sm text-on-surface-variant/50 text-center py-4">No activity yet — start logging hours!</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Task Breakdown */}
+              <div className="bg-surface-container-lowest rounded-2xl p-5">
+                <h3 className="font-manrope font-bold text-sm text-on-surface mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>view_kanban</span>
+                  Task Breakdown
+                </h3>
+                <div className="space-y-3">
+                  {KANBAN_COLUMNS.map(col => {
+                    const count = tasks.filter(t => t.status === col.key).length;
+                    const pct = tasks.length > 0 ? Math.round((count / tasks.length) * 100) : 0;
+                    return (
+                      <div key={col.key}>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="font-medium text-on-surface">{col.label}</span>
+                          <span className="text-on-surface-variant">{count} ({pct}%)</span>
+                        </div>
+                        <div className="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+                          <div className={`h-full rounded-full transition-all duration-700 ${col.dot}`} style={{ width: `${pct}%` }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Quick navigate */}
+                <button onClick={() => setActiveTab('board')} className="w-full mt-4 py-2.5 text-center text-xs font-semibold text-primary bg-primary/5 rounded-xl hover:bg-primary/10 transition-colors flex items-center justify-center gap-1">
+                  <span className="material-symbols-outlined text-sm">open_in_new</span>
+                  Open Kanban Board
+                </button>
+              </div>
+            </div>
+
+            {/* Project Details + Milestones */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-surface-container-lowest rounded-2xl p-5">
+                <h3 className="font-manrope font-bold text-sm text-on-surface mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>info</span>
+                  Project Details
+                </h3>
+                <div className="space-y-2.5 text-sm">
+                  {[
+                    ['Category', project.category],
+                    ['Project Owner', project.projectOwner || project.project_owner_name],
+                    ['Size', project.size],
+                    ['Complexity', project.complexity],
+                    ['Type', project.projectType === 'FullProduct' ? 'Full Product' : 'POC'],
+                    ['Delivery', deliveryDate ? new Date(deliveryDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Not set'],
+                  ].filter(([, v]) => v).map(([k, v]) => (
+                    <div key={k} className="flex justify-between py-1.5 border-b border-outline-variant/5 last:border-0">
+                      <span className="text-on-surface-variant">{k}</span>
+                      <span className="font-medium text-on-surface">{v}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Requirements Summary */}
+              <div className="bg-surface-container-lowest rounded-2xl p-5">
+                <h3 className="font-manrope font-bold text-sm text-on-surface mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>checklist</span>
+                  Requirements Progress
+                </h3>
+                {requirements.length === 0 ? (
+                  <p className="text-sm text-on-surface-variant/50 text-center py-4">No requirements defined yet</p>
+                ) : (
+                  <>
+                    <div className="flex justify-between text-xs text-on-surface-variant mb-2">
+                      <span>{doneReqs} of {requirements.length} complete</span>
+                      <span>{requirements.length > 0 ? Math.round((doneReqs / requirements.length) * 100) : 0}%</span>
+                    </div>
+                    <div className="h-2.5 w-full bg-surface-container-high rounded-full overflow-hidden mb-4">
+                      <div className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                        style={{ width: `${requirements.length > 0 ? (doneReqs / requirements.length) * 100 : 0}%` }} />
+                    </div>
+                    <div className="space-y-1.5">
+                      {requirements.slice(0, 5).map((r, i) => (
+                        <div key={i} className="flex items-center gap-2 py-1">
+                          <span className={`material-symbols-outlined text-sm ${r.status === 'done' ? 'text-emerald-500' : r.status === 'blocked' ? 'text-red-500' : 'text-on-surface-variant/40'}`}
+                            style={{ fontVariationSettings: r.status === 'done' ? "'FILL' 1" : "'FILL' 0" }}>
+                            {r.status === 'done' ? 'check_circle' : r.status === 'blocked' ? 'cancel' : 'radio_button_unchecked'}
+                          </span>
+                          <span className={`text-sm ${r.status === 'done' ? 'text-on-surface-variant line-through' : 'text-on-surface'}`}>{r.title}</span>
+                        </div>
+                      ))}
+                      {requirements.length > 5 && (
+                        <button onClick={() => setActiveTab('requirements')} className="text-xs text-primary font-medium mt-1">
+                          +{requirements.length - 5} more →
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
+                <button onClick={() => setActiveTab('requirements')} className="w-full mt-4 py-2.5 text-center text-xs font-semibold text-primary bg-primary/5 rounded-xl hover:bg-primary/10 transition-colors">
+                  Manage Requirements
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {activeTab === 'board' && <BoardTab
           tasks={tasks}
           tasksByColumn={tasksByColumn}
