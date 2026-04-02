@@ -324,7 +324,7 @@ export default function AllIdeas() {
               <span className="material-symbols-outlined text-[14px]">keyboard_arrow_down</span>
             </button>
             {sortOpen && (
-              <div className="absolute right-0 mt-1 w-44 bg-surface-container-lowest rounded-lg border border-outline-variant
+              <div className="absolute right-0 mt-1 w-44 bg-surface-container-lowest rounded-md border border-outline-variant
                               shadow-[0px_8px_24px_rgba(0,0,0,0.08)] z-20 overflow-hidden">
                 {SORT_OPTIONS.map((opt) => (
                   <button

@@ -82,7 +82,7 @@ export default function Navbar() {
             </button>
 
             {showMenu && (
-              <div className="absolute right-0 top-full mt-2 w-72 bg-surface-container-lowest rounded-lg shadow-tonal-lg z-50 overflow-hidden">
+              <div className="absolute right-0 top-full mt-2 w-72 bg-surface-container-lowest rounded-md shadow-tonal-lg z-50 overflow-hidden">
                 {/* User info */}
                 <div className="p-4 border-b border-surface-container-high">
                   <p className="text-sm font-bold text-on-surface">{user.name}</p>
@@ -111,21 +111,21 @@ export default function Navbar() {
                 <div className="p-2">
                   <button
                     onClick={() => { setShowMenu(false); navigate('/profile'); }}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-on-surface hover:bg-surface-container-high transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-on-surface hover:bg-surface-container-high transition-colors text-left"
                   >
                     <span className="material-symbols-outlined text-[18px]">person</span>
                     Profile
                   </button>
                   <button
                     onClick={() => { setShowMenu(false); navigate('/guide'); }}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-on-surface hover:bg-surface-container-high transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-on-surface hover:bg-surface-container-high transition-colors text-left"
                   >
                     <span className="material-symbols-outlined text-[18px]">help</span>
                     Guide
                   </button>
                   <button
                     onClick={() => { setShowMenu(false); handleLogout(); }}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-error hover:bg-error-container/50 transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-error hover:bg-error-container/50 transition-colors text-left"
                   >
                     <span className="material-symbols-outlined text-[18px]">logout</span>
                     Logout
