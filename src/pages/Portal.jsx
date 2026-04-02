@@ -160,11 +160,17 @@ export default function Portal() {
   return (
     <div className="space-y-10">
       {/* Personalized greeting */}
-      <div>
-        <h1 className="text-3xl font-bold font-manrope tracking-tight text-on-surface">
-          Hello, {firstName} <span role="img" aria-label="wave">👋</span>
-        </h1>
-        <p className="text-sm text-on-surface-variant mt-1">{subtitle}</p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-bold font-manrope tracking-tight text-on-surface">
+            Hello, {firstName} <span role="img" aria-label="wave">👋</span>
+          </h1>
+          <p className="text-sm text-on-surface-variant mt-1">{subtitle}</p>
+        </div>
+        <Link to="/ideas/submit" className="btn-primary inline-flex items-center gap-1.5">
+          <span className="material-symbols-outlined text-lg">add</span>
+          Submit idea
+        </Link>
       </div>
 
       {/* Stat cards */}
