@@ -13,6 +13,9 @@ export default function IdeaDetail() {
   const [notes, setNotes] = useState('');
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editForm, setEditForm] = useState({});
+  const [editSaving, setEditSaving] = useState(false);
 
   useEffect(() => {
     api.get(`/ideas/${id}`).then(res => setIdea(res.data)).catch(() => {}).finally(() => setLoading(false));
@@ -39,6 +42,28 @@ export default function IdeaDetail() {
       setIdea(res.data);
     } catch { alert('Failed to post comment'); }
     setSubmitting(false);
+  };
+
+  const handleSaveEdit = async () => {
+    setEditSaving(true);
+    try {
+      await api.patch(`/ideas/${id}/edit`, editForm);
+      const res = await api.get(`/ideas/${id}`);
+      setIdea(res.data);
+      setEditing(false);
+    } catch { alert('Failed to save'); }
+    setEditSaving(false);
+  };
+
+  const startEditing = () => {
+    setEditing(true);
+    setEditForm({
+      size: idea.size || '',
+      complexity: idea.complexity || '',
+      bidCutoffDate: idea.bidCutoffDate ? new Date(idea.bidCutoffDate).toISOString().split('T')[0] : '',
+      expectedDeliveryDate: idea.expectedDeliveryDate ? new Date(idea.expectedDeliveryDate).toISOString().split('T')[0] : '',
+      projectOwner: idea.projectOwner || '',
+    });
   };
 
   const submitForReview = async () => {
@@ -77,7 +102,7 @@ export default function IdeaDetail() {
             <h1 className="text-lg font-medium font-manrope tracking-tight text-on-surface">{idea.title}</h1>
             <p className="text-sm text-on-surface-variant mt-1">{idea.category} · Owner: {idea.projectOwner || 'Not set'}</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-medium ${idea.projectType === 'FullProduct' ? 'bg-teal-50 text-teal-700' : 'bg-primary/10 text-primary'}`}>
               {idea.projectType === 'FullProduct' ? 'Full product' : 'POC'}
             </span>
@@ -85,6 +110,11 @@ export default function IdeaDetail() {
             <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-medium ${statusColors[idea.status] || 'bg-surface-container-high text-on-surface-variant'}`}>
               {idea.status}
             </span>
+            {user?.role === 'Admin' && ['BiddingOpen', 'InProgress', 'Approved'].includes(idea.status) && !editing && (
+              <button onClick={startEditing} className="p-2 rounded-xl hover:bg-surface-container-high/50 transition-colors">
+                <span className="material-symbols-outlined text-on-surface-variant text-lg">edit</span>
+              </button>
+            )}
           </div>
         </div>
         <p className="text-sm text-on-surface-variant leading-relaxed">{idea.description}</p>
@@ -116,6 +146,56 @@ export default function IdeaDetail() {
           {idea.pointsReward > 0 && <div><p className="text-xs text-on-surface-variant/60">Points</p><p className="text-sm font-medium text-primary">+{idea.pointsReward} pts</p></div>}
         </div>
       </div>
+
+      {editing && (
+        <div className="surface-card-elevated p-5 mb-4">
+          <h3 className="font-manrope font-bold text-sm text-on-surface mb-4 flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary text-lg">edit</span>
+            Edit Idea Details
+          </h3>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="text-xs font-semibold text-on-surface-variant block mb-1">Size</label>
+              <select value={editForm.size} onChange={e => setEditForm(f => ({...f, size: e.target.value}))} className="input-field w-full">
+                {['Micro','Small','Medium','Large','XL','Enterprise'].map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-on-surface-variant block mb-1">Complexity</label>
+              <select value={editForm.complexity} onChange={e => setEditForm(f => ({...f, complexity: e.target.value}))} className="input-field w-full">
+                {['Low','Medium','High','Innovative'].map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-on-surface-variant block mb-1">Bid cutoff</label>
+              <div className="relative">
+                <input type="date" value={editForm.bidCutoffDate} onChange={e => setEditForm(f => ({...f, bidCutoffDate: e.target.value}))}
+                  className="input-field w-full cursor-pointer" />
+                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none text-lg">calendar_month</span>
+              </div>
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-on-surface-variant block mb-1">Expected delivery</label>
+              <div className="relative">
+                <input type="date" value={editForm.expectedDeliveryDate} onChange={e => setEditForm(f => ({...f, expectedDeliveryDate: e.target.value}))}
+                  className="input-field w-full cursor-pointer" />
+                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none text-lg">calendar_month</span>
+              </div>
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="text-xs font-semibold text-on-surface-variant block mb-1">Project Owner</label>
+            <input type="text" value={editForm.projectOwner} onChange={e => setEditForm(f => ({...f, projectOwner: e.target.value}))}
+              className="input-field w-full" />
+          </div>
+          <div className="flex gap-2">
+            <button onClick={handleSaveEdit} disabled={editSaving} className="btn-primary px-5 py-2 text-sm disabled:opacity-50">
+              {editSaving ? 'Saving...' : 'Save Changes'}
+            </button>
+            <button onClick={() => setEditing(false)} className="px-5 py-2 rounded-xl text-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high transition">Cancel</button>
+          </div>
+        </div>
+      )}
 
       {/* Team Members */}
       {idea.teamMembers && idea.teamMembers.length > 0 && (
