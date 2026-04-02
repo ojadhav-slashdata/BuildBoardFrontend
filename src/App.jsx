@@ -21,6 +21,8 @@ import Analytics from './pages/Analytics';
 import AdminUsers from './pages/AdminUsers';
 import Feedback from './pages/Feedback';
 import BidResults from './pages/BidResults';
+import Marketplace from './pages/Marketplace';
+import Guide from './pages/Guide';
 
 export default function App() {
   return (
@@ -44,6 +46,8 @@ export default function App() {
         <Route path="/ideas/:id/bid" element={<PlaceBid />} />
         <Route path="/my-bids" element={<MyBids />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/marketplace" element={<ProtectedRoute><Marketplace /></ProtectedRoute>} />
+        <Route path="/guide" element={<ProtectedRoute><Guide /></ProtectedRoute>} />
 
         {/* Manager / Admin */}
         <Route

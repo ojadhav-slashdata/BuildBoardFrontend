@@ -5,12 +5,16 @@ const linksByRole = {
   Employee: [
     { to: '/portal', label: 'Home', icon: 'dashboard' },
     { to: '/my-bids', label: 'My Bids', icon: 'gavel' },
+    { to: '/marketplace', label: 'Rewards', icon: 'redeem' },
+    { to: '/guide', label: 'Guide', icon: 'help' },
     { to: '/profile', label: 'Profile', icon: 'person' },
   ],
   Manager: [
     { to: '/portal', label: 'Home', icon: 'dashboard' },
     { to: '/approvals', label: 'Approvals', icon: 'fact_check' },
     { to: '/analytics', label: 'Analytics', icon: 'monitoring' },
+    { to: '/marketplace', label: 'Rewards', icon: 'redeem' },
+    { to: '/guide', label: 'Guide', icon: 'help' },
     { to: '/profile', label: 'Profile', icon: 'person' },
   ],
   Admin: [
@@ -18,6 +22,8 @@ const linksByRole = {
     { to: '/approvals', label: 'Approvals', icon: 'fact_check' },
     { to: '/analytics', label: 'Analytics', icon: 'monitoring' },
     { to: '/admin/users', label: 'Users', icon: 'group' },
+    { to: '/marketplace', label: 'Rewards', icon: 'redeem' },
+    { to: '/guide', label: 'Guide', icon: 'help' },
     { to: '/profile', label: 'Profile', icon: 'person' },
   ],
 };
