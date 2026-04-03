@@ -346,17 +346,17 @@ export default function ExecutiveDashboard() {
             valueA={o.soloBids}
             labelB="Team"
             valueB={o.teamBids}
-            colorA="bg-secondary"
-            colorB="bg-primary"
+            colorA="bg-sky-400"
+            colorB="bg-violet-400"
           />
           <div className="mt-4 grid grid-cols-2 gap-3">
-            <div className="bg-secondary/5 rounded-2xl p-4 text-center border border-secondary/10">
-              <p className="text-2xl font-manrope font-extrabold text-secondary">{o.soloBids}</p>
-              <p className="text-xs text-secondary/60 font-medium mt-0.5">Solo Bids</p>
+            <div className="bg-sky-50 rounded-2xl p-4 text-center border border-sky-100">
+              <p className="text-2xl font-manrope font-extrabold text-sky-600">{o.soloBids}</p>
+              <p className="text-xs text-sky-600/60 font-medium mt-0.5">Solo Bids</p>
             </div>
-            <div className="bg-primary/5 rounded-2xl p-4 text-center border border-primary/10">
-              <p className="text-2xl font-manrope font-extrabold text-primary">{o.teamBids}</p>
-              <p className="text-xs text-primary/60 font-medium mt-0.5">Team Bids</p>
+            <div className="bg-violet-50 rounded-2xl p-4 text-center border border-violet-100">
+              <p className="text-2xl font-manrope font-extrabold text-violet-600">{o.teamBids}</p>
+              <p className="text-xs text-violet-600/60 font-medium mt-0.5">Team Bids</p>
             </div>
           </div>
         </div>
@@ -408,7 +408,7 @@ export default function ExecutiveDashboard() {
                   {i < 3 ? medals[i] : `#${i + 1}`}
                 </span>
                 {person.avatar ? (
-                  <img src={person.avatar} alt={person.name} className="w-9 h-9 rounded-full object-cover shrink-0" />
+                  <img src={person.avatar} alt={person.name} className="w-9 h-9 rounded-full object-cover shrink-0" referrerPolicy="no-referrer" />
                 ) : (
                   <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                     <span className="text-sm font-bold text-primary">{(person.name || '?')[0]}</span>
