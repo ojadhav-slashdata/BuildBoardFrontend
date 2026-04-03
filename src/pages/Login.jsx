@@ -139,7 +139,7 @@ export default function Login() {
                   <span className="material-symbols-outlined text-white text-2xl">tactic</span>
                 </div>
                 <h2 className="text-3xl font-headline font-black text-on-background tracking-tight">Build<span className="text-primary">Board</span></h2>
-                <p className="text-sm text-on-surface-variant mt-1">Innovation Portal</p>
+                <p className="text-sm text-on-surface-variant mt-1">Think · Build · Earn</p>
               </div>
 
               {/* Login card */}
@@ -169,7 +169,7 @@ export default function Login() {
                 {/* Feature pills */}
                 <div className="space-y-2.5 mb-8">
                   {[
-                    { icon: 'lightbulb', text: 'Submit & discover innovation ideas' },
+                    { icon: 'lightbulb', text: 'Submit & discover ideas' },
                     { icon: 'handshake', text: 'Bid solo or as a team to build' },
                     { icon: 'emoji_events', text: 'Earn points & redeem real rewards' },
                   ].map((item, i) => (
@@ -195,7 +195,7 @@ export default function Login() {
                 </button>
 
                 <p className="mt-5 text-center text-xs text-on-surface-variant/50">
-                  By signing in, you agree to the innovation program guidelines
+                  By signing in, you agree to the BuildBoard program guidelines
                 </p>
               </div>
             </div>
@@ -211,7 +211,7 @@ export default function Login() {
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
                     <span className="material-symbols-outlined text-white text-xl">tactic</span>
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-widest text-on-surface-variant/50">Innovation Portal</span>
+                  <span className="text-xs font-bold uppercase tracking-widest text-on-surface-variant/50">Think · Build · Earn</span>
                 </div>
                 <h1 className="text-6xl xl:text-7xl font-headline font-black tracking-tighter text-on-background leading-[0.95] mb-0">
                   Build<span className="text-primary">Board</span>
@@ -223,7 +223,7 @@ export default function Login() {
                   Your ideas. Built by your team. <span className="text-primary">Rewarded.</span>
                 </p>
                 <p className="text-base text-on-surface-variant mt-3 max-w-md leading-relaxed">
-                  The platform where employees submit innovation ideas, teams compete to build them, and everyone earns real rewards.
+                  Think up ideas, build them with your team, and earn real rewards. That's BuildBoard.
                 </p>
               </div>
             </div>

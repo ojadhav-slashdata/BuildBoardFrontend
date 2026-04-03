@@ -45,7 +45,7 @@ export default function Navbar() {
           </div>
           <span className="text-lg font-bold font-manrope tracking-tight text-on-surface hidden sm:block">Build<span style={{ color: 'var(--c-primary, #3525cd)' }}>Board</span></span>
         </Link>
-        <span className="hidden sm:block text-xs text-on-surface-variant/60 pl-3 ml-1 border-l border-outline-variant/20">Innovation Portal</span>
+        <span className="hidden sm:block text-xs text-on-surface-variant/60 pl-3 ml-1 border-l border-outline-variant/20">Think · Build · Earn</span>
       </div>
 
       <div className="flex items-center gap-3">
