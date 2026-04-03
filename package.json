@@ -9,8 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "firebase": "^11.0.0",
     "axios": "^1.7.2",
+    "firebase": "^11.0.0",
+    "new-dirham-symbol": "^1.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
