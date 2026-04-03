@@ -30,6 +30,7 @@ export default function SubmitIdea() {
     challenges: '',
   });
   const [submitting, setSubmitting] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [titleCount, setTitleCount] = useState(0);
   const [descCount, setDescCount] = useState(0);
@@ -52,6 +53,25 @@ export default function SubmitIdea() {
     setForm(f => ({ ...f, [field]: val }));
     if (field === 'title') setTitleCount(val.length);
     if (field === 'description') setDescCount(val.length);
+  };
+
+  const enhanceWithAI = async () => {
+    if (!form.title.trim()) { alert('Please enter a title first.'); return; }
+    setAiLoading(true);
+    try {
+      const res = await api.post('/ai/enhance-description', {
+        title: form.title,
+        notes: form.description || '',
+        category: form.category || '',
+      });
+      if (res.data?.description) {
+        setForm(f => ({ ...f, description: res.data.description }));
+        setDescCount(res.data.description.length);
+      }
+    } catch {
+      alert('AI assist failed. Please try again.');
+    }
+    setAiLoading(false);
   };
 
   const toggleBusinessValue = (tag) => {
@@ -159,13 +179,27 @@ export default function SubmitIdea() {
 
             {/* Description */}
             <div>
-              <div className="flex justify-between items-baseline mb-2">
+              <div className="flex justify-between items-center mb-2">
                 <label className="text-sm font-semibold text-on-surface-variant">
                   Description <span className="text-error">*</span>
                 </label>
-                <span className={`text-xs tabular-nums ${descCount < 50 ? 'text-amber-600' : 'text-emerald-600'}`}>
-                  {descCount < 50 ? `${descCount} / min 50` : `${descCount} chars ✓`}
-                </span>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={enhanceWithAI}
+                    disabled={aiLoading}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:opacity-90 disabled:opacity-50 transition-all shadow-sm"
+                  >
+                    {aiLoading ? (
+                      <><span className="w-3 h-3 rounded-full border-2 border-white/30 border-t-white animate-spin" />Generating...</>
+                    ) : (
+                      <><span className="material-symbols-outlined" style={{ fontSize: '14px' }}>auto_awesome</span>AI Assist</>
+                    )}
+                  </button>
+                  <span className={`text-xs tabular-nums ${descCount < 50 ? 'text-amber-600' : 'text-emerald-600'}`}>
+                    {descCount < 50 ? `${descCount} / min 50` : `${descCount} chars ✓`}
+                  </span>
+                </div>
               </div>
 
               {/* Rich-text-style toolbar (visual only) */}
