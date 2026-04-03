@@ -143,8 +143,12 @@ export default function Marketplace() {
       {/* ── Featured Reward ── */}
       {featured && category === 'All' && (
         <div className="mb-10 bg-primary/5 rounded-2xl overflow-hidden flex flex-col md:flex-row group border border-primary/10 hover:border-primary/20 transition-colors">
-          <div className="md:w-1/2 h-56 md:h-72 bg-gradient-to-br from-primary/20 to-primary-container/30 flex items-center justify-center">
-            <span className="text-8xl">{featured.icon}</span>
+          <div className="md:w-1/2 h-56 md:h-72 bg-gradient-to-br from-primary/10 to-primary-container/20 flex items-center justify-center overflow-hidden">
+            <img
+              src="https://www.apple.com/v/macbook-air/y/images/meta/macbook_air_mx__ez5y0k5yy7au_og.png?202603021334"
+              alt="Featured reward"
+              className="w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-700"
+            />
           </div>
           <div className="md:w-1/2 flex flex-col justify-center p-8">
             <div className="flex items-center gap-2 mb-3">
