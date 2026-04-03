@@ -4,9 +4,9 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 function fmt(n) {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `$${(n / 1_000).toFixed(1)}K`;
-  return `$${n}`;
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M AED`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K AED`;
+  return `${n} AED`;
 }
 
 function HorizontalBar({ label, value, max, color = 'bg-primary' }) {
@@ -224,7 +224,7 @@ export default function ExecutiveDashboard() {
           icon="payments"
           label="Est. Business Value"
           value={fmt(o.estimatedBusinessValue)}
-          sub={`${o.totalInnovationHours.toLocaleString()} hrs @ $50/hr`}
+          sub={`${o.totalInnovationHours.toLocaleString()} hrs @ 50 AED/hr`}
           gradient="bg-gradient-to-br from-amber-500 to-orange-400"
           iconColor="text-amber-600"
         />
@@ -471,7 +471,7 @@ export default function ExecutiveDashboard() {
             </div>
             <h2 className="font-manrope font-extrabold text-white text-2xl md:text-3xl leading-tight mb-2">
               {o.totalInnovationHours.toLocaleString()} innovation hours
-              <span className="text-white/70"> at $50/hr</span>
+              <span className="text-white/70"> at 50 AED/hr</span>
             </h2>
             <p className="text-white/70 text-sm font-medium">
               Represents an estimated <strong className="text-white">{fmt(o.estimatedBusinessValue)}</strong> in business value generated
