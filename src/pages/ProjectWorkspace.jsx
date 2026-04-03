@@ -353,7 +353,7 @@ export default function ProjectWorkspace() {
 
   // ─── Derived data ─────────────────────────────────────────────────────────
 
-  const team = project.teamMembers || project.team || [];
+  const team = project.members || project.teamMembers || project.team || [];
   const totalHours = project.totalHoursLogged || project.timeLogs?.reduce((s, l) => s + l.hours, 0) || 0;
   const estimatedHours = project.estimatedHours || project.budgetHours || 100;
   const hoursPercent = Math.min(100, Math.round((totalHours / estimatedHours) * 100));
@@ -371,6 +371,8 @@ export default function ProjectWorkspace() {
 
   const isAdmin = user?.role === 'Admin';
   const isMember = (project.members || []).some(m => m.id === user?.id);
+  const isBidWinner = project.bidWinnerId === user?.id;
+  const canManageProject = isBidWinner || isAdmin || isMember;
 
   // ─── Render ───────────────────────────────────────────────────────────────
 
@@ -385,7 +387,7 @@ export default function ProjectWorkspace() {
             All Projects
           </button>
 
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">{project.name}</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">{project.title || project.name}</h1>
 
           {/* Project Hero Card */}
           <div className="rounded-3xl p-6 mb-4" style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #3525cd 100%)' }}>
@@ -463,7 +465,7 @@ export default function ProjectWorkspace() {
         </div>
 
         {/* Project Action Buttons */}
-        {project.status === 'InProgress' && isMember && (
+        {project.status === 'InProgress' && canManageProject && (
           <div className="bg-primary/10 border border-primary/20 rounded-2xl p-4 mb-4 flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-primary">Ready for review?</p>
