@@ -319,6 +319,28 @@ export default function ProjectWorkspace() {
     );
   }
 
+  // ─── Project status actions ────────────────────────────────────────────────
+  const [statusSubmitting, setStatusSubmitting] = useState(false);
+
+  const sendForReview = async () => {
+    setStatusSubmitting(true);
+    try {
+      await api.patch(`/ideas/${id}/send-for-review`);
+      await fetchProject();
+    } catch { alert('Failed to send for review'); }
+    setStatusSubmitting(false);
+  };
+
+  const markCompleted = async () => {
+    if (!window.confirm('Mark this project as completed? Points will be awarded to the team.')) return;
+    setStatusSubmitting(true);
+    try {
+      await api.patch(`/ideas/${id}/complete`);
+      await fetchProject();
+    } catch { alert('Failed to mark as completed'); }
+    setStatusSubmitting(false);
+  };
+
   if (!project) {
     return (
       <div className="text-center py-20">
@@ -344,7 +366,11 @@ export default function ProjectWorkspace() {
     BiddingOpen: 'bg-green-50 text-green-700',
     Completed: 'bg-emerald-50 text-emerald-700',
     PendingApproval: 'bg-blue-50 text-blue-700',
+    PendingReview: 'bg-purple-50 text-purple-700',
   };
+
+  const isAdmin = user?.role === 'Admin';
+  const isMember = (project.members || []).some(m => m.id === user?.id);
 
   // ─── Render ───────────────────────────────────────────────────────────────
 
@@ -368,7 +394,7 @@ export default function ProjectWorkspace() {
                 <div className="flex items-center gap-2 mb-2">
                   {project.status && (
                     <span className="text-[10px] px-2.5 py-1 rounded-full font-bold bg-white/15 text-white/90 backdrop-blur">
-                      {project.status === 'InProgress' ? '● In Progress' : project.status}
+                      {project.status === 'InProgress' ? '● In Progress' : project.status === 'PendingReview' ? '● Pending Review' : project.status === 'Completed' ? '✓ Completed' : project.status}
                     </span>
                   )}
                   {project.projectType && (
@@ -435,6 +461,50 @@ export default function ProjectWorkspace() {
             </div>
           </div>
         </div>
+
+        {/* Project Action Buttons */}
+        {project.status === 'InProgress' && isMember && (
+          <div className="bg-primary/10 border border-primary/20 rounded-2xl p-4 mb-4 flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-primary">Ready for review?</p>
+              <p className="text-xs text-primary/70">Send this project to admin for final review</p>
+            </div>
+            <button onClick={sendForReview} disabled={statusSubmitting}
+              className="px-5 py-2.5 bg-gradient-to-r from-primary to-primary-container text-white rounded-xl text-sm font-bold shadow-md hover:scale-105 transition-all disabled:opacity-50">
+              {statusSubmitting ? 'Sending...' : 'Send for Review'}
+            </button>
+          </div>
+        )}
+
+        {project.status === 'PendingReview' && isAdmin && (
+          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 mb-4 flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-emerald-800">Project submitted for review</p>
+              <p className="text-xs text-emerald-600">Review the work and mark as completed to award points to the team</p>
+            </div>
+            <button onClick={markCompleted} disabled={statusSubmitting}
+              className="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-xl text-sm font-bold shadow-md hover:scale-105 transition-all disabled:opacity-50">
+              {statusSubmitting ? 'Completing...' : 'Mark as Completed & Award Points'}
+            </button>
+          </div>
+        )}
+
+        {project.status === 'PendingReview' && !isAdmin && (
+          <div className="bg-purple-50 border border-purple-200 rounded-2xl p-4 mb-4">
+            <p className="text-sm font-medium text-purple-800">Awaiting admin review</p>
+            <p className="text-xs text-purple-600">Your project has been submitted and is pending review by admin</p>
+          </div>
+        )}
+
+        {project.status === 'Completed' && (
+          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 mb-4 flex items-center gap-3">
+            <span className="material-symbols-outlined text-emerald-600 text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+            <div>
+              <p className="text-sm font-medium text-emerald-800">Project completed!</p>
+              <p className="text-xs text-emerald-600">Points have been awarded to all team members</p>
+            </div>
+          </div>
+        )}
 
         {/* Tab bar */}
         <div className="flex gap-1 bg-surface-container-low rounded-2xl p-1 mb-6">
