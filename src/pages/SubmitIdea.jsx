@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../axiosConfig';
+import Dropdown from '../components/Dropdown';
 
 const categories = ['Tech', 'HR', 'Finance', 'Operations', 'Other'];
 
@@ -35,6 +36,9 @@ export default function SubmitIdea() {
   const [titleCount, setTitleCount] = useState(0);
   const [descCount, setDescCount] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [effort, setEffort] = useState('');
+  const [impact, setImpact] = useState('');
+  const [resource, setResource] = useState('');
 
   const [categoryLeads, setCategoryLeads] = useState({});
 
@@ -236,28 +240,20 @@ export default function SubmitIdea() {
                 <label className="block text-sm font-semibold text-on-surface-variant mb-2">
                   Category <span className="text-error">*</span>
                 </label>
-                <div className="relative">
-                  <select
-                    required
-                    value={form.category}
-                    onChange={(e) => {
-                      const cat = e.target.value;
-                      setForm(f => ({ ...f, category: cat }));
-                      const approver = categoryLeads[cat];
-                      if (approver) {
-                        setForm(f => ({ ...f, category: cat, projectOwner: approver.name }));
-                        setOwnerSearch(approver.name);
-                      }
-                    }}
-                    className="w-full rounded-2xl py-4 px-5 bg-surface-container-lowest border-none text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/30 transition-all appearance-none cursor-pointer pr-10"
-                  >
-                    <option value="">Select a category</option>
-                    {categories.map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
-                  <span className="material-symbols-outlined pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40" style={{ fontSize: '20px' }}>
-                    expand_more
-                  </span>
-                </div>
+                <Dropdown
+                  value={form.category}
+                  onChange={(val) => {
+                    setForm(f => ({ ...f, category: val }));
+                    const approver = categoryLeads[val];
+                    if (approver) {
+                      setForm(f => ({ ...f, category: val, projectOwner: approver.name }));
+                      setOwnerSearch(approver.name);
+                    }
+                  }}
+                  options={categories.map(c => ({ value: c, label: c }))}
+                  placeholder="Select a category"
+                  className="w-full rounded-2xl py-4 px-5 bg-surface-container-lowest border-none text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                />
               </div>
 
               {/* Assigned Approver (read-only, auto-filled from category) */}
@@ -429,10 +425,13 @@ export default function SubmitIdea() {
                     <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>schedule</span>
                     <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Est. Effort</span>
                   </div>
-                  <select className="w-full bg-transparent border-none outline-none text-sm font-medium text-on-surface cursor-pointer appearance-none">
-                    <option value="">— select —</option>
-                    {EFFORT_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
-                  </select>
+                  <Dropdown
+                    value={effort}
+                    onChange={(val) => setEffort(val)}
+                    options={EFFORT_OPTIONS}
+                    placeholder="— select —"
+                    className="w-full bg-transparent border-none outline-none text-sm font-medium text-on-surface"
+                  />
                 </div>
 
                 {/* Potential Impact */}
@@ -441,10 +440,13 @@ export default function SubmitIdea() {
                     <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>trending_up</span>
                     <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Potential Impact</span>
                   </div>
-                  <select className="w-full bg-transparent border-none outline-none text-sm font-medium text-on-surface cursor-pointer appearance-none">
-                    <option value="">— select —</option>
-                    {IMPACT_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
-                  </select>
+                  <Dropdown
+                    value={impact}
+                    onChange={(val) => setImpact(val)}
+                    options={IMPACT_OPTIONS}
+                    placeholder="— select —"
+                    className="w-full bg-transparent border-none outline-none text-sm font-medium text-on-surface"
+                  />
                 </div>
 
                 {/* Resource Req. */}
@@ -453,10 +455,13 @@ export default function SubmitIdea() {
                     <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>group</span>
                     <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Resource Req.</span>
                   </div>
-                  <select className="w-full bg-transparent border-none outline-none text-sm font-medium text-on-surface cursor-pointer appearance-none">
-                    <option value="">— select —</option>
-                    {RESOURCE_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
-                  </select>
+                  <Dropdown
+                    value={resource}
+                    onChange={(val) => setResource(val)}
+                    options={RESOURCE_OPTIONS}
+                    placeholder="— select —"
+                    className="w-full bg-transparent border-none outline-none text-sm font-medium text-on-surface"
+                  />
                 </div>
               </div>
             </div>

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import api from '../axiosConfig';
+import DatePicker from '../components/DatePicker';
+import Dropdown from '../components/Dropdown';
 
 const STATUS_LABELS = {
   BiddingOpen: 'Open for Bidding',
@@ -294,31 +296,19 @@ export default function IdeaDetail() {
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
               <label className="text-xs font-semibold text-on-surface-variant block mb-1">Size</label>
-              <select value={editForm.size} onChange={e => setEditForm(f => ({...f, size: e.target.value}))} className="input-field w-full">
-                {['Micro','Small','Medium','Large','XL','Enterprise'].map(s => <option key={s} value={s}>{s}</option>)}
-              </select>
+              <Dropdown value={editForm.size} onChange={(val) => setEditForm(f => ({...f, size: val}))} className="input-field w-full" placeholder="Select size" options={[{value: 'Micro', label: 'Micro'}, {value: 'Small', label: 'Small'}, {value: 'Medium', label: 'Medium'}, {value: 'Large', label: 'Large'}, {value: 'XL', label: 'XL'}, {value: 'Enterprise', label: 'Enterprise'}]} />
             </div>
             <div>
               <label className="text-xs font-semibold text-on-surface-variant block mb-1">Complexity</label>
-              <select value={editForm.complexity} onChange={e => setEditForm(f => ({...f, complexity: e.target.value}))} className="input-field w-full">
-                {['Low','Medium','High','Innovative'].map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
+              <Dropdown value={editForm.complexity} onChange={(val) => setEditForm(f => ({...f, complexity: val}))} className="input-field w-full" placeholder="Select complexity" options={[{value: 'Low', label: 'Low'}, {value: 'Medium', label: 'Medium'}, {value: 'High', label: 'High'}, {value: 'Innovative', label: 'Innovative'}]} />
             </div>
             <div>
               <label className="text-xs font-semibold text-on-surface-variant block mb-1">Bid cutoff</label>
-              <div className="relative">
-                <input type="date" value={editForm.bidCutoffDate} onChange={e => setEditForm(f => ({...f, bidCutoffDate: e.target.value}))}
-                  className="input-field w-full cursor-pointer" />
-                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none text-lg">calendar_month</span>
-              </div>
+              <DatePicker value={editForm.bidCutoffDate} onChange={(val) => setEditForm(f => ({...f, bidCutoffDate: val}))} className="input-field w-full" placeholder="Select date" />
             </div>
             <div>
               <label className="text-xs font-semibold text-on-surface-variant block mb-1">Expected delivery</label>
-              <div className="relative">
-                <input type="date" value={editForm.expectedDeliveryDate} onChange={e => setEditForm(f => ({...f, expectedDeliveryDate: e.target.value}))}
-                  className="input-field w-full cursor-pointer" />
-                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none text-lg">calendar_month</span>
-              </div>
+              <DatePicker value={editForm.expectedDeliveryDate} onChange={(val) => setEditForm(f => ({...f, expectedDeliveryDate: val}))} className="input-field w-full" placeholder="Select date" />
             </div>
           </div>
           <div className="mb-4">

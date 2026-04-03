@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../axiosConfig';
+import DatePicker, { TimePicker } from '../components/DatePicker';
 
 const pocSizes = [
   { name: 'Micro', time: '< 1 day', hours: '< 8 hrs', pts: 10, min: 4, max: 8 },
@@ -425,46 +426,37 @@ export default function Approvals() {
           <div>
             <label className="text-sm font-medium text-on-surface block mb-1.5">Bid cutoff <span className="text-red-500">*</span></label>
             <div className="flex gap-2">
-              <div className="relative flex-1">
-                <input type="date" value={bidCutoff.split('T')[0] || bidCutoff} onChange={e => {
-                  const time = bidCutoffTime || '18:00';
-                  setBidCutoff(e.target.value);
-                  setBidCutoffTime(time);
-                }}
-                  min={new Date().toISOString().split('T')[0]}
-                  className="input-field w-full px-3 py-3 rounded-xl text-sm cursor-pointer" />
-                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none text-lg">calendar_month</span>
+              <div className="flex-1">
+                <DatePicker
+                  value={bidCutoff.split('T')[0] || bidCutoff}
+                  onChange={(val) => {
+                    const time = bidCutoffTime || '18:00';
+                    setBidCutoff(val);
+                    setBidCutoffTime(time);
+                  }}
+                  minDate={new Date()}
+                  placeholder="Select date"
+                  className="input-field w-full px-3 py-3 rounded-xl text-sm cursor-pointer"
+                />
               </div>
-              <select value={bidCutoffTime} onChange={e => setBidCutoffTime(e.target.value)}
-                className="input-field px-3 py-3 rounded-xl text-sm cursor-pointer w-28">
-                <option value="09:00">9:00 AM</option>
-                <option value="10:00">10:00 AM</option>
-                <option value="11:00">11:00 AM</option>
-                <option value="12:00">12:00 PM</option>
-                <option value="13:00">1:00 PM</option>
-                <option value="14:00">2:00 PM</option>
-                <option value="15:00">3:00 PM</option>
-                <option value="16:00">4:00 PM</option>
-                <option value="17:00">5:00 PM</option>
-                <option value="18:00">6:00 PM</option>
-                <option value="19:00">7:00 PM</option>
-                <option value="20:00">8:00 PM</option>
-                <option value="21:00">9:00 PM</option>
-                <option value="22:00">10:00 PM</option>
-                <option value="23:00">11:00 PM</option>
-                <option value="23:59">Midnight</option>
-              </select>
+              <TimePicker
+                value={bidCutoffTime}
+                onChange={(val) => setBidCutoffTime(val)}
+                placeholder="Select time"
+                className="input-field px-3 py-3 rounded-xl text-sm cursor-pointer w-28"
+              />
             </div>
             <p className="text-xs text-on-surface-variant/40 mt-1">Date and time when bidding window closes</p>
           </div>
           <div>
             <label className="text-sm font-medium text-on-surface block mb-1.5">Expected delivery <span className="text-red-500">*</span></label>
-            <div className="relative">
-              <input type="date" value={deliveryDate} onChange={e => setDeliveryDate(e.target.value)}
-                min={bidCutoff || new Date().toISOString().split('T')[0]}
-                className="input-field w-full px-3 py-3 rounded-xl text-sm outline-none focus:border-primary cursor-pointer appearance-none" />
-              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none text-lg">calendar_month</span>
-            </div>
+            <DatePicker
+              value={deliveryDate}
+              onChange={(val) => setDeliveryDate(val)}
+              minDate={bidCutoff ? new Date(bidCutoff) : new Date()}
+              placeholder="Select date"
+              className="input-field w-full px-3 py-3 rounded-xl text-sm outline-none focus:border-primary cursor-pointer"
+            />
             <p className="text-xs text-on-surface-variant/40 mt-1">Target completion for builders</p>
           </div>
         </div>

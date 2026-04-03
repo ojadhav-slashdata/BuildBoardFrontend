@@ -2,6 +2,7 @@ import { useEffect, useState, useContext, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../axiosConfig';
 import LoadingSpinner from '../components/LoadingSpinner';
+import DatePicker from '../components/DatePicker';
 import { AuthContext } from '../context/AuthContext';
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -427,12 +428,11 @@ export default function PlaceBid() {
           <label className="block text-sm font-medium text-on-surface mb-1">
             Realistic delivery date <span className="text-red-500">*</span>
           </label>
-          <input
-            type="date"
-            required
+          <DatePicker
             value={committedDate}
-            onChange={(e) => setCommittedDate(e.target.value)}
-            min={new Date().toISOString().split('T')[0]}
+            onChange={(val) => setCommittedDate(val)}
+            placeholder="Select delivery date"
+            minDate={new Date()}
             className="input-field w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
           />
           {idea.expectedDeliveryDate && (

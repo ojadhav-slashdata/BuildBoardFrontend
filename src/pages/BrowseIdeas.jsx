@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../axiosConfig';
+import Dropdown from '../components/Dropdown';
 
 const CATEGORIES = ['All', 'Tech', 'HR', 'Finance', 'Operations', 'Other'];
 const SIZES = ['All', 'Micro', 'Small', 'Medium', 'Large', 'XL', 'Enterprise'];
@@ -85,14 +86,20 @@ export default function BrowseIdeas() {
             className="w-full pl-10 pr-4 py-2.5 bg-surface-container-lowest rounded-lg text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>
-        <select value={filters.category} onChange={e => setFilters(f => ({ ...f, category: e.target.value }))}
-          className="px-3 py-2.5 bg-surface-container-lowest rounded-lg text-sm text-on-surface outline-none">
-          {CATEGORIES.map(c => <option key={c} value={c}>{c === 'All' ? 'All categories' : c}</option>)}
-        </select>
-        <select value={filters.size} onChange={e => setFilters(f => ({ ...f, size: e.target.value }))}
-          className="px-3 py-2.5 bg-surface-container-lowest rounded-lg text-sm text-on-surface outline-none">
-          {SIZES.map(s => <option key={s} value={s}>{s === 'All' ? 'All sizes' : s}</option>)}
-        </select>
+        <Dropdown
+          value={filters.category}
+          onChange={(val) => setFilters(f => ({ ...f, category: val }))}
+          options={CATEGORIES.map(c => ({ value: c, label: c === 'All' ? 'All categories' : c }))}
+          placeholder="All categories"
+          className="px-3 py-2.5 bg-surface-container-lowest rounded-lg text-sm text-on-surface outline-none"
+        />
+        <Dropdown
+          value={filters.size}
+          onChange={(val) => setFilters(f => ({ ...f, size: val }))}
+          options={SIZES.map(s => ({ value: s, label: s === 'All' ? 'All sizes' : s }))}
+          placeholder="All sizes"
+          className="px-3 py-2.5 bg-surface-container-lowest rounded-lg text-sm text-on-surface outline-none"
+        />
         <span className="text-xs text-on-surface-variant">{filtered.length} result{filtered.length !== 1 ? 's' : ''}</span>
       </div>
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../axiosConfig';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
+import DatePicker from '../components/DatePicker';
 
 function fmtDate(iso) {
   if (!iso) return '—';
@@ -93,12 +94,12 @@ function BidCard({ bid, onConfirm, onDecline, editingBid, editDate, editApproach
         <div className="mt-4 pt-4 border-t border-outline-variant/10 space-y-3">
           <div>
             <label className="text-xs font-semibold text-on-surface-variant block mb-1">Delivery date</label>
-            <div className="relative">
-              <input type="date" value={editDate} onChange={e => onEditDateChange(e.target.value)}
-                min={new Date().toISOString().split('T')[0]}
-                className="input-field w-full px-3 py-2.5 rounded-xl text-sm cursor-pointer" />
-              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 pointer-events-none text-lg">calendar_month</span>
-            </div>
+            <DatePicker
+              value={editDate}
+              onChange={(val) => onEditDateChange(val)}
+              placeholder="Select delivery date"
+              className="input-field w-full px-3 py-2.5 rounded-xl text-sm cursor-pointer"
+            />
           </div>
           <div>
             <label className="text-xs font-semibold text-on-surface-variant block mb-1">Approach</label>
