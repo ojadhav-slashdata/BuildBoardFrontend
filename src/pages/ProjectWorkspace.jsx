@@ -136,6 +136,9 @@ export default function ProjectWorkspace() {
   const [logHoursVal, setLogHoursVal] = useState(2);
   const [logNotes, setLogNotes] = useState('');
 
+  // Project status actions
+  const [statusSubmitting, setStatusSubmitting] = useState(false);
+
   // ─── Data fetching ────────────────────────────────────────────────────────
 
   const fetchProject = async () => {
@@ -318,9 +321,6 @@ export default function ProjectWorkspace() {
       </div>
     );
   }
-
-  // ─── Project status actions ────────────────────────────────────────────────
-  const [statusSubmitting, setStatusSubmitting] = useState(false);
 
   const sendForReview = async () => {
     setStatusSubmitting(true);
