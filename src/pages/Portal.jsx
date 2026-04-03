@@ -279,7 +279,7 @@ export default function Portal() {
               ) : (
                 leaderboard.slice(0, 5).map((entry, i) => {
                   const userMatch = Object.values(usersMap).find(u => u.name === entry.name);
-                  const avatar = userMatch?.pictureUrl;
+                  const avatar = entry.avatar || userMatch?.pictureUrl;
                   return (
                   <li key={entry.name ?? i} className="flex items-center gap-4 bg-surface-container-lowest p-3 rounded-2xl hover:translate-x-0.5 transition-transform">
                     <span className="w-6 text-center font-bold text-primary italic">
