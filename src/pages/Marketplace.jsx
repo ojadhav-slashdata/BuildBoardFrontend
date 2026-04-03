@@ -3,6 +3,41 @@ import api from '../axiosConfig';
 
 const categories = ['All', 'Gift cards', 'Staycations', 'Meals', 'Swag', 'Learning', 'Experience'];
 
+// Map emoji icons to styled material icons for a cleaner look
+const iconMap = {
+  '🎁': { icon: 'card_giftcard', bg: 'bg-rose-50', color: 'text-rose-500', hoverBg: 'group-hover:bg-rose-100' },
+  '📚': { icon: 'menu_book', bg: 'bg-blue-50', color: 'text-blue-500', hoverBg: 'group-hover:bg-blue-100' },
+  '🍽️': { icon: 'restaurant', bg: 'bg-amber-50', color: 'text-amber-500', hoverBg: 'group-hover:bg-amber-100' },
+  '🧖': { icon: 'spa', bg: 'bg-teal-50', color: 'text-teal-500', hoverBg: 'group-hover:bg-teal-100' },
+  '🏨': { icon: 'hotel', bg: 'bg-indigo-50', color: 'text-indigo-500', hoverBg: 'group-hover:bg-indigo-100' },
+  '🏖️': { icon: 'beach_access', bg: 'bg-cyan-50', color: 'text-cyan-500', hoverBg: 'group-hover:bg-cyan-100' },
+  '✈️': { icon: 'flight', bg: 'bg-violet-50', color: 'text-violet-500', hoverBg: 'group-hover:bg-violet-100' },
+  '👕': { icon: 'checkroom', bg: 'bg-emerald-50', color: 'text-emerald-500', hoverBg: 'group-hover:bg-emerald-100' },
+  '☕': { icon: 'coffee', bg: 'bg-orange-50', color: 'text-orange-500', hoverBg: 'group-hover:bg-orange-100' },
+  '🎧': { icon: 'headphones', bg: 'bg-slate-100', color: 'text-slate-600', hoverBg: 'group-hover:bg-slate-200' },
+  '🎫': { icon: 'confirmation_number', bg: 'bg-pink-50', color: 'text-pink-500', hoverBg: 'group-hover:bg-pink-100' },
+};
+
+function RewardIcon({ emoji, size = 'normal' }) {
+  const mapped = iconMap[emoji];
+  const sz = size === 'large' ? 'w-16 h-16' : 'w-14 h-14';
+  const iconSz = size === 'large' ? '32px' : '28px';
+  if (mapped) {
+    return (
+      <div className={`${sz} ${mapped.bg} ${mapped.hoverBg} rounded-xl flex items-center justify-center transition-colors`}>
+        <span className={`material-symbols-outlined ${mapped.color}`} style={{ fontSize: iconSz, fontVariationSettings: "'FILL' 1" }}>
+          {mapped.icon}
+        </span>
+      </div>
+    );
+  }
+  return (
+    <div className={`${sz} bg-surface-container rounded-xl flex items-center justify-center text-3xl group-hover:bg-primary-container/40 transition-colors`}>
+      {emoji}
+    </div>
+  );
+}
+
 export default function Marketplace() {
   const [rewards, setRewards] = useState({});
   const [balance, setBalance] = useState(null);
@@ -191,8 +226,8 @@ export default function Marketplace() {
             key={reward.id}
             className="bg-surface-container-lowest p-7 rounded-2xl flex flex-col group hover:shadow-2xl hover:shadow-primary/5 transition-all border border-outline-variant/5"
           >
-            <div className="w-14 h-14 bg-surface-container rounded-xl flex items-center justify-center mb-5 text-3xl group-hover:bg-primary-container/40 transition-colors">
-              {reward.icon}
+            <div className="mb-5">
+              <RewardIcon emoji={reward.icon} />
             </div>
             <h4 className="text-lg font-extrabold text-on-surface mb-1.5 tracking-tight">{reward.title}</h4>
             <p className="text-sm text-on-surface-variant mb-6 font-medium leading-snug flex-1">{reward.description}</p>
@@ -258,7 +293,7 @@ export default function Marketplace() {
             </p>
 
             <div className="bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-4 mb-6 flex items-center gap-3">
-              <span className="text-2xl">{redeemModal.icon}</span>
+              <RewardIcon emoji={redeemModal.icon} />
               <div>
                 <p className="font-bold text-on-surface">{redeemModal.title}</p>
                 <p className="text-xs text-on-surface-variant">{redeemModal.description}</p>
